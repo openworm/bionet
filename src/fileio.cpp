@@ -420,7 +420,7 @@ int myfreadBytes(unsigned char *bytes, int size, FILE *fp)
       }
       bytes[i] = (d1 * 16) + d2;
    }
-   delete buf;
+   delete [] buf;
    return(ret);
 #endif
 }
@@ -441,7 +441,7 @@ int myfwriteBytes(unsigned char *bytes, int size, FILE *fp)
    }
    buf[len - 1] = '\0';
    int ret = fprintf(fp, "%s\n", buf);
-   delete buf;
+   delete [] buf;
    return(ret);
 #endif
 }

@@ -13,12 +13,12 @@ TIME gettime()
    static TIME base_time = 0;
    if (base_time == 0)
    {
-      base_time = (TIME)GetTickCount();
+      base_time = (TIME)GetTickCount64();
       return(0);
    }
    else
    {
-      t = (TIME)GetTickCount();
+      t = (TIME)GetTickCount64();
       assert(t >= base_time);
       return(t - base_time);
    }
