@@ -60,9 +60,10 @@ public:
    Network *network;
    int     tag;
    float   error;
+   bool    behaves;
 
    // Evaluate behavior.
-   void evaluate(vector<Behavior *>& behaviors, Network *homomorph = NULL);
+   void evaluate(vector<Behavior *>& behaviors, int maxStep, Network *homomorph = NULL);
 
    // Mutate.
    void mutate();
@@ -97,8 +98,8 @@ public:
                         Network *homomorph, bool homomorphClones,
                         MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
                         MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
-                        int populationSize, int numOffspring, int numGenerations,
-                        RANDOM randomSeed);
+                        int populationSize, int numMutants, int numOffspring, int numGenerations,
+                        int fitnessQuorum, RANDOM randomSeed);
 
    // Destructor.
    ~NetworkMorphoGenesis();
@@ -112,15 +113,26 @@ public:
    // Initial population of homomorph clones?
    bool homomorphClones;
 
-   // Evolution parameters.
+   // Population size.
    int populationSize;
+
+   // Mutants created per generation.
+   int numMutants;
+
+   // Number of homomorphic offspring per generation.
    int numOffspring;
 
    // Network population.
    vector<NetworkMorph *> population;
+   vector<NetworkMorph *> mutants;
+   vector<NetworkMorph *> offspring;
 
-   // Run parameters.
+   // Number of generations.
    int numGenerations;
+
+   // Fitness quorum.
+   int fitnessQuorum;
+   int behaviorStep;
 
    // Random seed.
    RANDOM randomSeed;
@@ -128,11 +140,17 @@ public:
    // Morph networks.
    void morph();
 
-   // Prune unfit members.
-   void prune();
-
    // Mutate members.
    void mutate();
+
+   // Mate homomorphic members.
+   void mate();
+
+   // Prune less fit members.
+   void prune();
+
+   // Sort population by fitness.
+   void sort();
 
    // Save networks.
    void saveNetworks(char *filePrefix);

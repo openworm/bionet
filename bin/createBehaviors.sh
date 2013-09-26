@@ -1,1 +1,1 @@
-./bionet -createNetworkBehaviors -loadNetwork network.txt -behaviors 5 -saveBehaviors behaviors.txt
+./bionet -createNetworkBehaviors -loadNetwork network.txt -behaviorLengths 5 -saveBehaviors behaviors.txt

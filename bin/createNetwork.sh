@@ -1,1 +1,1 @@
-./bionet -createNetwork -numNeurons 16 -numSensors 4 -numMotors 4 -saveNetwork network.txt -randomSeed -2031898919
+./bionet -createNetwork -numNeurons 40 -numSensors 4 -numMotors 4 -saveNetwork network.txt -randomSeed 3503936686

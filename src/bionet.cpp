@@ -37,7 +37,7 @@ char *Usage[] =
    (char *)"bionet",
    (char *)"  -createNetworkBehaviors",
    (char *)"  -loadNetwork <network file name>",
-   (char *)"  -behaviors <sensory-motor sequence length list (blank separator)>",
+   (char *)"  -behaviorLengths <sensory-motor sequence length list (blank separator)>",
    (char *)"  [-randomSeed <random seed>]",
    (char *)"  [-saveBehaviors <behaviors file name>]",
    (char *)"",
@@ -59,15 +59,18 @@ char *Usage[] =
    (char *)"bionet",
    (char *)"   -createMorphicNetworks",
    (char *)"   -loadBehaviors <behaviors file name>",
-   (char *)"   [-loadNetwork <homomorph network file name> (to create homomorphic networks)",
-   (char *)"      [-homomorphClones (start with population of homomorphic network clones)]]",
    (char *)"   -excitatoryNeurons <minimum number> <maximum> <max delta> <probability of random change>",
    (char *)"   -inhibitoryNeurons <minimum number> <maximum> <max delta> <probability of random change>",
    (char *)"   -synapsePropensities <minimum> <maximum> <max delta> <probability of random change>",
    (char *)"   -synapseWeights <max delta> <probability of random change>",
    (char *)"   -populationSize <number population members>",
-   (char *)"   -numOffspring <number offspring per generation>",
+   (char *)"   -numMutants <number mutants per generation>",
+   (char *)"   [-loadNetwork <homomorph network file name> (to create homomorphic networks)",
+   (char *)"      [-homomorphClones (start with population of homomorphic network clones)]",
+   (char *)"      [-numOffspring <number mating offspring per generation> (for homomorphic networks)]]",
    (char *)"   -numGenerations <number of evolution generations>",
+   (char *)"   [-fitnessQuorum <fit member quorum required to advance behavior testing to next sensory-motor step>",
+   (char *)"      (defaults to immediate testing of entire behavior sequences)]",
    (char *)"   -saveNetworks [<files prefix (default=\"network_\")>]",
    (char *)"   [-randomSeed <random seed>]",
    NULL
@@ -379,7 +382,7 @@ int createNetworkBehaviors(int argc, char *argv[])
          networkLoadFile = argv[i];
          continue;
       }
-      if (strcmp(argv[i], "-behaviors") == 0)
+      if (strcmp(argv[i], "-behaviorLengths") == 0)
       {
          i++;
          if ((i >= argc) || (argv[i][0] == '-'))
@@ -605,18 +608,20 @@ int printNetworkBehaviors(int argc, char *argv[])
 int createMorphicNetworks(int argc, char *argv[])
 {
    char        *behaviorsLoadFile = NULL;
-   char        *networkLoadFile   = NULL;
    MutableParm excitatoryNeuronsParm;
    MutableParm inhibitoryNeuronsParm;
    MutableParm synapsePropensitiesParm;
    MutableParm synapseWeightsParm;
-   int         populationSize  = -1;
-   int         numOffspring    = -1;
-   int         numGenerations  = -1;
-   bool        homomorphClones = false;
-   RANDOM      randomSeed      = Network::DEFAULT_RANDOM_SEED;
-   bool        saveNetworks    = false;
-   char        *filesPrefix    = (char *)"network_";
+   int         populationSize   = -1;
+   int         numMutants       = -1;
+   char        *networkLoadFile = NULL;
+   bool        homomorphClones  = false;
+   int         numOffspring     = -1;
+   int         numGenerations   = -1;
+   int         fitnessQuorum    = -1;
+   RANDOM      randomSeed       = Network::DEFAULT_RANDOM_SEED;
+   bool        saveNetworks     = false;
+   char        *filesPrefix     = (char *)"network_";
 
    for (int i = 1; i < argc; i++)
    {
@@ -633,22 +638,6 @@ int createMorphicNetworks(int argc, char *argv[])
             return(1);
          }
          behaviorsLoadFile = argv[i];
-         continue;
-      }
-      if (strcmp(argv[i], "-loadNetwork") == 0)
-      {
-         i++;
-         if ((i >= argc) || (argv[i][0] == '-'))
-         {
-            printUsageError(argv[i - 1]);
-            return(1);
-         }
-         networkLoadFile = argv[i];
-         continue;
-      }
-      if (strcmp(argv[i], "-homomorphClones") == 0)
-      {
-         homomorphClones = true;
          continue;
       }
       if ((strcmp(argv[i], "-excitatoryNeurons") == 0) ||
@@ -762,6 +751,38 @@ int createMorphicNetworks(int argc, char *argv[])
          }
          continue;
       }
+      if (strcmp(argv[i], "-numMutants") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         numMutants = atoi(argv[i]);
+         if (numMutants < 0)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         continue;
+      }
+      if (strcmp(argv[i], "-loadNetwork") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         networkLoadFile = argv[i];
+         continue;
+      }
+      if (strcmp(argv[i], "-homomorphClones") == 0)
+      {
+         homomorphClones = true;
+         continue;
+      }
       if (strcmp(argv[i], "-numOffspring") == 0)
       {
          i++;
@@ -788,6 +809,22 @@ int createMorphicNetworks(int argc, char *argv[])
          }
          numGenerations = atoi(argv[i]);
          if (numGenerations < 0)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         continue;
+      }
+      if (strcmp(argv[i], "-fitnessQuorum") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         fitnessQuorum = atoi(argv[i]);
+         if (fitnessQuorum < 0)
          {
             printUsageError(argv[i - 1]);
             return(1);
@@ -829,21 +866,40 @@ int createMorphicNetworks(int argc, char *argv[])
        (synapsePropensitiesParm.randomProbability < 0.0f) ||
        (synapseWeightsParm.randomProbability < 0.0f) ||
        (populationSize < 0) ||
-       (numOffspring < 0) ||
+       (numMutants < 0) ||
        ((numGenerations < 0) ||
         !saveNetworks))
    {
       printUsageError((char *)"missing required option");
       return(1);
    }
-   if (numOffspring > populationSize)
+   if (fitnessQuorum > populationSize)
    {
-      printUsageError((char *)"numOffspring > populationSize");
+      printUsageError((char *)"fitnessQuorum > populationSize");
       return(1);
    }
    if (homomorphClones && (networkLoadFile == NULL))
    {
       printUsageError((char *)"homomorphClones option requires homomorph network");
+      return(1);
+   }
+   if ((numOffspring != -1) && (networkLoadFile == NULL))
+   {
+      printUsageError((char *)"numOffspring option requires homomorph network");
+      return(1);
+   }
+   if (numOffspring == -1)
+   {
+      numOffspring = 0;
+   }
+   if ((numMutants + numOffspring) > populationSize)
+   {
+      printUsageError((char *)"(numMutants + numOffspring) > populationSize");
+      return(1);
+   }
+   if ((numOffspring > 0) && (populationSize < 2))
+   {
+      printUsageError((char *)"numOffspring > 0 && populationSize < 2");
       return(1);
    }
 
@@ -873,8 +929,8 @@ int createMorphicNetworks(int argc, char *argv[])
       behaviors, homomorph, homomorphClones,
       excitatoryNeuronsParm, inhibitoryNeuronsParm,
       synapsePropensitiesParm, synapseWeightsParm,
-      populationSize, numOffspring, numGenerations,
-      randomSeed);
+      populationSize, numMutants, numOffspring,
+      numGenerations, fitnessQuorum, randomSeed);
    assert(morphoGenesis != NULL);
    morphoGenesis->morph();
    morphoGenesis->saveNetworks(filesPrefix);

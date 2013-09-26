@@ -57,7 +57,7 @@ Create network behaviors:
 bionet
    -createNetworkBehaviors
    -loadNetwork <network file name>
-   -behaviors <sensory-motor sequence length list (blank separator)>
+   -behaviorLengths <sensory-motor sequence length list (blank separator)>
    [-randomSeed <random seed>]
    [-saveBehaviors <behaviors file name>]
 
@@ -79,14 +79,17 @@ Create isomorphic/homomorphic networks:
 bionet
    -createMorphicNetworks
    -loadBehaviors <behaviors file name>
-   [-loadNetwork <homomorph network file name> (to create homomorphic networks)
-      [-homomorphClones (start with population of homomorphic network clones)]]
    -excitatoryNeurons <minimum number> <maximum> <max delta> <probability of random change>
    -inhibitoryNeurons <minimum number> <maximum> <max delta> <probability of random change>
    -synapsePropensities <minimum> <maximum> <max delta> <probability of random change>
    -synapseWeights <max delta> <probability of random change>
    -populationSize <number population members>
-   -numOffspring <number offspring per generation>
+   -numMutants <number mutants per generation>
+   [-loadNetwork <homomorph network file name> (to create homomorphic networks)
+      [-homomorphClones (start with population of homomorphic network clones)]
+      [-numOffspring <number mating offspring per generation> (for homomorphic networks)]]
    -numGenerations <number of evolution generations>
+   [-fitnessQuorum <fit member quorum required to advance behavior testing to next sensory-motor step>
+      (defaults to immediate testing of entire behavior sequences)]
    -saveNetworks [<files prefix (default="network_")>]
    [-randomSeed <random seed>]
