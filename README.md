@@ -50,6 +50,7 @@ Graph network:
 
 bionet
    -graphNetwork <graph file name ('dot' network)>
+   [-title <graph title>]
    -loadNetwork <network file name>
 
 Create network behaviors:

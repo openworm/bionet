@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include <string>
 using namespace std;
 
 class Network;
@@ -17,8 +18,9 @@ public:
    Synapse(float weight);
    Synapse();
 
-   float weight;
-   float signal;
+   float  weight;
+   float  signal;
+   string label;
 
    void load(FILE *fp);
    void save(FILE *fp);
@@ -39,6 +41,7 @@ public:
    ACTIVATION_FUNCTION function;
    float               bias;
    float               activation;
+   string              label;
 
    void fire();
    void propagate();

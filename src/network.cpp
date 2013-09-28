@@ -28,8 +28,7 @@ Network::Network(int numNeurons, int numSensors, int numMotors,
    this->numSensors = numSensors;
    this->numMotors  = numMotors;
    n = numSensors + numMotors;
-   this->randomSeed = randomSeed;
-   randomizer       = new Random(randomSeed);
+   Random *randomizer = new Random(randomSeed);
 
    // Add neurons.
    for (i = 0; i < numNeurons; i++)
@@ -128,6 +127,7 @@ Network::Network(int numNeurons, int numSensors, int numMotors,
          }
       }
    }
+   delete randomizer;
 }
 
 
@@ -135,7 +135,6 @@ Network::Network(char *filename)
 {
    neurons.clear();
    synapses.clear();
-   randomizer = NULL;
    load(filename);
 }
 
@@ -144,7 +143,6 @@ Network::Network(FILE *fp)
 {
    neurons.clear();
    synapses.clear();
-   randomizer = NULL;
    load(fp);
 }
 
@@ -306,8 +304,6 @@ Network::~Network()
       synapses[i].clear();
    }
    synapses.clear();
-   delete randomizer;
-   randomizer = NULL;
 }
 
 
@@ -456,13 +452,6 @@ void Network::load(FILE *fp)
          }
       }
    }
-   FREAD_LONG(&randomSeed, fp);
-   if (randomizer == NULL)
-   {
-      randomizer = new Random(randomSeed);
-      assert(randomizer != NULL);
-   }
-   randomizer->RAND_LOAD(fp);
 }
 
 
@@ -510,8 +499,6 @@ void Network::save(FILE *fp)
          }
       }
    }
-   FWRITE_LONG(&randomSeed, fp);
-   randomizer->RAND_SAVE(fp);
 }
 
 
@@ -609,9 +596,10 @@ void Network::print()
 // Network graph dump in 'dot' format.
 bool Network::dumpGraph(char *title, char *filename)
 {
-   FILE   *out;
-   int    i, j, numNeurons;
-   Neuron *neuron;
+   FILE       *out;
+   int        i, j, numNeurons;
+   Neuron     *neuron;
+   const char *label;
 
    if (filename == NULL)
    {
@@ -641,7 +629,15 @@ bool Network::dumpGraph(char *title, char *filename)
    for (i = 0; i < numSensors; i++)
    {
       neuron = neurons[i];
-      fprintf(out, "\t\"%p\" [label=\"index=%d\",shape=triangle];\n", (void *)neuron, neuron->index);
+      label  = neuron->label.c_str();
+      if (strlen(label) == 0)
+      {
+         fprintf(out, "\t\"%p\" [label=\"index=%d\",shape=triangle];\n", (void *)neuron, neuron->index);
+      }
+      else
+      {
+         fprintf(out, "\t\"%p\" [label=\"%s\",shape=triangle];\n", (void *)neuron, label);
+      }
    }
    fprintf(out, "\t};\n");
 
@@ -650,7 +646,15 @@ bool Network::dumpGraph(char *title, char *filename)
    for (i = 0; i < numMotors; i++)
    {
       neuron = neurons[numSensors + i];
-      fprintf(out, "\t\"%p\" [label=\"index=%d\",shape=triangle,orientation=180];\n", (void *)neuron, neuron->index);
+      label  = neuron->label.c_str();
+      if (strlen(label) == 0)
+      {
+         fprintf(out, "\t\"%p\" [label=\"index=%d\",shape=triangle,orientation=180];\n", (void *)neuron, neuron->index);
+      }
+      else
+      {
+         fprintf(out, "\t\"%p\" [label=\"%s\",shape=triangle,orientation=180];\n", (void *)neuron, label);
+      }
    }
    fprintf(out, "\t};\n");
 
@@ -659,13 +663,28 @@ bool Network::dumpGraph(char *title, char *filename)
    for (i = numSensors + numMotors; i < numNeurons; i++)
    {
       neuron = neurons[i];
-      if (neuron->excitatory)
+      label  = neuron->label.c_str();
+      if (strlen(label) == 0)
       {
-         fprintf(out, "\t\"%p\" [label=\"index=%d\",shape=diamond];\n", (void *)neuron, neuron->index);
+         if (neuron->excitatory)
+         {
+            fprintf(out, "\t\"%p\" [label=\"index=%d\",shape=diamond];\n", (void *)neuron, neuron->index);
+         }
+         else
+         {
+            fprintf(out, "\t\"%p\" [label=\"index=%d\",shape=diamond,peripheries=2];\n", (void *)neuron, neuron->index);
+         }
       }
       else
       {
-         fprintf(out, "\t\"%p\" [label=\"index=%d\",shape=diamond,peripheries=2];\n", (void *)neuron, neuron->index);
+         if (neuron->excitatory)
+         {
+            fprintf(out, "\t\"%p\" [label=\"%s\",shape=diamond];\n", (void *)neuron, label);
+         }
+         else
+         {
+            fprintf(out, "\t\"%p\" [label=\"%s\",shape=diamond,peripheries=2];\n", (void *)neuron, label);
+         }
       }
    }
    fprintf(out, "\t};\n");
@@ -677,7 +696,15 @@ bool Network::dumpGraph(char *title, char *filename)
       {
          if (synapses[i][j] != NULL)
          {
-            fprintf(out, "\t\"%p\" -> \"%p\" [label=\"%0.2f\"];\n", (void *)neuron, (void *)neurons[j], synapses[i][j]->weight);
+            label = synapses[i][j]->label.c_str();
+            if (strlen(label) == 0)
+            {
+               fprintf(out, "\t\"%p\" -> \"%p\" [label=\"%0.2f\"];\n", (void *)neuron, (void *)neurons[j], synapses[i][j]->weight);
+            }
+            else
+            {
+               fprintf(out, "\t\"%p\" -> \"%p\" [label=\"%s\"];\n", (void *)neuron, (void *)neurons[j], label);
+            }
          }
       }
    }

@@ -23,16 +23,24 @@ Synapse::Synapse()
 // Load synapse.
 void Synapse::load(FILE *fp)
 {
+   char buf[BUFSIZ];
+
    FREAD_FLOAT(&weight, fp);
    FREAD_FLOAT(&signal, fp);
+   FREAD_STRING(buf, BUFSIZ, fp);
+   label = buf;
 }
 
 
 // Save synapse.
 void Synapse::save(FILE *fp)
 {
+   char buf[BUFSIZ];
+
    FWRITE_FLOAT(&weight, fp);
    FWRITE_FLOAT(&signal, fp);
+   strncpy(buf, label.c_str(), BUFSIZ);
+   FWRITE_STRING(buf, BUFSIZ, fp);
 }
 
 
@@ -43,7 +51,7 @@ void Synapse::print(bool terse, bool labels)
    {
       if (labels)
       {
-         printf("weight=%0.2f", weight);
+         printf("weight=%0.2f, label=%s", weight, label.c_str());
       }
       else
       {
@@ -54,7 +62,7 @@ void Synapse::print(bool terse, bool labels)
    {
       if (labels)
       {
-         printf("weight=%0.2f, signal=%0.2f", weight, signal);
+         printf("weight=%0.2f, signal=%0.2f, label=%s", weight, signal, label.c_str());
       }
       else
       {
@@ -129,7 +137,8 @@ void Neuron::propagate()
 // Load neuron.
 void Neuron::load(FILE *fp)
 {
-   int i;
+   int  i;
+   char buf[BUFSIZ];
 
    FREAD_INT(&index, fp);
    FREAD_BOOL(&excitatory, fp);
@@ -146,13 +155,16 @@ void Neuron::load(FILE *fp)
    }
    FREAD_FLOAT(&bias, fp);
    FREAD_FLOAT(&activation, fp);
+   FREAD_STRING(buf, BUFSIZ, fp);
+   label = buf;
 }
 
 
 // Save neuron.
 void Neuron::save(FILE *fp)
 {
-   int i;
+   int  i;
+   char buf[BUFSIZ];
 
    FWRITE_INT(&index, fp);
    FWRITE_BOOL(&excitatory, fp);
@@ -169,6 +181,8 @@ void Neuron::save(FILE *fp)
    FWRITE_INT(&i, fp);
    FWRITE_FLOAT(&bias, fp);
    FWRITE_FLOAT(&activation, fp);
+   strncpy(buf, label.c_str(), BUFSIZ);
+   FWRITE_STRING(buf, BUFSIZ, fp);
 }
 
 
@@ -179,7 +193,7 @@ void Neuron::print(bool terse, bool labels)
    {
       if (labels)
       {
-         printf("activation=%0.2f", activation);
+         printf("activation=%0.2f, label=%s", activation, label.c_str());
       }
       else
       {
@@ -211,7 +225,8 @@ void Neuron::print(bool terse, bool labels)
             printf("LINEAR, ");
             break;
          }
-         printf("activation=%0.2f", activation);
+         printf("activation=%0.2f, ", activation);
+         printf("label=%s", label.c_str());
       }
       else
       {

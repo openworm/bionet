@@ -30,6 +30,7 @@ char *Usage[] =
    (char *)"",
    (char *)"bionet",
    (char *)"   -graphNetwork <graph file name ('dot' format)>",
+   (char *)"   [-title <graph title>]",
    (char *)"   -loadNetwork <network file name>",
    (char *)"",
    (char *)"Create network behaviors:",
@@ -312,6 +313,7 @@ int graphNetwork(int argc, char *argv[])
 {
    char *networkGraphFile = NULL;
    char *networkLoadFile  = NULL;
+   char *title            = (char *)"Network";
 
    for (int i = 1; i < argc; i++)
    {
@@ -324,6 +326,17 @@ int graphNetwork(int argc, char *argv[])
             return(1);
          }
          networkGraphFile = argv[i];
+         continue;
+      }
+      if (strcmp(argv[i], "-title") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         title = argv[i];
          continue;
       }
       if (strcmp(argv[i], "-loadNetwork") == 0)
@@ -350,7 +363,7 @@ int graphNetwork(int argc, char *argv[])
    // Load and graph network.
    Network *network = new Network(networkLoadFile);
    assert(network != NULL);
-   network->dumpGraph((char *)"Network", networkGraphFile);
+   network->dumpGraph(title, networkGraphFile);
    delete network;
    return(0);
 }

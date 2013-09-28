@@ -27,9 +27,8 @@ public:
    // Default synapse propensity.
    static const float DEFAULT_SYNAPSE_PROPENSITY;
 
-   // Random seed.
+   // Default random seed.
    static const RANDOM DEFAULT_RANDOM_SEED;
-   RANDOM              randomSeed;
 
    // Neurons.
    int              numNeurons, numSensors, numMotors;
@@ -65,9 +64,6 @@ public:
    bool isConnected();
 
 private:
-
-   // Random number generator.
-   Random *randomizer;
 
    // Are neurons connected?
    bool isConnected(vector<bool>& connectedNeurons, bool toSensor);
