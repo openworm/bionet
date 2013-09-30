@@ -55,7 +55,7 @@ public:
    void save(FILE *fp);
 
    // Print network.
-   void print();
+   void print(bool network = true, bool connectivity = false);
 
    // Dump network graph in 'dot' format.
    bool dumpGraph(char *title = NULL, char *filename = NULL);
@@ -68,5 +68,21 @@ private:
    // Are neurons connected?
    bool isConnected(vector<bool>& connectedNeurons, bool toSensor);
    void connect(int index, vector<bool>& connectedNeurons, bool toSensor);
+
+   // Visit motor/sensor endpoints.
+   void visitEndpoints(vector<Neuron *>& endpoints,
+                       vector<Neuron *>& visited, bool motorEndpoints);
+
+   static bool compareNeurons(Neuron *a, Neuron *b)
+   {
+      if (a->label.empty() || b->label.empty())
+      {
+         return(a->index < b->index);
+      }
+      else
+      {
+         return(a->label < b->label);
+      }
+   }
 };
 #endif

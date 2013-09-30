@@ -1,6 +1,7 @@
 // Neural network.
 
 #include "network.hpp"
+#include <algorithm>
 
 // Default parameters.
 const float Network:: DEFAULT_INHIBITOR_DENSITY  = 0.25f;
@@ -503,92 +504,282 @@ void Network::save(FILE *fp)
 
 
 // Print network.
-void Network::print()
+void Network::print(bool network, bool connectivity)
 {
-   int i, j, n;
+   int i, j, k, n;
 
-   n = (int)neurons.size();
-   printf("Neurons:\n");
-   printf("type\tindex\texcitatory\tfunction\tactivation\n");
-   for (i = 0; i < n; i++)
+   // Print network?
+   if (network)
    {
-      if (i < numSensors)
+      n = (int)neurons.size();
+      printf("Neurons:\n");
+      printf("type\tindex\texcitatory\tfunction\tactivation\n");
+      for (i = 0; i < n; i++)
       {
-         printf("sensor");
-      }
-      else if (i < (numSensors + numMotors))
-      {
-         printf("motor");
-      }
-      else
-      {
-         printf("inter");
-      }
-      printf("\t");
-      neurons[i]->print(false);
-      printf("\n");
-   }
-   printf("Synapse weights (horizontal=source/vertical=target):\n");
-   printf("   ");
-   for (i = 0; i < n; i++)
-   {
-      printf("%d", i);
-      if (i < numSensors)
-      {
-         printf("s    ");
-      }
-      else if (i < (numSensors + numMotors))
-      {
-         printf("m    ");
-      }
-      else
-      {
-         printf("i    ");
-      }
-   }
-   printf("\n");
-   for (i = 0; i < n; i++)
-   {
-      printf("%d", i);
-      if (i < numSensors)
-      {
-         printf("s ");
-      }
-      else if (i < (numSensors + numMotors))
-      {
-         printf("m ");
-      }
-      else
-      {
-         printf("i ");
-      }
-      for (j = 0; j < n; j++)
-      {
-         if (synapses[j][i] != NULL)
+         if (i < numSensors)
          {
-            if (neurons[j]->excitatory)
-            {
-               if (synapses[j][i]->weight >= 0.0f)
-               {
-                  printf(" ");
-               }
-            }
-            else
-            {
-               if (synapses[j][i]->weight < 0.0f)
-               {
-                  printf(" ");
-               }
-            }
-            synapses[j][i]->print();
-            printf(" ");
+            printf("sensor");
+         }
+         else if (i < (numSensors + numMotors))
+         {
+            printf("motor");
          }
          else
          {
-            printf("      ");
+            printf("inter");
+         }
+         printf("\t");
+         neurons[i]->print(false);
+         printf("\n");
+      }
+      printf("Synapse weights (horizontal=source/vertical=target):\n");
+      printf("   ");
+      for (i = 0; i < n; i++)
+      {
+         printf("%d", i);
+         if (i < numSensors)
+         {
+            printf("s    ");
+         }
+         else if (i < (numSensors + numMotors))
+         {
+            printf("m    ");
+         }
+         else
+         {
+            printf("i    ");
          }
       }
       printf("\n");
+      for (i = 0; i < n; i++)
+      {
+         printf("%d", i);
+         if (i < numSensors)
+         {
+            printf("s ");
+         }
+         else if (i < (numSensors + numMotors))
+         {
+            printf("m ");
+         }
+         else
+         {
+            printf("i ");
+         }
+         for (j = 0; j < n; j++)
+         {
+            if (synapses[j][i] != NULL)
+            {
+               if (neurons[j]->excitatory)
+               {
+                  if (synapses[j][i]->weight >= 0.0f)
+                  {
+                     printf(" ");
+                  }
+               }
+               else
+               {
+                  if (synapses[j][i]->weight < 0.0f)
+                  {
+                     printf(" ");
+                  }
+               }
+               synapses[j][i]->print();
+               printf(" ");
+            }
+            else
+            {
+               printf("      ");
+            }
+         }
+         printf("\n");
+      }
+   }
+
+   // Print connectivity?
+   if (connectivity)
+   {
+      Neuron           *sensor, *motor;
+      vector<Neuron *> visited;
+      vector<Neuron *> endpoints;
+      int              min, max, sum;
+
+      printf("Sensor to motors:\n");
+      printf("sensor\tmotors\n");
+      min = max = -1;
+      sum = 0;
+      for (i = 0; i < numSensors; i++)
+      {
+         sensor = neurons[i];
+         if (sensor->label.empty())
+         {
+            printf("%d", sensor->index);
+         }
+         else
+         {
+            printf("%s", sensor->label.c_str());
+         }
+         printf("\t");
+         endpoints.clear();
+         visited.clear();
+         visited.push_back(sensor);
+         visitEndpoints(endpoints, visited, true);
+         n = (int)endpoints.size();
+         if ((min == -1) || (n < min))
+         {
+            min = n;
+         }
+         if ((max == -1) || (n > max))
+         {
+            max = n;
+         }
+         sum += n;
+         sort(endpoints.begin(), endpoints.end(), compareNeurons);
+         for (j = 0, n = (int)endpoints.size(); j < n; j++)
+         {
+            motor = endpoints[j];
+            if (motor->label.empty())
+            {
+               printf("%d", motor->index);
+            }
+            else
+            {
+               printf("%s", motor->label.c_str());
+            }
+            if (j < (n - 1))
+            {
+               printf(" ");
+            }
+         }
+         printf("\n");
+      }
+      if (numSensors > 0)
+      {
+         printf("minimum=%d, maximum=%d, average=%0.2f\n", min, max, (float)sum / (float)numSensors);
+      }
+      printf("Motor to sensors:\n");
+      printf("motor\tsensors\n");
+      min = max = -1;
+      sum = 0;
+      for (i = numSensors, j = numSensors + numMotors; i < j; i++)
+      {
+         motor = neurons[i];
+         if (motor->label.empty())
+         {
+            printf("%d", motor->index);
+         }
+         else
+         {
+            printf("%s", motor->label.c_str());
+         }
+         printf("\t");
+         endpoints.clear();
+         visited.clear();
+         visited.push_back(motor);
+         visitEndpoints(endpoints, visited, false);
+         n = (int)endpoints.size();
+         if ((min == -1) || (n < min))
+         {
+            min = n;
+         }
+         if ((max == -1) || (n > max))
+         {
+            max = n;
+         }
+         sum += n;
+         sort(endpoints.begin(), endpoints.end(), compareNeurons);
+         for (k = 0, n = (int)endpoints.size(); k < n; k++)
+         {
+            sensor = endpoints[k];
+            if (sensor->label.empty())
+            {
+               printf("%d", sensor->index);
+            }
+            else
+            {
+               printf("%s", sensor->label.c_str());
+            }
+            if (k < (n - 1))
+            {
+               printf(" ");
+            }
+         }
+         printf("\n");
+      }
+      if (numMotors > 0)
+      {
+         printf("minimum=%d, maximum=%d, average=%0.2f\n", min, max, (float)sum / (float)numMotors);
+      }
+   }
+}
+
+
+// Visit motor/sensor endpoints.
+void Network::visitEndpoints(vector<Neuron *>& endpoints,
+                             vector<Neuron *>& visited, bool motorEndpoints)
+{
+   int i, j, k;
+
+   Neuron *neuron = visited.back();
+   int    index   = neuron->index;
+
+   if (motorEndpoints)
+   {
+      if ((index >= numSensors) && (index < (numSensors + numMotors)))
+      {
+         endpoints.push_back(neuron);
+      }
+      else
+      {
+         for (i = 0; i < numNeurons; i++)
+         {
+            if (synapses[index][i] != NULL)
+            {
+               neuron = neurons[i];
+               for (j = 0, k = (int)visited.size(); j < k; j++)
+               {
+                  if (neuron == visited[j])
+                  {
+                     break;
+                  }
+               }
+               if (j == k)
+               {
+                  visited.push_back(neuron);
+                  visitEndpoints(endpoints, visited, motorEndpoints);
+               }
+            }
+         }
+      }
+   }
+   else
+   {
+      if (index < numSensors)
+      {
+         endpoints.push_back(neuron);
+      }
+      else
+      {
+         for (i = 0; i < numNeurons; i++)
+         {
+            if (synapses[i][index] != NULL)
+            {
+               neuron = neurons[i];
+               for (j = 0, k = (int)visited.size(); j < k; j++)
+               {
+                  if (neuron == visited[j])
+                  {
+                     break;
+                  }
+               }
+               if (j == k)
+               {
+                  visited.push_back(neuron);
+                  visitEndpoints(endpoints, visited, motorEndpoints);
+               }
+            }
+         }
+      }
    }
 }
 

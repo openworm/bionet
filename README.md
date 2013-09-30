@@ -44,6 +44,7 @@ Print network:
 
 bionet
    -printNetwork
+   [-connectivity (also print connectivity)]   
    -loadNetwork <network file name>
 
 Graph network:

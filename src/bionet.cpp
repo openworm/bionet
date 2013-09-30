@@ -24,6 +24,7 @@ char *Usage[] =
    (char *)"",
    (char *)"bionet",
    (char *)"   -printNetwork",
+   (char *)"   [-connectivity (also print connectivity)]",
    (char *)"   -loadNetwork <network file name>",
    (char *)"",
    (char *)"Graph network:",
@@ -270,12 +271,18 @@ int createNetwork(int argc, char *argv[])
 // Print network.
 int printNetwork(int argc, char *argv[])
 {
+   bool connectivity     = false;
    char *networkLoadFile = NULL;
 
    for (int i = 1; i < argc; i++)
    {
       if (strcmp(argv[i], "-printNetwork") == 0)
       {
+         continue;
+      }
+      if (strcmp(argv[i], "-connectivity") == 0)
+      {
+         connectivity = true;
          continue;
       }
       if (strcmp(argv[i], "-loadNetwork") == 0)
@@ -302,7 +309,7 @@ int printNetwork(int argc, char *argv[])
    // Load and print network.
    Network *network = new Network(networkLoadFile);
    assert(network != NULL);
-   network->print();
+   network->print(true, connectivity);
    delete network;
    return(0);
 }
