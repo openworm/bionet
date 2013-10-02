@@ -44,9 +44,8 @@ public:
    NetworkMorph(MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
                 MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
                 int numSensors, int numMotors, Random *randomizer, int tag = 0);
-   NetworkMorph(MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
-                MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
-                Network *homomorph, Random *randomizer, int tag = 0);
+   NetworkMorph(Network *homomorph, MutableParm& synapseWeightsParm,
+                Random *randomizer, int tag = 0);
    NetworkMorph(FILE *fp, Random *randomizer);
 
    // Destructor.
@@ -57,13 +56,14 @@ public:
    MutableParm synapsePropensitiesParm;
    MutableParm synapseWeightsParm;
 
+   bool    homomorphic;
    Network *network;
    int     tag;
    float   error;
    bool    behaves;
 
    // Evaluate behavior.
-   void evaluate(vector<Behavior *>& behaviors, int maxStep, Network *homomorph = NULL);
+   void evaluate(vector<Behavior *>& behaviors, int maxStep);
 
    // Mutate.
    void mutate();
@@ -93,13 +93,17 @@ class NetworkMorphoGenesis
 {
 public:
 
-   // Constructor.
+   // Isomorph constructor.
    NetworkMorphoGenesis(vector<Behavior *>& behaviors,
-                        Network *homomorph, bool homomorphClones,
+                        int populationSize, int numMutants, int numGenerations, int fitnessQuorum,
                         MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
                         MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
+                        RANDOM randomSeed);
+
+   // Homomorph constructor.
+   NetworkMorphoGenesis(vector<Behavior *>& behaviors, Network *homomorph,
                         int populationSize, int numMutants, int numOffspring, int numGenerations,
-                        int fitnessQuorum, RANDOM randomSeed);
+                        int fitnessQuorum, MutableParm& synapseWeightsParm, RANDOM randomSeed);
 
    // Destructor.
    ~NetworkMorphoGenesis();
@@ -109,9 +113,6 @@ public:
 
    // Homomorphic network.
    Network *homomorph;
-
-   // Initial population of homomorph clones?
-   bool homomorphClones;
 
    // Population size.
    int populationSize;

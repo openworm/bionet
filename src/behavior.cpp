@@ -17,7 +17,7 @@ Behavior::Behavior(Network *network, int length, Random *randomizer)
       for (j = 0; j < network->numSensors; j++)
       {
          sensors[j] = (float)randomizer->RAND_PROB();
-         if ((j % 2) == 0)
+         if ((j % 2) == (i % 2))
          {
             sensors[j] = 1.0f;
          }

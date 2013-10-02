@@ -1,3 +1,3 @@
-bionet.exe -createMorphicNetworks -loadBehaviors behaviors.txt -excitatoryNeurons 8 8 0 0.0 -inhibitoryNeurons 4 4 0 0.0 -synapsePropensities .13 .13 .0 .0 -synapseWeights .1 0.05 -populationSize 20 -numMutants 5 -numGenerations 1000 -saveNetworks -homomorphClones -loadNetwork network.txt
+bionet.exe -createHomomorphicNetworks -loadBehaviors behaviors.txt -loadNetwork network.txt -synapseWeights .1 0.05 -populationSize 25 -numMutants 5 -numOffspring 5 -numGenerations 1000 -fitnessQuorum 1 -saveNetworks
 @pause
 

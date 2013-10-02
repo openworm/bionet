@@ -142,57 +142,22 @@ NetworkMorph::NetworkMorph(MutableParm& excitatoryNeuronsParm, MutableParm& inhi
    network = new Network(numNeurons, numSensors, numMotors,
                          inhibitorDensity, synapsePropensity, randomizer->RAND());
    assert(network != NULL);
-   error   = 0.0f;
-   behaves = false;
+   homomorphic = false;
+   error       = 0.0f;
+   behaves     = false;
 }
 
 
-NetworkMorph::NetworkMorph(MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
-                           MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
-                           Network *homomorph, Random *randomizer, int tag)
+NetworkMorph::NetworkMorph(Network *homomorph, MutableParm& synapseWeightsParm,
+                           Random *randomizer, int tag)
 {
-   int i, j, k, n;
-
-   this->excitatoryNeuronsParm   = excitatoryNeuronsParm;
-   this->inhibitoryNeuronsParm   = inhibitoryNeuronsParm;
-   this->synapsePropensitiesParm = synapsePropensitiesParm;
-   this->synapseWeightsParm      = synapseWeightsParm;
-   this->randomizer = randomizer;
-   this->tag        = tag;
-   network          = homomorph->clone();
-   int numExcitatory = 0;
-   int numInhibitory = 0;
-   int numSynapses   = 0;
-   for (i = 0, k = network->numSensors + network->numMotors,
-        n = network->numNeurons; i < n; i++)
-   {
-      if (i >= k)
-      {
-         if (network->neurons[i]->excitatory)
-         {
-            numExcitatory++;
-         }
-         else
-         {
-            numInhibitory++;
-         }
-      }
-      for (j = 0; j < n; j++)
-      {
-         if (network->synapses[i][j] != NULL)
-         {
-            numSynapses++;
-            network->synapses[i][j]->weight = (float)randomizer->RAND_INTERVAL(0.0, 1.0);
-         }
-      }
-   }
-   this->excitatoryNeuronsParm.setValue((float)numExcitatory);
-   this->inhibitoryNeuronsParm.setValue((float)numInhibitory);
-   n = network->numNeurons;
-   float synapsePropensity = (float)numSynapses / (float)(n * n);
-   this->synapsePropensitiesParm.setValue(synapsePropensity);
-   error   = 0.0f;
-   behaves = false;
+   this->synapseWeightsParm = synapseWeightsParm;
+   this->randomizer         = randomizer;
+   this->tag   = tag;
+   homomorphic = true;
+   network     = homomorph->clone();
+   error       = 0.0f;
+   behaves     = false;
 }
 
 
@@ -212,8 +177,7 @@ NetworkMorph::~NetworkMorph()
 
 
 // Evaluate behavior.
-void NetworkMorph::evaluate(vector<Behavior *>& behaviors, int maxStep,
-                            Network *homomorph)
+void NetworkMorph::evaluate(vector<Behavior *>& behaviors, int maxStep)
 {
    int      i, j, k, n, m, o, count, exceed;
    float    delta;
@@ -252,11 +216,6 @@ void NetworkMorph::evaluate(vector<Behavior *>& behaviors, int maxStep,
       error /= (float)count;
    }
    error += (float)exceed;
-
-   if (homomorph != NULL)
-   {
-      // TODO
-   }
 }
 
 
@@ -268,204 +227,24 @@ void NetworkMorph::mutate()
    float   synapsePropensity, newSynapsePropensity, weight;
    Synapse *synapse;
 
-   // Mutate network parameters.
-   numExcitatory = numInhibitory = numSynapses = 0;
-   for (i = 0, k = network->numSensors + network->numMotors,
-        n = network->numNeurons; i < n; i++)
+   if (!homomorphic)
    {
-      if (i >= k)
+      // Mutate network parameters.
+      numExcitatory = numInhibitory = numSynapses = 0;
+      for (i = 0, k = network->numSensors + network->numMotors,
+           n = network->numNeurons; i < n; i++)
       {
-         if (network->neurons[i]->excitatory)
+         if (i >= k)
          {
-            numExcitatory++;
-         }
-         else
-         {
-            numInhibitory++;
-         }
-      }
-      for (j = 0; j < n; j++)
-      {
-         if (network->synapses[i][j] != NULL)
-         {
-            numSynapses++;
-         }
-      }
-   }
-   synapsePropensity = (float)numSynapses / (float)(network->numNeurons * network->numNeurons);
-   synapsePropensitiesParm.setValue(synapsePropensity);
-   newExcitatory        = numExcitatory;
-   newInhibitory        = numInhibitory;
-   newSynapsePropensity = synapsePropensity;
-   if (!behaves && randomizer->RAND_CHANCE(excitatoryNeuronsParm.randomProbability))
-   {
-      newExcitatory = randomizer->RAND_CHOICE(
-         (int)(excitatoryNeuronsParm.maximum - excitatoryNeuronsParm.minimum) + 1) +
-                      (int)excitatoryNeuronsParm.minimum;
-   }
-   else
-   {
-      if (excitatoryNeuronsParm.maxDelta > 0.0f)
-      {
-         if (randomizer->RAND_BOOL())
-         {
-            newExcitatory += randomizer->RAND_CHOICE((int)excitatoryNeuronsParm.maxDelta + 1);
-            if (newExcitatory > (int)excitatoryNeuronsParm.maximum)
+            if (network->neurons[i]->excitatory)
             {
-               newExcitatory = (int)excitatoryNeuronsParm.maximum;
+               numExcitatory++;
+            }
+            else
+            {
+               numInhibitory++;
             }
          }
-         else
-         {
-            newExcitatory -= randomizer->RAND_CHOICE((int)excitatoryNeuronsParm.maxDelta + 1);
-            if (newExcitatory < (int)excitatoryNeuronsParm.minimum)
-            {
-               newExcitatory = (int)excitatoryNeuronsParm.minimum;
-            }
-         }
-      }
-   }
-   if (!behaves && randomizer->RAND_CHANCE(inhibitoryNeuronsParm.randomProbability))
-   {
-      newInhibitory = randomizer->RAND_CHOICE(
-         (int)(inhibitoryNeuronsParm.maximum - inhibitoryNeuronsParm.minimum) + 1) +
-                      (int)inhibitoryNeuronsParm.minimum;
-   }
-   else
-   {
-      if (inhibitoryNeuronsParm.maxDelta > 0.0f)
-      {
-         if (randomizer->RAND_BOOL())
-         {
-            newInhibitory += randomizer->RAND_CHOICE((int)inhibitoryNeuronsParm.maxDelta + 1);
-            if (newInhibitory > (int)inhibitoryNeuronsParm.maximum)
-            {
-               newInhibitory = (int)inhibitoryNeuronsParm.maximum;
-            }
-         }
-         else
-         {
-            newInhibitory -= randomizer->RAND_CHOICE((int)inhibitoryNeuronsParm.maxDelta + 1);
-            if (newInhibitory < (int)inhibitoryNeuronsParm.minimum)
-            {
-               newInhibitory = (int)inhibitoryNeuronsParm.minimum;
-            }
-         }
-      }
-   }
-   if (!behaves && randomizer->RAND_CHANCE(synapsePropensitiesParm.randomProbability))
-   {
-      newSynapsePropensity = (float)randomizer->RAND_INTERVAL(
-         synapsePropensitiesParm.minimum, synapsePropensitiesParm.maximum);
-   }
-   else
-   {
-      if (synapsePropensitiesParm.maxDelta > 0.0f)
-      {
-         if (randomizer->RAND_BOOL())
-         {
-            newSynapsePropensity +=
-               (float)randomizer->RAND_INTERVAL(0.0, synapsePropensitiesParm.maxDelta);
-            if (newSynapsePropensity > synapsePropensitiesParm.maximum)
-            {
-               newSynapsePropensity = synapsePropensitiesParm.maximum;
-            }
-         }
-         else
-         {
-            newSynapsePropensity -=
-               (float)randomizer->RAND_INTERVAL(0.0, synapsePropensitiesParm.maxDelta);
-            if (newSynapsePropensity < synapsePropensitiesParm.minimum)
-            {
-               newSynapsePropensity = synapsePropensitiesParm.minimum;
-            }
-         }
-      }
-   }
-
-   // Mutate network?
-   if ((newExcitatory != numExcitatory) || (newInhibitory != numInhibitory))
-   {
-      if (newExcitatory < numExcitatory)
-      {
-         for (i = 0, j = numExcitatory - newExcitatory,
-              k = network->numSensors + network->numMotors; i < j; i++)
-         {
-            while (true)
-            {
-               n = randomizer->RAND_CHOICE(network->numNeurons);
-               if ((n >= k) && network->neurons[n]->excitatory)
-               {
-                  deleteIndexedNeuron(n);
-                  break;
-               }
-            }
-         }
-      }
-      if (newInhibitory < numInhibitory)
-      {
-         for (i = 0, j = numInhibitory - newInhibitory,
-              k = network->numSensors + network->numMotors; i < j; i++)
-         {
-            while (true)
-            {
-               n = randomizer->RAND_CHOICE(network->numNeurons);
-               if ((n >= k) && !network->neurons[n]->excitatory)
-               {
-                  deleteIndexedNeuron(n);
-                  break;
-               }
-            }
-         }
-      }
-      if (newExcitatory > numExcitatory)
-      {
-         for (i = 0, j = newExcitatory - numExcitatory; i < j; i++)
-         {
-            addIndexedNeuron(network->numNeurons, true);
-         }
-      }
-      if (newInhibitory > numInhibitory)
-      {
-         for (i = 0, j = newInhibitory - numInhibitory; i < j; i++)
-         {
-            addIndexedNeuron(network->numNeurons, false);
-         }
-      }
-
-      // Ensure network connectivity.
-      n = network->numSensors + network->numMotors;
-      while (!network->isConnected())
-      {
-         i = randomizer->RAND_CHOICE(network->numNeurons);
-         j = randomizer->RAND_CHOICE(network->numNeurons);
-         if (i == j)
-         {
-            continue;
-         }
-         if ((network->numNeurons > n) && (i < network->numSensors) &&
-             (j >= network->numSensors) && (j < n))
-         {
-            continue;
-         }
-         if (network->synapses[i][j] == NULL)
-         {
-            if (((i < network->numSensors) || (i >= n)) && (j >= network->numSensors))
-            {
-               weight = (float)randomizer->RAND_INTERVAL(0.0, 1.0);
-               network->synapses[i][j] = new Synapse(weight);
-               assert(network->synapses[i][j] != NULL);
-            }
-         }
-      }
-   }
-
-   // Mutate synapse propensity?
-   if (newSynapsePropensity != synapsePropensity)
-   {
-      numSynapses = 0;
-      for (i = 0, n = network->numNeurons; i < n; i++)
-      {
          for (j = 0; j < n; j++)
          {
             if (network->synapses[i][j] != NULL)
@@ -474,73 +253,256 @@ void NetworkMorph::mutate()
             }
          }
       }
-      n = network->numNeurons * network->numNeurons;
-      int newNumSynapses = (int)(newSynapsePropensity * (float)n);
-      if (newNumSynapses > numSynapses)
+      synapsePropensity = (float)numSynapses / (float)(network->numNeurons * network->numNeurons);
+      synapsePropensitiesParm.setValue(synapsePropensity);
+      newExcitatory        = numExcitatory;
+      newInhibitory        = numInhibitory;
+      newSynapsePropensity = synapsePropensity;
+      if (!behaves && randomizer->RAND_CHANCE(excitatoryNeuronsParm.randomProbability))
       {
-         int   deltaSynapses        = newNumSynapses - numSynapses;
-         int   numAvailableSynapses = n - numSynapses;
-         float deltaPropensity      = (float)deltaSynapses / (float)numAvailableSynapses;
-         n = network->numSensors + network->numMotors;
-         for (i = 0; i < network->numNeurons; i++)
+         newExcitatory = randomizer->RAND_CHOICE(
+            (int)(excitatoryNeuronsParm.maximum - excitatoryNeuronsParm.minimum) + 1) +
+                         (int)excitatoryNeuronsParm.minimum;
+      }
+      else
+      {
+         if (excitatoryNeuronsParm.maxDelta > 0.0f)
          {
-            for (j = 0; j < network->numNeurons; j++)
+            if (randomizer->RAND_BOOL())
             {
-               if (i == j)
+               newExcitatory += randomizer->RAND_CHOICE((int)excitatoryNeuronsParm.maxDelta + 1);
+               if (newExcitatory > (int)excitatoryNeuronsParm.maximum)
                {
-                  continue;
+                  newExcitatory = (int)excitatoryNeuronsParm.maximum;
                }
-               if ((network->numNeurons > n) && (i < network->numSensors) &&
-                   (j >= network->numSensors) && (j < n))
+            }
+            else
+            {
+               newExcitatory -= randomizer->RAND_CHOICE((int)excitatoryNeuronsParm.maxDelta + 1);
+               if (newExcitatory < (int)excitatoryNeuronsParm.minimum)
                {
-                  continue;
-               }
-               if (network->synapses[i][j] == NULL)
-               {
-                  if (((i < network->numSensors) || (i >= n)) && (j >= network->numSensors))
-                  {
-                     if (randomizer->RAND_CHANCE(deltaPropensity))
-                     {
-                        weight = (float)randomizer->RAND_INTERVAL(0.0, 1.0);
-                        network->synapses[i][j] = new Synapse(weight);
-                        assert(network->synapses[i][j] != NULL);
-                        numSynapses++;
-                     }
-                  }
+                  newExcitatory = (int)excitatoryNeuronsParm.minimum;
                }
             }
          }
       }
-      else if (newNumSynapses < numSynapses)
+      if (!behaves && randomizer->RAND_CHANCE(inhibitoryNeuronsParm.randomProbability))
       {
-         int   deltaSynapses   = numSynapses - newNumSynapses;
-         float deltaPropensity = (float)deltaSynapses / (float)numSynapses;
+         newInhibitory = randomizer->RAND_CHOICE(
+            (int)(inhibitoryNeuronsParm.maximum - inhibitoryNeuronsParm.minimum) + 1) +
+                         (int)inhibitoryNeuronsParm.minimum;
+      }
+      else
+      {
+         if (inhibitoryNeuronsParm.maxDelta > 0.0f)
+         {
+            if (randomizer->RAND_BOOL())
+            {
+               newInhibitory += randomizer->RAND_CHOICE((int)inhibitoryNeuronsParm.maxDelta + 1);
+               if (newInhibitory > (int)inhibitoryNeuronsParm.maximum)
+               {
+                  newInhibitory = (int)inhibitoryNeuronsParm.maximum;
+               }
+            }
+            else
+            {
+               newInhibitory -= randomizer->RAND_CHOICE((int)inhibitoryNeuronsParm.maxDelta + 1);
+               if (newInhibitory < (int)inhibitoryNeuronsParm.minimum)
+               {
+                  newInhibitory = (int)inhibitoryNeuronsParm.minimum;
+               }
+            }
+         }
+      }
+      if (!behaves && randomizer->RAND_CHANCE(synapsePropensitiesParm.randomProbability))
+      {
+         newSynapsePropensity = (float)randomizer->RAND_INTERVAL(
+            synapsePropensitiesParm.minimum, synapsePropensitiesParm.maximum);
+      }
+      else
+      {
+         if (synapsePropensitiesParm.maxDelta > 0.0f)
+         {
+            if (randomizer->RAND_BOOL())
+            {
+               newSynapsePropensity +=
+                  (float)randomizer->RAND_INTERVAL(0.0, synapsePropensitiesParm.maxDelta);
+               if (newSynapsePropensity > synapsePropensitiesParm.maximum)
+               {
+                  newSynapsePropensity = synapsePropensitiesParm.maximum;
+               }
+            }
+            else
+            {
+               newSynapsePropensity -=
+                  (float)randomizer->RAND_INTERVAL(0.0, synapsePropensitiesParm.maxDelta);
+               if (newSynapsePropensity < synapsePropensitiesParm.minimum)
+               {
+                  newSynapsePropensity = synapsePropensitiesParm.minimum;
+               }
+            }
+         }
+      }
+
+      // Mutate network?
+      if ((newExcitatory != numExcitatory) || (newInhibitory != numInhibitory))
+      {
+         if (newExcitatory < numExcitatory)
+         {
+            for (i = 0, j = numExcitatory - newExcitatory,
+                 k = network->numSensors + network->numMotors; i < j; i++)
+            {
+               while (true)
+               {
+                  n = randomizer->RAND_CHOICE(network->numNeurons);
+                  if ((n >= k) && network->neurons[n]->excitatory)
+                  {
+                     deleteIndexedNeuron(n);
+                     break;
+                  }
+               }
+            }
+         }
+         if (newInhibitory < numInhibitory)
+         {
+            for (i = 0, j = numInhibitory - newInhibitory,
+                 k = network->numSensors + network->numMotors; i < j; i++)
+            {
+               while (true)
+               {
+                  n = randomizer->RAND_CHOICE(network->numNeurons);
+                  if ((n >= k) && !network->neurons[n]->excitatory)
+                  {
+                     deleteIndexedNeuron(n);
+                     break;
+                  }
+               }
+            }
+         }
+         if (newExcitatory > numExcitatory)
+         {
+            for (i = 0, j = newExcitatory - numExcitatory; i < j; i++)
+            {
+               addIndexedNeuron(network->numNeurons, true);
+            }
+         }
+         if (newInhibitory > numInhibitory)
+         {
+            for (i = 0, j = newInhibitory - numInhibitory; i < j; i++)
+            {
+               addIndexedNeuron(network->numNeurons, false);
+            }
+         }
+
+         // Ensure network connectivity.
+         n = network->numSensors + network->numMotors;
+         while (!network->isConnected())
+         {
+            i = randomizer->RAND_CHOICE(network->numNeurons);
+            j = randomizer->RAND_CHOICE(network->numNeurons);
+            if (i == j)
+            {
+               continue;
+            }
+            if ((network->numNeurons > n) && (i < network->numSensors) &&
+                (j >= network->numSensors) && (j < n))
+            {
+               continue;
+            }
+            if (network->synapses[i][j] == NULL)
+            {
+               if (((i < network->numSensors) || (i >= n)) && (j >= network->numSensors))
+               {
+                  weight = (float)randomizer->RAND_INTERVAL(0.0, 1.0);
+                  network->synapses[i][j] = new Synapse(weight);
+                  assert(network->synapses[i][j] != NULL);
+               }
+            }
+         }
+      }
+
+      // Mutate synapse propensity?
+      if (newSynapsePropensity != synapsePropensity)
+      {
+         numSynapses = 0;
          for (i = 0, n = network->numNeurons; i < n; i++)
          {
             for (j = 0; j < n; j++)
             {
-               if ((synapse = network->synapses[i][j]) != NULL)
+               if (network->synapses[i][j] != NULL)
                {
-                  if (randomizer->RAND_CHANCE(deltaPropensity))
+                  numSynapses++;
+               }
+            }
+         }
+         n = network->numNeurons * network->numNeurons;
+         int newNumSynapses = (int)(newSynapsePropensity * (float)n);
+         if (newNumSynapses > numSynapses)
+         {
+            int   deltaSynapses        = newNumSynapses - numSynapses;
+            int   numAvailableSynapses = n - numSynapses;
+            float deltaPropensity      = (float)deltaSynapses / (float)numAvailableSynapses;
+            n = network->numSensors + network->numMotors;
+            for (i = 0; i < network->numNeurons; i++)
+            {
+               for (j = 0; j < network->numNeurons; j++)
+               {
+                  if (i == j)
                   {
-                     network->synapses[i][j] = NULL;
-                     if (network->isConnected())
+                     continue;
+                  }
+                  if ((network->numNeurons > n) && (i < network->numSensors) &&
+                      (j >= network->numSensors) && (j < n))
+                  {
+                     continue;
+                  }
+                  if (network->synapses[i][j] == NULL)
+                  {
+                     if (((i < network->numSensors) || (i >= n)) && (j >= network->numSensors))
                      {
-                        delete synapse;
-                        numSynapses--;
+                        if (randomizer->RAND_CHANCE(deltaPropensity))
+                        {
+                           weight = (float)randomizer->RAND_INTERVAL(0.0, 1.0);
+                           network->synapses[i][j] = new Synapse(weight);
+                           assert(network->synapses[i][j] != NULL);
+                           numSynapses++;
+                        }
                      }
-                     else
+                  }
+               }
+            }
+         }
+         else if (newNumSynapses < numSynapses)
+         {
+            int   deltaSynapses   = numSynapses - newNumSynapses;
+            float deltaPropensity = (float)deltaSynapses / (float)numSynapses;
+            for (i = 0, n = network->numNeurons; i < n; i++)
+            {
+               for (j = 0; j < n; j++)
+               {
+                  if ((synapse = network->synapses[i][j]) != NULL)
+                  {
+                     if (randomizer->RAND_CHANCE(deltaPropensity))
                      {
-                        network->synapses[i][j] = synapse;
+                        network->synapses[i][j] = NULL;
+                        if (network->isConnected())
+                        {
+                           delete synapse;
+                           numSynapses--;
+                        }
+                        else
+                        {
+                           network->synapses[i][j] = synapse;
+                        }
                      }
                   }
                }
             }
          }
       }
+      synapsePropensity = (float)numSynapses / (float)(network->numNeurons * network->numNeurons);
+      synapsePropensitiesParm.setValue(synapsePropensity);
    }
-   synapsePropensity = (float)numSynapses / (float)(network->numNeurons * network->numNeurons);
-   synapsePropensitiesParm.setValue(synapsePropensity);
 
    // Mutate synapse weights.
    for (i = 0, n = network->numNeurons; i < n; i++)
@@ -714,11 +676,20 @@ void NetworkMorph::addIndexedNeuron(int index, bool excitatory)
 // Clone.
 NetworkMorph *NetworkMorph::clone()
 {
-   NetworkMorph *networkMorph = new NetworkMorph(
-      excitatoryNeuronsParm, inhibitoryNeuronsParm,
-      synapsePropensitiesParm, synapseWeightsParm,
-      network->numSensors, network->numMotors, randomizer, tag);
+   NetworkMorph *networkMorph;
 
+   if (homomorphic)
+   {
+      networkMorph = new NetworkMorph(
+         network, synapseWeightsParm, randomizer, tag);
+   }
+   else
+   {
+      networkMorph = new NetworkMorph(
+         excitatoryNeuronsParm, inhibitoryNeuronsParm,
+         synapsePropensitiesParm, synapseWeightsParm,
+         network->numSensors, network->numMotors, randomizer, tag);
+   }
    assert(networkMorph != NULL);
    networkMorph->error   = error;
    networkMorph->behaves = behaves;
@@ -741,6 +712,7 @@ void NetworkMorph::load(FILE *fp)
    }
    network = new Network(fp);
    assert(network != NULL);
+   FREAD_BOOL(&homomorphic, fp);
    FREAD_INT(&tag, fp);
    FREAD_FLOAT(&error, fp);
    FREAD_BOOL(&behaves, fp);
@@ -754,6 +726,7 @@ void NetworkMorph::save(FILE *fp)
    inhibitoryNeuronsParm.save(fp);
    synapsePropensitiesParm.save(fp);
    synapseWeightsParm.save(fp);
+   FWRITE_BOOL(&homomorphic, fp);
    FWRITE_INT(&tag, fp);
    FWRITE_FLOAT(&error, fp);
    FWRITE_BOOL(&behaves, fp);
@@ -772,6 +745,15 @@ void NetworkMorph::print()
    {
       printf("NULL\n");
    }
+   printf("homomorphic=");
+   if (homomorphic)
+   {
+      printf("true\n");
+   }
+   else
+   {
+      printf("false\n");
+   }
    printf("tag=%d\n", tag);
    printf("error=%f\n", error);
    printf("behaves=");
@@ -786,13 +768,12 @@ void NetworkMorph::print()
 }
 
 
-// Constructor.
+// Isomorph constructor.
 NetworkMorphoGenesis::NetworkMorphoGenesis(vector<Behavior *>& behaviors,
-                                           Network *homomorph, bool homomorphClones,
+                                           int populationSize, int numMutants, int numGenerations, int fitnessQuorum,
                                            MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
                                            MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
-                                           int populationSize, int numMutants, int numOffspring, int numGenerations,
-                                           int fitnessQuorum, RANDOM randomSeed)
+                                           RANDOM randomSeed)
 {
    int          i, j, numSensors, numMotors;
    NetworkMorph *networkMorph;
@@ -804,8 +785,52 @@ NetworkMorphoGenesis::NetworkMorphoGenesis(vector<Behavior *>& behaviors,
    {
       this->behaviors.push_back(behaviors[i]);
    }
-   this->homomorph       = homomorph;
-   this->homomorphClones = homomorphClones;
+   homomorph = NULL;
+   assert(numMutants <= populationSize);
+   this->populationSize = populationSize;
+   this->numMutants     = numMutants;
+   numOffspring         = -1;
+   this->numGenerations = numGenerations;
+   this->fitnessQuorum  = fitnessQuorum;
+   if (fitnessQuorum == -1)
+   {
+      behaviorStep = -1;
+   }
+   else
+   {
+      behaviorStep = 0;
+   }
+   assert(behaviors.size() > 0);
+   numSensors = (int)behaviors[0]->sensorSequence[0].size();
+   numMotors  = (int)behaviors[0]->motorSequence[0].size();
+   for (i = 0; i < populationSize; i++)
+   {
+      networkMorph = new NetworkMorph(excitatoryNeuronsParm, inhibitoryNeuronsParm,
+                                      synapsePropensitiesParm, synapseWeightsParm,
+                                      numSensors, numMotors, randomizer);
+      assert(networkMorph != NULL);
+      population.push_back(networkMorph);
+   }
+}
+
+
+// Homomorph constructor.
+NetworkMorphoGenesis::NetworkMorphoGenesis(vector<Behavior *>& behaviors, Network *homomorph,
+                                           int populationSize, int numMutants, int numOffspring,
+                                           int numGenerations, int fitnessQuorum,
+                                           MutableParm& synapseWeightsParm, RANDOM randomSeed)
+{
+   int          i, j;
+   NetworkMorph *networkMorph;
+
+   this->randomSeed = randomSeed;
+   randomizer       = new Random(randomSeed);
+   assert(randomizer != NULL);
+   for (i = 0, j = (int)behaviors.size(); i < j; i++)
+   {
+      this->behaviors.push_back(behaviors[i]);
+   }
+   this->homomorph = homomorph;
    assert((numMutants + numOffspring) <= populationSize);
    this->populationSize = populationSize;
    this->numMutants     = numMutants;
@@ -820,31 +845,11 @@ NetworkMorphoGenesis::NetworkMorphoGenesis(vector<Behavior *>& behaviors,
    {
       behaviorStep = 0;
    }
-   if (homomorphClones)
+   for (i = 0; i < populationSize; i++)
    {
-      assert(homomorph != NULL);
-      for (i = 0; i < populationSize; i++)
-      {
-         networkMorph = new NetworkMorph(excitatoryNeuronsParm, inhibitoryNeuronsParm,
-                                         synapsePropensitiesParm, synapseWeightsParm,
-                                         homomorph, randomizer);
-         assert(networkMorph != NULL);
-         population.push_back(networkMorph);
-      }
-   }
-   else
-   {
-      assert(behaviors.size() > 0);
-      numSensors = (int)behaviors[0]->sensorSequence[0].size();
-      numMotors  = (int)behaviors[0]->motorSequence[0].size();
-      for (i = 0; i < populationSize; i++)
-      {
-         networkMorph = new NetworkMorph(excitatoryNeuronsParm, inhibitoryNeuronsParm,
-                                         synapsePropensitiesParm, synapseWeightsParm,
-                                         numSensors, numMotors, randomizer);
-         assert(networkMorph != NULL);
-         population.push_back(networkMorph);
-      }
+      networkMorph = new NetworkMorph(homomorph, synapseWeightsParm, randomizer);
+      assert(networkMorph != NULL);
+      population.push_back(networkMorph);
    }
 }
 
@@ -879,7 +884,7 @@ void NetworkMorphoGenesis::morph()
    }
    for (i = 0, n = (int)population.size(); i < n; i++)
    {
-      population[i]->evaluate(behaviors, behaviorStep, homomorph);
+      population[i]->evaluate(behaviors, behaviorStep);
    }
    sort();
    printf("Generation=0\n");
@@ -917,7 +922,7 @@ void NetworkMorphoGenesis::morph()
             behaviorStep++;
             for (i = 0, n = (int)population.size(); i < n; i++)
             {
-               population[i]->evaluate(behaviors, behaviorStep, homomorph);
+               population[i]->evaluate(behaviors, behaviorStep);
             }
             sort();
          }
@@ -940,7 +945,7 @@ void NetworkMorphoGenesis::mutate()
       mutants[i] = population[j]->clone();
       mutants[i]->tag++;
       mutants[i]->mutate();
-      mutants[i]->evaluate(behaviors, behaviorStep, homomorph);
+      mutants[i]->evaluate(behaviors, behaviorStep);
       printf("%d\t%d\t\t%f\n", i, mutants[i]->tag, mutants[i]->error);
    }
 }
@@ -985,7 +990,7 @@ void NetworkMorphoGenesis::mate()
             }
          }
          offspring[i]->tag++;
-         offspring[i]->evaluate(behaviors, behaviorStep, homomorph);
+         offspring[i]->evaluate(behaviors, behaviorStep);
          printf("%d\t%d\t\t%f\n", i, offspring[i]->tag, offspring[i]->error);
       }
    }
@@ -1087,14 +1092,6 @@ void NetworkMorphoGenesis::print()
    else
    {
       printf("NULL\n");
-   }
-   if (homomorphClones)
-   {
-      printf("homomorphClones=true\n");
-   }
-   else
-   {
-      printf("homomorphClones=false\n");
    }
    printf("populationSize=%d\n", populationSize);
    printf("numMutants=%d\n", numMutants);
