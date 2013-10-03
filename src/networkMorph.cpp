@@ -129,6 +129,7 @@ NetworkMorph::NetworkMorph(MutableParm& excitatoryNeuronsParm, MutableParm& inhi
    this->excitatoryNeuronsParm.initValue(randomizer);
    this->inhibitoryNeuronsParm.initValue(randomizer);
    this->synapsePropensitiesParm.initValue(randomizer);
+   this->synapseWeightsParm.initValue(randomizer);
    int numInterneurons = (int)this->excitatoryNeuronsParm.value +
                          (int)this->inhibitoryNeuronsParm.value;
    int   numNeurons       = numSensors + numMotors + numInterneurons;
@@ -140,7 +141,9 @@ NetworkMorph::NetworkMorph(MutableParm& excitatoryNeuronsParm, MutableParm& inhi
    }
    float synapsePropensity = this->synapsePropensitiesParm.value;
    network = new Network(numNeurons, numSensors, numMotors,
-                         inhibitorDensity, synapsePropensity, randomizer->RAND());
+                         inhibitorDensity, synapsePropensity,
+                         synapseWeightsParm.minimum, synapseWeightsParm.maximum,
+                         randomizer->RAND());
    assert(network != NULL);
    homomorphic = false;
    error       = 0.0f;
@@ -151,13 +154,30 @@ NetworkMorph::NetworkMorph(MutableParm& excitatoryNeuronsParm, MutableParm& inhi
 NetworkMorph::NetworkMorph(Network *homomorph, MutableParm& synapseWeightsParm,
                            Random *randomizer, int tag)
 {
+   int     i, j, n;
+   Synapse *synapse;
+
    this->synapseWeightsParm = synapseWeightsParm;
-   this->randomizer         = randomizer;
-   this->tag   = tag;
-   homomorphic = true;
-   network     = homomorph->clone();
-   error       = 0.0f;
-   behaves     = false;
+   this->synapseWeightsParm.initValue(randomizer);
+   this->randomizer = randomizer;
+   this->tag        = tag;
+   homomorphic      = true;
+   network          = homomorph->clone();
+   n = network->numNeurons;
+   for (i = 0; i < n; i++)
+   {
+      for (j = 0; j < n; j++)
+      {
+         synapse = network->synapses[i][j];
+         if (synapse != NULL)
+         {
+            synapse->weight = (float)randomizer->RAND_INTERVAL(
+               synapseWeightsParm.minimum, synapseWeightsParm.maximum);
+         }
+      }
+   }
+   error   = 0.0f;
+   behaves = false;
 }
 
 
@@ -413,7 +433,8 @@ void NetworkMorph::mutate()
             {
                if (((i < network->numSensors) || (i >= n)) && (j >= network->numSensors))
                {
-                  weight = (float)randomizer->RAND_INTERVAL(0.0, 1.0);
+                  weight = (float)randomizer->RAND_INTERVAL(
+                     synapseWeightsParm.minimum, synapseWeightsParm.maximum);
                   network->synapses[i][j] = new Synapse(weight);
                   assert(network->synapses[i][j] != NULL);
                }
@@ -462,7 +483,8 @@ void NetworkMorph::mutate()
                      {
                         if (randomizer->RAND_CHANCE(deltaPropensity))
                         {
-                           weight = (float)randomizer->RAND_INTERVAL(0.0, 1.0);
+                           weight = (float)randomizer->RAND_INTERVAL(
+                              synapseWeightsParm.minimum, synapseWeightsParm.maximum);
                            network->synapses[i][j] = new Synapse(weight);
                            assert(network->synapses[i][j] != NULL);
                            numSynapses++;
@@ -522,8 +544,8 @@ void NetworkMorph::mutate()
                {
                   if (randomizer->RAND_BOOL())
                   {
-                     synapse->weight +=
-                        (float)randomizer->RAND_INTERVAL(0.0, synapseWeightsParm.maxDelta);
+                     synapse->weight += (float)randomizer->RAND_INTERVAL(
+                        0.0, synapseWeightsParm.maxDelta);
                      if (synapse->weight > synapseWeightsParm.maximum)
                      {
                         synapse->weight = synapseWeightsParm.maximum;
@@ -531,8 +553,8 @@ void NetworkMorph::mutate()
                   }
                   else
                   {
-                     synapse->weight -=
-                        (float)randomizer->RAND_INTERVAL(0.0, synapseWeightsParm.maxDelta);
+                     synapse->weight -= (float)randomizer->RAND_INTERVAL(
+                        0.0, synapseWeightsParm.maxDelta);
                      if (synapse->weight < synapseWeightsParm.minimum)
                      {
                         synapse->weight = synapseWeightsParm.minimum;
@@ -639,7 +661,8 @@ void NetworkMorph::addIndexedNeuron(int index, bool excitatory)
          {
             if (randomizer->RAND_CHANCE(synapsePropensity))
             {
-               weight = (float)randomizer->RAND_INTERVAL(0.0, 1.0);
+               weight = (float)randomizer->RAND_INTERVAL(
+                  synapseWeightsParm.minimum, synapseWeightsParm.maximum);
                network->synapses[index][i] = new Synapse(weight);
                assert(network->synapses[index][i] != NULL);
             }
@@ -663,7 +686,8 @@ void NetworkMorph::addIndexedNeuron(int index, bool excitatory)
          {
             if (randomizer->RAND_CHANCE(synapsePropensity))
             {
-               weight = (float)randomizer->RAND_INTERVAL(0.0, 1.0);
+               weight = (float)randomizer->RAND_INTERVAL(
+                  synapseWeightsParm.minimum, synapseWeightsParm.maximum);
                network->synapses[i][index] = new Synapse(weight);
                assert(network->synapses[i][index] != NULL);
             }
@@ -726,6 +750,7 @@ void NetworkMorph::save(FILE *fp)
    inhibitoryNeuronsParm.save(fp);
    synapsePropensitiesParm.save(fp);
    synapseWeightsParm.save(fp);
+   network->save(fp);
    FWRITE_BOOL(&homomorphic, fp);
    FWRITE_INT(&tag, fp);
    FWRITE_FLOAT(&error, fp);
@@ -770,7 +795,7 @@ void NetworkMorph::print()
 
 // Isomorph constructor.
 NetworkMorphoGenesis::NetworkMorphoGenesis(vector<Behavior *>& behaviors,
-                                           int populationSize, int numMutants, int numGenerations, int fitnessQuorum,
+                                           int populationSize, int numMutants, int fitnessQuorum,
                                            MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
                                            MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
                                            RANDOM randomSeed)
@@ -790,7 +815,6 @@ NetworkMorphoGenesis::NetworkMorphoGenesis(vector<Behavior *>& behaviors,
    this->populationSize = populationSize;
    this->numMutants     = numMutants;
    numOffspring         = -1;
-   this->numGenerations = numGenerations;
    this->fitnessQuorum  = fitnessQuorum;
    if (fitnessQuorum == -1)
    {
@@ -800,6 +824,7 @@ NetworkMorphoGenesis::NetworkMorphoGenesis(vector<Behavior *>& behaviors,
    {
       behaviorStep = 0;
    }
+   generation = 0;
    assert(behaviors.size() > 0);
    numSensors = (int)behaviors[0]->sensorSequence[0].size();
    numMotors  = (int)behaviors[0]->motorSequence[0].size();
@@ -816,8 +841,7 @@ NetworkMorphoGenesis::NetworkMorphoGenesis(vector<Behavior *>& behaviors,
 
 // Homomorph constructor.
 NetworkMorphoGenesis::NetworkMorphoGenesis(vector<Behavior *>& behaviors, Network *homomorph,
-                                           int populationSize, int numMutants, int numOffspring,
-                                           int numGenerations, int fitnessQuorum,
+                                           int populationSize, int numMutants, int numOffspring, int fitnessQuorum,
                                            MutableParm& synapseWeightsParm, RANDOM randomSeed)
 {
    int          i, j;
@@ -835,7 +859,6 @@ NetworkMorphoGenesis::NetworkMorphoGenesis(vector<Behavior *>& behaviors, Networ
    this->populationSize = populationSize;
    this->numMutants     = numMutants;
    this->numOffspring   = numOffspring;
-   this->numGenerations = numGenerations;
    this->fitnessQuorum  = fitnessQuorum;
    if (fitnessQuorum == -1)
    {
@@ -845,11 +868,30 @@ NetworkMorphoGenesis::NetworkMorphoGenesis(vector<Behavior *>& behaviors, Networ
    {
       behaviorStep = 0;
    }
+   generation = 0;
    for (i = 0; i < populationSize; i++)
    {
       networkMorph = new NetworkMorph(homomorph, synapseWeightsParm, randomizer);
       assert(networkMorph != NULL);
       population.push_back(networkMorph);
+   }
+}
+
+
+// Load constructor.
+NetworkMorphoGenesis::NetworkMorphoGenesis(vector<Behavior *>& behaviors, char *filename)
+{
+   int i, j;
+
+   randomizer = NULL;
+   for (i = 0, j = (int)behaviors.size(); i < j; i++)
+   {
+      this->behaviors.push_back(behaviors[i]);
+   }
+   if (!load(filename))
+   {
+      fprintf(stderr, "Cannot load morph from file %s\n", filename);
+      assert(false);
    }
 }
 
@@ -867,9 +909,9 @@ NetworkMorphoGenesis::~NetworkMorphoGenesis()
 
 
 // Morph networks.
-void NetworkMorphoGenesis::morph()
+void NetworkMorphoGenesis::morph(int numGenerations)
 {
-   int i, c, n;
+   int i, c, g, n;
    int maxBehaviorStep;
 
    if (behaviorStep != -1)
@@ -887,7 +929,7 @@ void NetworkMorphoGenesis::morph()
       population[i]->evaluate(behaviors, behaviorStep);
    }
    sort();
-   printf("Generation=0\n");
+   printf("Generation=%d\n", generation);
    printf("Population:\n");
    printf("Member\tgeneration\tfitness\n");
    for (i = 0, n = (int)population.size(); i < n; i++)
@@ -898,12 +940,13 @@ void NetworkMorphoGenesis::morph()
    {
       printf("Behavior testing step=%d\n", behaviorStep);
    }
-   for (int generation = 0; generation < numGenerations; generation++)
+   for (g = 0; g < numGenerations; g++)
    {
+      generation++;
+      printf("Generation=%d\n", generation);
       mutate();
       mate();
       prune();
-      printf("Generation=%d\n", generation + 1);
       printf("Population:\n");
       printf("Member\tgeneration\tfitness\n");
       for (i = c = 0, n = (int)population.size(); i < n; i++)
@@ -1058,6 +1101,99 @@ void NetworkMorphoGenesis::sort()
 }
 
 
+// Load morph.
+bool NetworkMorphoGenesis::load(char *filename)
+{
+   int  i, n;
+   FILE *fp;
+
+   if ((fp = fopen(filename, "r")) == NULL)
+   {
+      fprintf(stderr, "Cannot load from file %s\n", filename);
+      return(false);
+   }
+   if (randomizer != NULL)
+   {
+      delete randomizer;
+   }
+   randomizer = new Random();
+   assert(randomizer != NULL);
+   randomizer->RAND_LOAD(fp);
+   FREAD_INT(&i, fp);
+   if (i == 0)
+   {
+      homomorph = NULL;
+   }
+   else
+   {
+      homomorph = new Network(fp);
+      assert(homomorph != NULL);
+   }
+   FREAD_INT(&populationSize, fp);
+   FREAD_INT(&numMutants, fp);
+   FREAD_INT(&numOffspring, fp);
+   for (i = 0, n = (int)population.size(); i < n; i++)
+   {
+      delete population[i];
+   }
+   population.clear();
+   mutants.clear();
+   offspring.clear();
+   FREAD_INT(&n, fp);
+   for (i = 0; i < n; i++)
+   {
+      NetworkMorph *networkMorph = new NetworkMorph(fp, randomizer);
+      assert(networkMorph != NULL);
+      population.push_back(networkMorph);
+   }
+   FREAD_INT(&fitnessQuorum, fp);
+   FREAD_INT(&behaviorStep, fp);
+   FREAD_LONG(&randomSeed, fp);
+   FREAD_INT(&generation, fp);
+   return(true);
+}
+
+
+// Save morph.
+bool NetworkMorphoGenesis::save(char *filename)
+{
+   int  i, n;
+   FILE *fp;
+
+   if ((fp = fopen(filename, "w")) == NULL)
+   {
+      fprintf(stderr, "Cannot save to file %s\n", filename);
+      return(false);
+   }
+   randomizer->RAND_SAVE(fp);
+   if (homomorph == NULL)
+   {
+      i = 0;
+      FWRITE_INT(&i, fp);
+   }
+   else
+   {
+      i = 1;
+      FWRITE_INT(&i, fp);
+      homomorph->save(fp);
+   }
+   FWRITE_INT(&populationSize, fp);
+   FWRITE_INT(&numMutants, fp);
+   FWRITE_INT(&numOffspring, fp);
+   n = (int)population.size();
+   FWRITE_INT(&n, fp);
+   for (i = 0; i < n; i++)
+   {
+      population[i]->save(fp);
+   }
+   FWRITE_INT(&fitnessQuorum, fp);
+   FWRITE_INT(&behaviorStep, fp);
+   FWRITE_LONG(&randomSeed, fp);
+   FWRITE_INT(&generation, fp);
+   return(true);
+}
+
+
 // Save networks.
 void NetworkMorphoGenesis::saveNetworks(char *filePrefix)
 {
@@ -1096,7 +1232,6 @@ void NetworkMorphoGenesis::print()
    printf("populationSize=%d\n", populationSize);
    printf("numMutants=%d\n", numMutants);
    printf("numOffspring=%d\n", numOffspring);
-   printf("numGenerations=%d\n", numGenerations);
    printf("fitnessQuorum=%d\n", fitnessQuorum);
    printf("randomSeed=%lu\n", randomSeed);
    printf("Population:\n");

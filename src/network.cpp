@@ -11,6 +11,7 @@ const RANDOM Network::DEFAULT_RANDOM_SEED        = 4517;
 // Constructors.
 Network::Network(int numNeurons, int numSensors, int numMotors,
                  float inhibitorDensity, float synapsePropensity,
+                 float minSynapseWeight, float maxSynapseWeight,
                  RANDOM randomSeed)
 {
    int    i, j, n;
@@ -98,7 +99,8 @@ Network::Network(int numNeurons, int numSensors, int numMotors,
             {
                if (randomizer->RAND_CHANCE(synapsePropensity))
                {
-                  weight         = (float)randomizer->RAND_INTERVAL(0.0, 1.0);
+                  weight = (float)randomizer->RAND_INTERVAL(
+                     minSynapseWeight, maxSynapseWeight);
                   synapses[i][j] = new Synapse(weight);
                   assert(synapses[i][j] != NULL);
                }
@@ -122,7 +124,8 @@ Network::Network(int numNeurons, int numSensors, int numMotors,
       {
          if (((i < numSensors) || (i >= n)) && (j >= numSensors))
          {
-            weight         = (float)randomizer->RAND_INTERVAL(0.0, 1.0);
+            weight = (float)randomizer->RAND_INTERVAL(
+               minSynapseWeight, maxSynapseWeight);
             synapses[i][j] = new Synapse(weight);
             assert(synapses[i][j] != NULL);
          }

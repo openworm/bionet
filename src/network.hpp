@@ -15,6 +15,8 @@ public:
    Network(int numNeurons, int numSensors, int numMotors,
            float inhibitorDensity = DEFAULT_INHIBITOR_DENSITY,
            float synapsePropensity = DEFAULT_SYNAPSE_PROPENSITY,
+           float minSynapseWeight = 0.0f,
+           float maxSynapseWeight = 1.0f,
            RANDOM randomSeed = DEFAULT_RANDOM_SEED);
 
    Network(char *filename);

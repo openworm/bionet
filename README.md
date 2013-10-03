@@ -36,6 +36,8 @@ bionet
    -numMotors <number of motors>
    [-inhibitorDensity <inhibitory neuron density [0.0,1.0]>]
    [-synapsePropensity <synapse generation propensity (0.0,1.0]>]
+   [-minSynapseWeight <minimum synapse weight (defaults to 0.0)>]
+   [-maxSynapseWeight <maximum synapse weight (defaults to 1.0)>]
    [-randomSeed <random seed>]
    [-saveNetwork <network file name>]
    [-graphNetwork <graph file name ('dot' format)>]
@@ -78,7 +80,7 @@ bionet
 
 Create isomorphic networks:
 
-bionet
+bionet (new morph)   
    -createIsomorphicNetworks
    -loadBehaviors <behaviors file name>
    -populationSize <number population members>
@@ -89,13 +91,20 @@ bionet
    -excitatoryNeurons <minimum number> <maximum> <max delta> <probability of random change>
    -inhibitoryNeurons <minimum number> <maximum> <max delta> <probability of random change>
    -synapsePropensities <minimum> <maximum> <max delta> <probability of random change>
-   -synapseWeights <max delta> <probability of random change>
-   -saveNetworks [<files prefix (default="network_")>]
+   -synapseWeights <minimum> <maximum> <max delta> <probability of random change>
+   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
    [-randomSeed <random seed>]
+
+bionet (resume morph)
+   -createIsomorphicNetworks
+   -loadBehaviors <behaviors file name>
+   -loadMorph <morph file name>
+   -numGenerations <number of evolution generations>
+   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
 
 Create homomorphic networks:
 
-bionet
+bionet (new morph)
    -createHomomorphicNetworks
    -loadBehaviors <behaviors file name>
    -loadNetwork <homomorph network file name>
@@ -105,6 +114,13 @@ bionet
    -numGenerations <number of evolution generations>
    [-fitnessQuorum <fit member quorum required to advance behavior testing to next sensory-motor step>
       (defaults to immediate testing of entire behavior sequences)]
-   -synapseWeights <max delta> <probability of random change>
-   -saveNetworks [<files prefix (default="network_")>]
+   -synapseWeights <minimum> <maximum> <max delta> <probability of random change>
+   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
    [-randomSeed <random seed>]
+
+bionet (resume morph)
+   -createHomomorphicNetworks
+   -loadBehaviors <behaviors file name>
+   -loadMorph <morph file name>
+   -numGenerations <number of evolution generations>
+   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]

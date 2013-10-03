@@ -95,15 +95,18 @@ public:
 
    // Isomorph constructor.
    NetworkMorphoGenesis(vector<Behavior *>& behaviors,
-                        int populationSize, int numMutants, int numGenerations, int fitnessQuorum,
+                        int populationSize, int numMutants, int fitnessQuorum,
                         MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
                         MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
                         RANDOM randomSeed);
 
    // Homomorph constructor.
    NetworkMorphoGenesis(vector<Behavior *>& behaviors, Network *homomorph,
-                        int populationSize, int numMutants, int numOffspring, int numGenerations,
+                        int populationSize, int numMutants, int numOffspring,
                         int fitnessQuorum, MutableParm& synapseWeightsParm, RANDOM randomSeed);
+
+   // Load constructor.
+   NetworkMorphoGenesis(vector<Behavior *>& behaviors, char *filename);
 
    // Destructor.
    ~NetworkMorphoGenesis();
@@ -128,9 +131,6 @@ public:
    vector<NetworkMorph *> mutants;
    vector<NetworkMorph *> offspring;
 
-   // Number of generations.
-   int numGenerations;
-
    // Fitness quorum.
    int fitnessQuorum;
    int behaviorStep;
@@ -138,8 +138,11 @@ public:
    // Random seed.
    RANDOM randomSeed;
 
+   // Generation.
+   int generation;
+
    // Morph networks.
-   void morph();
+   void morph(int numGenerations);
 
    // Mutate members.
    void mutate();
@@ -152,6 +155,12 @@ public:
 
    // Sort population by fitness.
    void sort();
+
+   // Load.
+   bool load(char *filename);
+
+   // Save.
+   bool save(char *filename);
 
    // Save networks.
    void saveNetworks(char *filePrefix);

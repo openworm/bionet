@@ -164,3 +164,49 @@ void Behavior::print()
       printf("\n");
    }
 }
+
+
+// Load behaviors from file.
+bool Behavior::loadBehaviors(char *filename, vector<Behavior *>& behaviors)
+{
+   int i, n;
+
+   FILE *fp = fopen(filename, "r");
+
+   if (fp == NULL)
+   {
+      return(false);
+   }
+   fscanf(fp, "%d", &n);
+   behaviors.clear();
+   for (i = 0; i < n; i++)
+   {
+      Behavior *behavior = new Behavior(fp);
+      assert(behavior != NULL);
+      behaviors.push_back(behavior);
+   }
+   fclose(fp);
+   return(true);
+}
+
+
+// Save behaviors to file.
+bool Behavior::saveBehaviors(char *filename, vector<Behavior *>& behaviors)
+{
+   int i, n;
+
+   FILE *fp = fopen(filename, "w");
+
+   if (fp == NULL)
+   {
+      return(false);
+   }
+   n = (int)behaviors.size();
+   fprintf(fp, "%d\n", n);
+   for (i = 0; i < n; i++)
+   {
+      behaviors[i]->save(fp);
+   }
+   fclose(fp);
+   return(true);
+}

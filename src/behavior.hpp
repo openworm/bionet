@@ -28,5 +28,11 @@ public:
 
    // Print.
    void print();
+
+   // Load behaviors from file.
+   static bool loadBehaviors(char *filename, vector<Behavior *>& behaviors);
+
+   // Save behaviors to file.
+   static bool saveBehaviors(char *filename, vector<Behavior *>& behaviors);
 };
 #endif

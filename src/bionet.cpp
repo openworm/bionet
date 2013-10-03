@@ -16,6 +16,8 @@ char *Usage[] =
    (char *)"   -numMotors <number of motors>",
    (char *)"   [-inhibitorDensity <inhibitory neuron density [0.0,1.0]>]",
    (char *)"   [-synapsePropensity <synapse generation propensity (0.0,1.0]>]",
+   (char *)"   [-minSynapseWeight <minimum synapse weight (defaults to 0.0)>]",
+   (char *)"   [-maxSynapseWeight <maximum synapse weight (defaults to 1.0)>]",
    (char *)"   [-randomSeed <random seed>]",
    (char *)"   [-saveNetwork <network file name>]",
    (char *)"   [-graphNetwork <graph file name ('dot' format)>]",
@@ -58,7 +60,7 @@ char *Usage[] =
    (char *)"",
    (char *)"Create isomorphic networks:",
    (char *)"",
-   (char *)"bionet",
+   (char *)"bionet (new morph)",
    (char *)"   -createIsomorphicNetworks",
    (char *)"   -loadBehaviors <behaviors file name>",
    (char *)"   -populationSize <number population members>",
@@ -69,13 +71,20 @@ char *Usage[] =
    (char *)"   -excitatoryNeurons <minimum number> <maximum> <max delta> <probability of random change>",
    (char *)"   -inhibitoryNeurons <minimum number> <maximum> <max delta> <probability of random change>",
    (char *)"   -synapsePropensities <minimum> <maximum> <max delta> <probability of random change>",
-   (char *)"   -synapseWeights <max delta> <probability of random change>",
-   (char *)"   -saveNetworks [<files prefix (default=\"network_\")>]",
+   (char *)"   -synapseWeights <minimum> <maximum> <max delta> <probability of random change>",
+   (char *)"   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default=\"network_\")>]",
    (char *)"   [-randomSeed <random seed>]",
+   (char *)"",
+   (char *)"bionet (resume morph)",
+   (char *)"   -createIsomorphicNetworks",
+   (char *)"   -loadBehaviors <behaviors file name>",
+   (char *)"   -loadMorph <morph file name>",
+   (char *)"   -numGenerations <number of evolution generations>",
+   (char *)"   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default=\"network_\")>]",
    (char *)"",
    (char *)"Create homomorphic networks:",
    (char *)"",
-   (char *)"bionet",
+   (char *)"bionet (new morph)",
    (char *)"   -createhomomorphicNetworks",
    (char *)"   -loadBehaviors <behaviors file name>",
    (char *)"   -loadNetwork <homomorph network file name>",
@@ -85,9 +94,16 @@ char *Usage[] =
    (char *)"   -numGenerations <number of evolution generations>",
    (char *)"   [-fitnessQuorum <fit member quorum required to advance behavior testing to next sensory-motor step>",
    (char *)"      (defaults to immediate testing of entire behavior sequences)]",
-   (char *)"   -synapseWeights <max delta> <probability of random change>",
-   (char *)"   -saveNetworks [<files prefix (default=\"network_\")>]",
+   (char *)"   -synapseWeights <minimum> <maximum> <max delta> <probability of random change>",
+   (char *)"   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default=\"network_\")>]",
    (char *)"   [-randomSeed <random seed>]",
+   (char *)"",
+   (char *)"bionet (resume morph)",
+   (char *)"   -createHomomorphicNetworks",
+   (char *)"   -loadBehaviors <behaviors file name>",
+   (char *)"   -loadMorph <morph file name>",
+   (char *)"   -numGenerations <number of evolution generations>",
+   (char *)"   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default=\"network_\")>]",
    NULL
 };
 
@@ -115,6 +131,8 @@ int createNetwork(int argc, char *argv[])
    int    numMotors         = -1;
    float  inhibitorDensity  = Network::DEFAULT_INHIBITOR_DENSITY;
    float  synapsePropensity = Network::DEFAULT_SYNAPSE_PROPENSITY;
+   float  minSynapseWeight  = 0.0f;
+   float  maxSynapseWeight  = 1.0f;
    RANDOM randomSeed        = Network::DEFAULT_RANDOM_SEED;
    char   *networkSaveFile  = NULL;
    char   *networkGraphFile = NULL;
@@ -205,6 +223,38 @@ int createNetwork(int argc, char *argv[])
          }
          continue;
       }
+      if (strcmp(argv[i], "-minSynapseWeight") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         minSynapseWeight = (float)atof(argv[i]);
+         if ((minSynapseWeight <= 0.0f) || (minSynapseWeight > 1.0f))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         continue;
+      }
+      if (strcmp(argv[i], "-maxSynapseWeight") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         maxSynapseWeight = (float)atof(argv[i]);
+         if ((maxSynapseWeight <= 0.0f) || (maxSynapseWeight > 1.0f))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         continue;
+      }
       if (strcmp(argv[i], "-randomSeed") == 0)
       {
          i++;
@@ -252,10 +302,17 @@ int createNetwork(int argc, char *argv[])
       printUsageError((char *)"numNeurons <= (numSensors + numMotors)");
       return(1);
    }
+   if (minSynapseWeight > maxSynapseWeight)
+   {
+      printUsageError((char *)"minSynapseWeight > maxSynapseWeight");
+      return(1);
+   }
 
    // Create network.
    Network *network = new Network(numNeurons, numSensors, numMotors,
-                                  inhibitorDensity, synapsePropensity, randomSeed);
+                                  inhibitorDensity, synapsePropensity,
+                                  minSynapseWeight, maxSynapseWeight,
+                                  randomSeed);
    assert(network != NULL);
    network->print();
    if (networkSaveFile != NULL)
@@ -392,13 +449,14 @@ int graphNetwork(int argc, char *argv[])
 // Create network behaviors.
 int createNetworkBehaviors(int argc, char *argv[])
 {
+   int    i, j, result;
    RANDOM randomSeed       = Network::DEFAULT_RANDOM_SEED;
    char   *networkLoadFile = NULL;
 
    vector<int> behaviorSequenceLengths;
    char        *behaviorsSaveFile = NULL;
 
-   for (int i = 1; i < argc; i++)
+   for (i = 1; i < argc; i++)
    {
       if (strcmp(argv[i], "-createNetworkBehaviors") == 0)
       {
@@ -424,7 +482,7 @@ int createNetworkBehaviors(int argc, char *argv[])
             return(1);
          }
          behaviorSequenceLengths.push_back(atoi(argv[i]));
-         for (int j = i + 1; j < argc && argv[j][0] != '-'; i = j, j++)
+         for (j = i + 1; j < argc && argv[j][0] != '-'; i = j, j++)
          {
             behaviorSequenceLengths.push_back(atoi(argv[j]));
          }
@@ -465,47 +523,43 @@ int createNetworkBehaviors(int argc, char *argv[])
    // Create behaviors.
    Network *network = new Network(networkLoadFile);
    assert(network != NULL);
-   Random *randomizer = new Random(randomSeed);
-   FILE   *fp         = NULL;
-   if (behaviorsSaveFile != NULL)
-   {
-      fp = fopen(behaviorsSaveFile, "w");
-      if (fp == NULL)
-      {
-         fprintf(stderr, "Cannot open behaviors save file %s\n", behaviorsSaveFile);
-         delete network;
-         return(1);
-      }
-      fprintf(fp, "%d\n", (int)behaviorSequenceLengths.size());
-   }
-   for (int i = 0; i < (int)behaviorSequenceLengths.size(); i++)
+   Random             *randomizer = new Random(randomSeed);
+   vector<Behavior *> behaviors;
+   for (i = 0; i < (int)behaviorSequenceLengths.size(); i++)
    {
       Behavior *behavior = new Behavior(network, behaviorSequenceLengths[i], randomizer);
       assert(behavior != NULL);
+      behaviors.push_back(behavior);
       printf("Behavior %d:\n", i);
       behavior->print();
-      if (fp != NULL)
-      {
-         behavior->save(fp);
-      }
-      delete behavior;
    }
-   if (fp != NULL)
+   result = 0;
+   if (behaviorsSaveFile != NULL)
    {
-      fclose(fp);
+      if (!Behavior::saveBehaviors(behaviorsSaveFile, behaviors))
+      {
+         fprintf(stderr, "Cannot save behaviors to file %s\n", behaviorsSaveFile);
+         result = 1;
+      }
    }
+   for (i = 0; i < (int)behaviors.size(); i++)
+   {
+      delete behaviors[i];
+   }
+   behaviors.clear();
    delete network;
-   return(0);
+   return(result);
 }
 
 
 // Test network behaviors.
 int testNetworkBehaviors(int argc, char *argv[])
 {
+   int  i, n, result;
    char *networkLoadFile   = NULL;
    char *behaviorsLoadFile = NULL;
 
-   for (int i = 1; i < argc; i++)
+   for (i = 1; i < argc; i++)
    {
       if (strcmp(argv[i], "-testNetworkBehaviors") == 0)
       {
@@ -547,26 +601,23 @@ int testNetworkBehaviors(int argc, char *argv[])
    Network *network = new Network(networkLoadFile);
    assert(network != NULL);
    network->print();
-   FILE *fp = fopen(behaviorsLoadFile, "r");
-   if (fp == NULL)
+   vector<Behavior *> behaviors;
+   if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
    {
-      fprintf(stderr, "Cannot open behaviors load file %s\n", behaviorsLoadFile);
+      fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
       delete network;
       return(1);
    }
-   int n;
-   fscanf(fp, "%d", &n);
-   for (int i = 0; i < n; i++)
+   result = 0;
+   for (i = 0, n = (int)behaviors.size(); i < n; i++)
    {
-      Behavior *behavior = new Behavior(fp);
-      assert(behavior != NULL);
+      Behavior *behavior = behaviors[i];
       if ((behavior->sensorSequence.size() > 0) &&
           ((int)behavior->sensorSequence[0].size() != network->numSensors))
       {
          fprintf(stderr, "Number of sensors not equal\n");
-         delete behavior;
-         delete network;
-         return(1);
+         result = 1;
+         break;
       }
       printf("Behavior %d:\n", i);
       behavior->print();
@@ -574,21 +625,25 @@ int testNetworkBehaviors(int argc, char *argv[])
       assert(testBehavior != NULL);
       printf("Test:\n");
       testBehavior->print();
-      delete behavior;
       delete testBehavior;
    }
-   fclose(fp);
+   for (i = 0, n = (int)behaviors.size(); i < n; i++)
+   {
+      delete behaviors[i];
+   }
+   behaviors.clear();
    delete network;
-   return(0);
+   return(result);
 }
 
 
 // Print network behaviors.
 int printNetworkBehaviors(int argc, char *argv[])
 {
+   int  i, n;
    char *behaviorsLoadFile = NULL;
 
-   for (int i = 1; i < argc; i++)
+   for (i = 1; i < argc; i++)
    {
       if (strcmp(argv[i], "-printNetworkBehaviors") == 0)
       {
@@ -616,23 +671,20 @@ int printNetworkBehaviors(int argc, char *argv[])
    }
 
    // Print behaviors.
-   FILE *fp = fopen(behaviorsLoadFile, "r");
-   if (fp == NULL)
+   vector<Behavior *> behaviors;
+   if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
    {
-      fprintf(stderr, "Cannot open behaviors load file %s\n", behaviorsLoadFile);
+      fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
       return(1);
    }
-   int n;
-   fscanf(fp, "%d", &n);
-   for (int i = 0; i < n; i++)
+   for (i = 0, n = (int)behaviors.size(); i < n; i++)
    {
-      Behavior *behavior = new Behavior(fp);
-      assert(behavior != NULL);
+      Behavior *behavior = behaviors[i];
       printf("Behavior %d:\n", i);
       behavior->print();
       delete behavior;
    }
-   fclose(fp);
+   behaviors.clear();
    return(0);
 }
 
@@ -640,6 +692,7 @@ int printNetworkBehaviors(int argc, char *argv[])
 // Create isomorphic networks.
 int createIsomorphicNetworks(int argc, char *argv[])
 {
+   int         i, n, result;
    char        *behaviorsLoadFile = NULL;
    int         populationSize     = -1;
    int         numMutants         = -1;
@@ -649,11 +702,13 @@ int createIsomorphicNetworks(int argc, char *argv[])
    MutableParm inhibitoryNeuronsParm;
    MutableParm synapsePropensitiesParm;
    MutableParm synapseWeightsParm;
-   bool        saveNetworks = false;
-   char        *filesPrefix = (char *)"network_";
-   RANDOM      randomSeed   = Network::DEFAULT_RANDOM_SEED;
+   bool        saveNetworks   = false;
+   char        *filesPrefix   = (char *)"network_";
+   RANDOM      randomSeed     = Network::DEFAULT_RANDOM_SEED;
+   char        *morphSaveFile = NULL;
+   char        *morphLoadFile = NULL;
 
-   for (int i = 1; i < argc; i++)
+   for (i = 1; i < argc; i++)
    {
       if (strcmp(argv[i], "-createIsomorphicNetworks") == 0)
       {
@@ -736,7 +791,8 @@ int createIsomorphicNetworks(int argc, char *argv[])
       }
       if ((strcmp(argv[i], "-excitatoryNeurons") == 0) ||
           (strcmp(argv[i], "-inhibitoryNeurons") == 0) ||
-          (strcmp(argv[i], "-synapsePropensities") == 0))
+          (strcmp(argv[i], "-synapsePropensities") == 0) ||
+          (strcmp(argv[i], "-synapseWeights") == 0))
       {
          i++;
          if ((i >= argc) || (argv[i][0] == '-'))
@@ -798,35 +854,10 @@ int createIsomorphicNetworks(int argc, char *argv[])
          {
             synapsePropensitiesParm.init(min, max, maxDelta, prob);
          }
-         continue;
-      }
-      if (strcmp(argv[i], "-synapseWeights") == 0)
-      {
-         i++;
-         if ((i >= argc) || (argv[i][0] == '-'))
+         else if (strcmp(argv[i - 4], "-synapseWeights") == 0)
          {
-            printUsageError(argv[i - 1]);
-            return(1);
+            synapseWeightsParm.init(min, max, maxDelta, prob);
          }
-         float maxDelta = (float)atof(argv[i]);
-         if (maxDelta < 0.0f)
-         {
-            printUsageError(argv[i - 1]);
-            return(1);
-         }
-         i++;
-         if ((i >= argc) || (argv[i][0] == '-'))
-         {
-            printUsageError(argv[i - 2]);
-            return(1);
-         }
-         float prob = (float)atof(argv[i]);
-         if ((prob < 0.0f) || (prob > 1.0f))
-         {
-            printUsageError(argv[i - 2]);
-            return(1);
-         }
-         synapseWeightsParm.init(0.0f, 1.0f, maxDelta, prob);
          continue;
       }
       if (strcmp(argv[i], "-saveNetworks") == 0)
@@ -841,6 +872,28 @@ int createIsomorphicNetworks(int argc, char *argv[])
          {
             filesPrefix = argv[i];
          }
+         continue;
+      }
+      if (strcmp(argv[i], "-saveMorph") == 0)
+      {
+         i++;
+         if (i >= argc)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         morphSaveFile = argv[i];
+         continue;
+      }
+      if (strcmp(argv[i], "-loadMorph") == 0)
+      {
+         i++;
+         if (i >= argc)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         morphLoadFile = argv[i];
          continue;
       }
       if (strcmp(argv[i], "-randomSeed") == 0)
@@ -858,69 +911,117 @@ int createIsomorphicNetworks(int argc, char *argv[])
       return(1);
    }
 
-   if ((behaviorsLoadFile == NULL) ||
-       (populationSize < 0) ||
-       (numMutants < 0) ||
-       (numGenerations < 0) ||
-       !saveNetworks ||
-       (excitatoryNeuronsParm.randomProbability < 0.0f) ||
-       (inhibitoryNeuronsParm.randomProbability < 0.0f) ||
-       (synapsePropensitiesParm.randomProbability < 0.0f) ||
-       (synapseWeightsParm.randomProbability < 0.0f))
+   if ((behaviorsLoadFile == NULL))
    {
-      printUsageError((char *)"missing required option");
+      printUsageError((char *)"missing loadBehaviors option");
       return(1);
    }
-   if (fitnessQuorum > populationSize)
+   if (numGenerations < 0)
    {
-      printUsageError((char *)"fitnessQuorum > populationSize");
+      printUsageError((char *)"missing numGenerations option");
       return(1);
    }
-   if (numMutants > populationSize)
+   if ((morphSaveFile == NULL) && !saveNetworks)
    {
-      printUsageError((char *)"numMutants > populationSize");
+      printUsageError((char *)"missing save option");
       return(1);
    }
 
-   FILE *fp = fopen(behaviorsLoadFile, "r");
-   if (fp == NULL)
+   result = 0;
+   if (morphLoadFile == NULL)
    {
-      fprintf(stderr, "Cannot open behaviors load file %s\n", behaviorsLoadFile);
-      return(1);
+      if ((populationSize < 0) ||
+          (numMutants < 0) ||
+          (excitatoryNeuronsParm.randomProbability < 0.0f) ||
+          (inhibitoryNeuronsParm.randomProbability < 0.0f) ||
+          (synapsePropensitiesParm.randomProbability < 0.0f) ||
+          (synapseWeightsParm.randomProbability < 0.0f))
+      {
+         printUsageError((char *)"missing required option");
+         return(1);
+      }
+      if (fitnessQuorum > populationSize)
+      {
+         printUsageError((char *)"fitnessQuorum > populationSize");
+         return(1);
+      }
+      if (numMutants > populationSize)
+      {
+         printUsageError((char *)"numMutants > populationSize");
+         return(1);
+      }
+      vector<Behavior *> behaviors;
+      if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
+      {
+         fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
+         return(1);
+      }
+      NetworkMorphoGenesis *morphoGenesis = new NetworkMorphoGenesis(
+         behaviors,
+         populationSize, numMutants, fitnessQuorum,
+         excitatoryNeuronsParm, inhibitoryNeuronsParm,
+         synapsePropensitiesParm, synapseWeightsParm,
+         randomSeed);
+      assert(morphoGenesis != NULL);
+      morphoGenesis->morph(numGenerations);
+      if (morphSaveFile != NULL)
+      {
+         if (!morphoGenesis->save(morphSaveFile))
+         {
+            fprintf(stderr, "Cannot save morph to file %s\n", morphSaveFile);
+            result = 1;
+         }
+      }
+      if (saveNetworks)
+      {
+         morphoGenesis->saveNetworks(filesPrefix);
+      }
+      delete morphoGenesis;
+      for (i = 0, n = (int)behaviors.size(); i < n; i++)
+      {
+         delete behaviors[i];
+      }
+      behaviors.clear();
    }
-   int n;
-   fscanf(fp, "%d", &n);
-   vector<Behavior *> behaviors;
-   for (int i = 0; i < n; i++)
+   else   // Resume morph.
    {
-      Behavior *behavior = new Behavior(fp);
-      assert(behavior != NULL);
-      behaviors.push_back(behavior);
+      vector<Behavior *> behaviors;
+      if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
+      {
+         fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
+         return(1);
+      }
+      NetworkMorphoGenesis *morphoGenesis =
+         new NetworkMorphoGenesis(behaviors, morphLoadFile);
+      assert(morphoGenesis != NULL);
+      morphoGenesis->morph(numGenerations);
+      if (morphSaveFile != NULL)
+      {
+         if (!morphoGenesis->save(morphSaveFile))
+         {
+            fprintf(stderr, "Cannot save morph to file %s\n", morphSaveFile);
+            result = 1;
+         }
+      }
+      if (saveNetworks)
+      {
+         morphoGenesis->saveNetworks(filesPrefix);
+      }
+      delete morphoGenesis;
+      for (i = 0, n = (int)behaviors.size(); i < n; i++)
+      {
+         delete behaviors[i];
+      }
+      behaviors.clear();
    }
-   fclose(fp);
-   NetworkMorphoGenesis *morphoGenesis = new NetworkMorphoGenesis(
-      behaviors,
-      populationSize, numMutants, numGenerations, fitnessQuorum,
-      excitatoryNeuronsParm, inhibitoryNeuronsParm,
-      synapsePropensitiesParm, synapseWeightsParm,
-      randomSeed);
-   assert(morphoGenesis != NULL);
-   morphoGenesis->morph();
-   morphoGenesis->saveNetworks(filesPrefix);
-   delete morphoGenesis;
-   for (int i = 0; i < n; i++)
-   {
-      Behavior *behavior = behaviors[i];
-      delete behavior;
-   }
-   behaviors.clear();
-   return(0);
+   return(result);
 }
 
 
 // Create homomorphic networks.
 int createHomomorphicNetworks(int argc, char *argv[])
 {
+   int         i, n, result;
    char        *behaviorsLoadFile = NULL;
    char        *networkLoadFile   = NULL;
    int         populationSize     = -1;
@@ -929,11 +1030,13 @@ int createHomomorphicNetworks(int argc, char *argv[])
    int         numGenerations     = -1;
    int         fitnessQuorum      = -1;
    MutableParm synapseWeightsParm;
-   bool        saveNetworks = false;
-   char        *filesPrefix = (char *)"network_";
-   RANDOM      randomSeed   = Network::DEFAULT_RANDOM_SEED;
+   bool        saveNetworks   = false;
+   char        *filesPrefix   = (char *)"network_";
+   RANDOM      randomSeed     = Network::DEFAULT_RANDOM_SEED;
+   char        *morphSaveFile = NULL;
+   char        *morphLoadFile = NULL;
 
-   for (int i = 1; i < argc; i++)
+   for (i = 1; i < argc; i++)
    {
       if (strcmp(argv[i], "-createHomomorphicNetworks") == 0)
       {
@@ -1041,7 +1144,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
          }
          continue;
       }
-      if (strcmp(argv[i], "-synapseWeights") == 0)
+      if ((strcmp(argv[i], "-synapseWeights") == 0))
       {
          i++;
          if ((i >= argc) || (argv[i][0] == '-'))
@@ -1049,8 +1152,8 @@ int createHomomorphicNetworks(int argc, char *argv[])
             printUsageError(argv[i - 1]);
             return(1);
          }
-         float maxDelta = (float)atof(argv[i]);
-         if (maxDelta < 0.0f)
+         float min = (float)atof(argv[i]);
+         if (min < 0.0f)
          {
             printUsageError(argv[i - 1]);
             return(1);
@@ -1061,13 +1164,37 @@ int createHomomorphicNetworks(int argc, char *argv[])
             printUsageError(argv[i - 2]);
             return(1);
          }
-         float prob = (float)atof(argv[i]);
-         if ((prob < 0.0f) || (prob > 1.0f))
+         float max = (float)atof(argv[i]);
+         if ((max < 0.0f) || (max < min))
          {
             printUsageError(argv[i - 2]);
             return(1);
          }
-         synapseWeightsParm.init(0.0f, 1.0f, maxDelta, prob);
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 3]);
+            return(1);
+         }
+         float maxDelta = (float)atof(argv[i]);
+         if (maxDelta < 0.0f)
+         {
+            printUsageError(argv[i - 3]);
+            return(1);
+         }
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 4]);
+            return(1);
+         }
+         float prob = (float)atof(argv[i]);
+         if ((prob < 0.0f) || (prob > 1.0f))
+         {
+            printUsageError(argv[i - 4]);
+            return(1);
+         }
+         synapseWeightsParm.init(min, max, maxDelta, prob);
          continue;
       }
       if (strcmp(argv[i], "-saveNetworks") == 0)
@@ -1082,6 +1209,28 @@ int createHomomorphicNetworks(int argc, char *argv[])
          {
             filesPrefix = argv[i];
          }
+         continue;
+      }
+      if (strcmp(argv[i], "-saveMorph") == 0)
+      {
+         i++;
+         if (i >= argc)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         morphSaveFile = argv[i];
+         continue;
+      }
+      if (strcmp(argv[i], "-loadMorph") == 0)
+      {
+         i++;
+         if (i >= argc)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         morphLoadFile = argv[i];
          continue;
       }
       if (strcmp(argv[i], "-randomSeed") == 0)
@@ -1099,69 +1248,116 @@ int createHomomorphicNetworks(int argc, char *argv[])
       return(1);
    }
 
-   if ((behaviorsLoadFile == NULL) ||
-       (networkLoadFile == NULL) ||
-       (populationSize < 0) ||
-       (numMutants < 0) ||
-       (numOffspring < 0) ||
-       ((numGenerations < 0) ||
-        (synapseWeightsParm.randomProbability < 0.0f) ||
-        !saveNetworks))
+   if ((behaviorsLoadFile == NULL))
    {
-      printUsageError((char *)"missing required option");
+      printUsageError((char *)"missing loadBehaviors option");
       return(1);
    }
-   if (fitnessQuorum > populationSize)
+   if (numGenerations < 0)
    {
-      printUsageError((char *)"fitnessQuorum > populationSize");
+      printUsageError((char *)"missing numGenerations option");
       return(1);
    }
-   if ((numMutants + numOffspring) > populationSize)
+   if ((morphSaveFile == NULL) && !saveNetworks)
    {
-      printUsageError((char *)"(numMutants + numOffspring) > populationSize");
-      return(1);
-   }
-   if ((numOffspring > 0) && (populationSize < 2))
-   {
-      printUsageError((char *)"numOffspring > 0 && populationSize < 2");
+      printUsageError((char *)"missing save option");
       return(1);
    }
 
-   FILE *fp = fopen(behaviorsLoadFile, "r");
-   if (fp == NULL)
+   result = 0;
+   if (morphLoadFile == NULL)
    {
-      fprintf(stderr, "Cannot open behaviors load file %s\n", behaviorsLoadFile);
-      return(1);
+      if ((networkLoadFile == NULL) ||
+          (populationSize < 0) ||
+          (numMutants < 0) ||
+          (numOffspring < 0) ||
+          (synapseWeightsParm.randomProbability < 0.0f))
+      {
+         printUsageError((char *)"missing required option");
+         return(1);
+      }
+      if (fitnessQuorum > populationSize)
+      {
+         printUsageError((char *)"fitnessQuorum > populationSize");
+         return(1);
+      }
+      if ((numMutants + numOffspring) > populationSize)
+      {
+         printUsageError((char *)"(numMutants + numOffspring) > populationSize");
+         return(1);
+      }
+      if ((numOffspring > 0) && (populationSize < 2))
+      {
+         printUsageError((char *)"numOffspring > 0 && populationSize < 2");
+         return(1);
+      }
+
+      vector<Behavior *> behaviors;
+      if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
+      {
+         fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
+         return(1);
+      }
+      Network *homomorph = new Network(networkLoadFile);
+      assert(homomorph != NULL);
+      NetworkMorphoGenesis *morphoGenesis = new NetworkMorphoGenesis(
+         behaviors, homomorph,
+         populationSize, numMutants, numOffspring, fitnessQuorum,
+         synapseWeightsParm, randomSeed);
+      assert(morphoGenesis != NULL);
+      morphoGenesis->morph(numGenerations);
+      if (morphSaveFile != NULL)
+      {
+         if (!morphoGenesis->save(morphSaveFile))
+         {
+            fprintf(stderr, "Cannot save morph to file %s\n", morphSaveFile);
+            result = 1;
+         }
+      }
+      if (saveNetworks)
+      {
+         morphoGenesis->saveNetworks(filesPrefix);
+      }
+      delete morphoGenesis;
+      for (i = 0, n = (int)behaviors.size(); i < n; i++)
+      {
+         delete behaviors[i];
+      }
+      behaviors.clear();
+      delete homomorph;
    }
-   int n;
-   fscanf(fp, "%d", &n);
-   vector<Behavior *> behaviors;
-   for (int i = 0; i < n; i++)
+   else   // Resume morph.
    {
-      Behavior *behavior = new Behavior(fp);
-      assert(behavior != NULL);
-      behaviors.push_back(behavior);
+      vector<Behavior *> behaviors;
+      if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
+      {
+         fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
+         return(1);
+      }
+      NetworkMorphoGenesis *morphoGenesis =
+         new NetworkMorphoGenesis(behaviors, morphLoadFile);
+      assert(morphoGenesis != NULL);
+      morphoGenesis->morph(numGenerations);
+      if (morphSaveFile != NULL)
+      {
+         if (!morphoGenesis->save(morphSaveFile))
+         {
+            fprintf(stderr, "Cannot save morph to file %s\n", morphSaveFile);
+            result = 1;
+         }
+      }
+      if (saveNetworks)
+      {
+         morphoGenesis->saveNetworks(filesPrefix);
+      }
+      delete morphoGenesis;
+      for (i = 0, n = (int)behaviors.size(); i < n; i++)
+      {
+         delete behaviors[i];
+      }
+      behaviors.clear();
    }
-   fclose(fp);
-   Network *homomorph = new Network(networkLoadFile);
-   assert(homomorph != NULL);
-   NetworkMorphoGenesis *morphoGenesis = new NetworkMorphoGenesis(
-      behaviors, homomorph,
-      populationSize, numMutants, numOffspring,
-      numGenerations, fitnessQuorum,
-      synapseWeightsParm, randomSeed);
-   assert(morphoGenesis != NULL);
-   morphoGenesis->morph();
-   morphoGenesis->saveNetworks(filesPrefix);
-   delete morphoGenesis;
-   for (int i = 0; i < n; i++)
-   {
-      Behavior *behavior = behaviors[i];
-      delete behavior;
-   }
-   behaviors.clear();
-   delete homomorph;
-   return(0);
+   return(result);
 }
 
 
@@ -1348,6 +1544,8 @@ char *Usage2[] =
    (char *)"   -numMotors <number of motors>",
    (char *)"   [-inhibitorDensity <inhibitory neuron density [0.0,1.0]>]",
    (char *)"   [-synapsePropensity <synapse generation propensity (0.0,1.0]>]",
+   (char *)"   [-minSynapseWeight <minimum synapse weight (defaults to 0.0)>]",
+   (char *)"   [-maxSynapseWeight <maximum synapse weight (defaults to 1.0)>]",
    (char *)"   [-randomSeed <random seed>]",
    NULL
 };
@@ -1378,6 +1576,8 @@ int behaviorSearch(int argc, char *argv[])
    int    numMotors         = -1;
    float  inhibitorDensity  = Network::DEFAULT_INHIBITOR_DENSITY;
    float  synapsePropensity = Network::DEFAULT_SYNAPSE_PROPENSITY;
+   float  minSynapseWeight  = 0.0f;
+   float  maxSynapseWeight  = 1.0f;
    RANDOM randomSeed        = Network::DEFAULT_RANDOM_SEED;
    Random *randomizer;
 
@@ -1499,6 +1699,38 @@ int behaviorSearch(int argc, char *argv[])
          }
          continue;
       }
+      if (strcmp(argv[i], "-minSynapseWeight") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         minSynapseWeight = (float)atof(argv[i]);
+         if ((minSynapseWeight <= 0.0f) || (minSynapseWeight > 1.0f))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         continue;
+      }
+      if (strcmp(argv[i], "-maxSynapseWeight") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         maxSynapseWeight = (float)atof(argv[i]);
+         if ((maxSynapseWeight <= 0.0f) || (maxSynapseWeight > 1.0f))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         continue;
+      }
       if (strcmp(argv[i], "-randomSeed") == 0)
       {
          i++;
@@ -1529,6 +1761,11 @@ int behaviorSearch(int argc, char *argv[])
       printUsageError2((char *)"numNeurons <= (numSensors + numMotors)");
       return(1);
    }
+   if (minSynapseWeight > maxSynapseWeight)
+   {
+      printUsageError2((char *)"minSynapseWeight > maxSynapseWeight");
+      return(1);
+   }
    randomizer = new Random(randomSeed);
    assert(randomizer != NULL);
 
@@ -1537,7 +1774,8 @@ int behaviorSearch(int argc, char *argv[])
       printf("trial=%d\n", trial);
       randomSeed = randomizer->RAND();
       printf("randomSeed=%lu\n", randomSeed);
-      Network *network = new Network(numNeurons, numSensors, numMotors, inhibitorDensity, synapsePropensity, randomSeed);
+      Network *network = new Network(numNeurons, numSensors, numMotors,
+                                     inhibitorDensity, synapsePropensity, minSynapseWeight, maxSynapseWeight, randomSeed);
       assert(network != NULL);
       Behavior *behavior = new Behavior(network, seqLength, randomizer);
       assert(behavior != NULL);
