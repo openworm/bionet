@@ -5,6 +5,7 @@
 #define __NET_HOMOMORPH_HPP__
 
 #include "networkMorph.hpp"
+#include <algorithm>
 #ifdef THREADS
 #include <pthread.h>
 #endif

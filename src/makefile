@@ -2,7 +2,7 @@
 
 CC = gcc
 
-CCFLAGS = -DTHREADS -O3 -c -std=c++11
+CCFLAGS = -DTHREADS -O3 -c -std=c++0x 
 LINKLIBS = -lm -lpthread -lstdc++
 
 all: ../bin/bionet
