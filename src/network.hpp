@@ -4,6 +4,7 @@
 #define __NETWORK_HPP__
 
 #include <stdlib.h>
+#include <queue>
 #include <vector>
 #include "neuron.hpp"
 #include "random.hpp"
@@ -59,6 +60,37 @@ public:
    // Print network.
    void print(bool network = true, bool connectivity = false);
 
+   // Network metrics:
+   struct SynapseMetrics
+   {
+      int   total;
+      // Per neuron:
+      int   minimum;
+      int   maximum;
+      int   median;
+      float mean;
+   };
+   struct ConnectionMetrics
+   {
+      int   minimum;
+      int   maximum;
+      int   median;
+      float mean;
+   };
+   struct PathLengthMetrics
+   {
+      int   minimum;
+      int   maximum;
+      int   median;
+      float mean;
+      float shortestMean;
+   };
+   void getMetrics(struct SynapseMetrics&    synapseMetrics,
+                   struct ConnectionMetrics& sensorsToMotorsConnectionMetrics,
+                   struct PathLengthMetrics& sensorsToMotorsPathLengthMetrics,
+                   struct ConnectionMetrics& motorsToSensorsConnectionMetrics,
+                   struct PathLengthMetrics& motorsToSensorsPathLengthMetrics);
+
    // Dump network graph in 'dot' format.
    bool dumpGraph(char *title = NULL, char *filename = NULL);
 
@@ -71,19 +103,21 @@ private:
    bool isConnected(vector<bool>& connectedNeurons, bool toSensor);
    void connect(int index, vector<bool>& connectedNeurons, bool toSensor);
 
-   // Visit motor/sensor endpoints.
-   void visitEndpoints(vector<Neuron *>& endpoints,
-                       vector<Neuron *>& visited, bool motorEndpoints);
+   // Breadth-first visit motor/sensor endpoints.
+   void visitEndpoints(queue<pair<Neuron *, int> >& open,
+                       vector<Neuron *>& closed,
+                       vector<pair<Neuron *, vector<int> *> >& endpoints,
+                       bool motorEndpoints);
 
-   static bool compareNeurons(Neuron *a, Neuron *b)
+   static bool compareNeurons(pair<Neuron *, vector<int> *> a, pair<Neuron *, vector<int> *> b)
    {
-      if (a->label.empty() || b->label.empty())
+      if (a.first->label.empty() || b.first->label.empty())
       {
-         return(a->index < b->index);
+         return(a.first->index < b.first->index);
       }
       else
       {
-         return(a->label < b->label);
+         return(a.first->label < b.first->label);
       }
    }
 };

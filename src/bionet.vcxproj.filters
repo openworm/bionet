@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="behavior.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="bionet.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="network.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="neuron.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="fileio.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="gettime.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="random.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="networkHomomorph.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="networkIsomorph.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="mutableParm.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="networkMorph.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="behavior.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="network.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="neuron.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="fileio.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="gettime.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="random.hpp">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="networkHomomorph.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="networkIsomorph.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="mutableParm.hpp">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="networkMorph.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE" />
+    <None Include="..\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="util">
+      <UniqueIdentifier>{99cf4f2c-7bc2-4f13-86f4-ba920c616498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{10902fff-0616-4212-8f36-03263a93051c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

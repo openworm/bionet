@@ -1,6 +1,13 @@
 if [ $# -eq 0 ]
 then
-./bionet -createHomomorphicNetworks -loadBehaviors CElegans_behaviors.txt -loadNetwork CElegans_network.txt -synapseWeights 0.0 .25 .1 0.05 -populationSize 25 -numMutants 5 -numOffspring 5 -numGenerations 50 -fitnessQuorum 1 -saveNetworks
+./bionet -createHomomorphicNetworks -loadBehaviors CElegans_behaviors.txt -loadNetwork CElegans_network.txt \
+-synapseWeights 0.0 .25 .1 -populationSize 500 -numOffspring 250 -numGenerations 1000 -behaveCutoff 50 \
+-fitnessMotorList 1,2 -crossoverRate .5 -mutationRate .05 -synapseCrossoverBondStrength .5 \
+-synapseOptimizedPathLength 4 -saveMorph morph.txt
 else
-./bionet -createHomomorphicNetworks -loadBehaviors CElegans_behaviors.txt -loadNetwork CElegans_network.txt -synapseWeights 0.0 .25 .1 0.05 -populationSize 25 -numMutants 5 -numOffspring 5 -numGenerations 50 -fitnessQuorum 1 -saveNetworks -randomSeed ${@}
+./bionet -createHomomorphicNetworks -loadBehaviors CElegans_behaviors.txt -loadNetwork CElegans_network.txt \
+-synapseWeights 0.0 .25 .1 -populationSize 500 -numOffspring 250 -numGenerations 1000 -behaveCutoff 50 \
+-fitnessMotorList 1,2 -crossoverRate .5 -mutationRate .05 -synapseCrossoverBondStrength .5 \
+-synapseOptimizedPathLength 4 -saveMorph morph.txt -randomSeed ${@}
 fi
+

@@ -14,6 +14,18 @@ An isomorphic network reproduces the behaviors of another network
 without knowing its interneuron configuration. A homomorphic network
 additionally mirrors the interneuron configuration of the other network.
 
+Bionet was inspired by OpenWorm (openworm.org), a project to model the
+C Elegans nematode worm in a high fidelity artificial creature. Although
+the connectome (neural network) of the worm is known, it is not known
+how it produces sensory-motor behaviors. Bionet is an attempt to do this.
+A network containing the C Elegans connectome is supplied with
+the distribution: CElegans_network.txt. This network has random weights
+and can be used to produce sensory-motor behavior sequences. The goal
+is to evolve other networks that perform the same behaviors, not
+knowing the original network weights. Since C Elegans has close to
+4000 synapses, this is a daunting task. However, accomplishing it would
+be a huge step toward programming an artificial C Elegans.
+
 Required packages:
 
 The UNIX version requires the gcc compiler, make command, and
@@ -78,6 +90,53 @@ bionet
    -printNetworkBehaviors
    -loadBehaviors <behaviors file name>
 
+Create homomorphic networks:
+
+bionet (new morph)
+   -createHomomorphicNetworks
+   -loadBehaviors <behaviors file name>
+   -loadNetwork <homomorph network file name>
+   -populationSize <number population members>
+   -numOffspring <number offspring per generation>
+   [-parentLongevity <parent dies after this many offspring>]
+   -numGenerations <number of evolution generations>
+   [-behaveCutoff <stop evolution when this many members behave>]
+   [-fitnessMotorList <list of motor outputs evaluated for fitness (0-n, comma-separated)>
+      (defaults to fitness evaluation of all motor outputs)]
+   [-fitnessQuorum <fit member quorum required to advance behavior testing to next sensory-motor step>
+      (defaults to immediate testing of entire behavior sequences)]
+   -crossoverRate <probability>
+   -mutationRate <probability>
+   -synapseWeights <minimum> <maximum> <max delta>
+   -synapseCrossoverBondStrength <probability of connected neurons crossing over together>
+   -synapseOptimizedPathLength <synapse path length optimized as a group>
+   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
+   [-randomSeed <random seed>]
+   [-numThreads <number of threads> (defaults to system capacity)]
+
+bionet (resume morph)
+   -createHomomorphicNetworks
+   -loadBehaviors <behaviors file name>
+   -loadMorph <morph file name>
+   -numGenerations <number of evolution generations>
+   [-behaveCutoff <stop evolution when this many members behave>]
+   [-fitnessMotorList <list of motor outputs evaluated for fitness (0-n, comma-separated)>
+      (defaults to loaded list)]
+   [-crossoverRate <probability> (defaults to loaded value)]
+   [-mutationRate <probability> (defaults to loaded value)]
+   [-synapseCrossoverBondStrength <probability of connected neurons crossing over together>]
+   [-synapseOptimizedPathLength <synapse path length optimized as a group>]
+   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
+   [-numThreads <number of threads> (defaults to system capacity)]
+
+Merge homomorphic network populations:
+
+bionet   
+   -mergeHomomorphicNetworks
+   -loadMorph <morph file name> <morph file name>
+   -saveMorph <morph file name>
+   [-randomSeed <random seed>]
+
 Create isomorphic networks:
 
 bionet (new morph)   
@@ -94,6 +153,7 @@ bionet (new morph)
    -synapseWeights <minimum> <maximum> <max delta> <probability of random change>
    -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
    [-randomSeed <random seed>]
+   [-numThreads <number of threads> (defaults to system capacity)]
 
 bionet (resume morph)
    -createIsomorphicNetworks
@@ -101,26 +161,4 @@ bionet (resume morph)
    -loadMorph <morph file name>
    -numGenerations <number of evolution generations>
    -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
-
-Create homomorphic networks:
-
-bionet (new morph)
-   -createHomomorphicNetworks
-   -loadBehaviors <behaviors file name>
-   -loadNetwork <homomorph network file name>
-   -populationSize <number population members>
-   -numMutants <number mutants per generation>
-   -numOffspring <number mating offspring per generation>
-   -numGenerations <number of evolution generations>
-   [-fitnessQuorum <fit member quorum required to advance behavior testing to next sensory-motor step>
-      (defaults to immediate testing of entire behavior sequences)]
-   -synapseWeights <minimum> <maximum> <max delta> <probability of random change>
-   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
-   [-randomSeed <random seed>]
-
-bionet (resume morph)
-   -createHomomorphicNetworks
-   -loadBehaviors <behaviors file name>
-   -loadMorph <morph file name>
-   -numGenerations <number of evolution generations>
-   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
+   [-numThreads <number of threads> (defaults to system capacity)]

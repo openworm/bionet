@@ -1,6 +1,12 @@
 if [ $# -eq 0 ]
 then
-./bionet -createHomomorphicNetworks -loadBehaviors behaviors.txt -loadNetwork network.txt -synapseWeights 0.0 1.0 .1 0.05 -populationSize 25 -numMutants 5 -numOffspring 5 -numGenerations 1000 -fitnessQuorum 1 -saveNetworks
+./bionet -createHomomorphicNetworks -loadBehaviors behaviors.txt -loadNetwork network.txt \
+-synapseWeights 0.0 1.0 .1 -populationSize 25 -numOffspring 10 -numGenerations 1000 \
+-behaveCutoff 5 -crossoverRate .5 -mutationRate .05 -synapseCrossoverBondStrength .5 \
+-synapseOptimizedPathLength 4 -saveMorph morph.txt
 else
-./bionet -createHomomorphicNetworks -loadBehaviors behaviors.txt -loadNetwork network.txt -synapseWeights 0.0 1.0 .1 0.05 -populationSize 25 -numMutants 5 -numOffspring 5 -numGenerations 1000 -fitnessQuorum 1 -saveNetworks -randomSeed ${@}
+./bionet -createHomomorphicNetworks -loadBehaviors behaviors.txt -loadNetwork network.txt \
+-synapseWeights 0.0 1.0 .1 -populationSize 25 -numOffspring 10 -numGenerations 1000 \
+-behaveCutoff 5 -crossoverRate .5 -mutationRate .05 -synapseCrossoverBondStrength .5 \
+-synapseOptimizedPathLength 4 -saveMorph morph.txt -randomSeed ${@}
 fi

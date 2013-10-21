@@ -602,15 +602,64 @@ void Network::print(bool network, bool connectivity)
    // Print connectivity?
    if (connectivity)
    {
-      Neuron           *sensor, *motor;
-      vector<Neuron *> visited;
-      vector<Neuron *> endpoints;
-      int              min, max, sum;
+      int    c, p, q;
+      Neuron *sensor, *motor;
+      queue<pair<Neuron *, int> >            open;
+      vector<Neuron *>                       closed;
+      vector<pair<Neuron *, vector<int> *> > endpoints;
+      int         minConnections, maxConnections, sumConnections;
+      int         minLength, maxLength;
+      int         sumLengths, countLengths;
+      int         sumShortestLengths, countShortestLengths;
+      vector<int> *lengths;
+      vector<int> values, values2;
+
+      printf("Neurons: numSensors=%d, numMotors=%d, numNeurons=%d\n", numSensors, numMotors, numNeurons);
+      values.clear();
+      p = q = -1;
+      for (i = c = 0; i < numNeurons; i++)
+      {
+         for (j = k = 0; j < numNeurons; j++)
+         {
+            if (synapses[i][j] != NULL)
+            {
+               c++;
+               k++;
+            }
+         }
+         if (k > 0)
+         {
+            values.push_back(k);
+            if ((p == -1) || (k < p))
+            {
+               p = k;
+            }
+            if ((q == -1) || (k > q))
+            {
+               q = k;
+            }
+         }
+      }
+      if (((int)values.size() > 0) && ((numNeurons - numMotors) > 0))
+      {
+         sort(values.begin(), values.end());
+         printf("Synapses: total=%d, minimum=%d, maximum=%d, median=%d, mean=%0.2f\n",
+                c, p, q, values[(int)values.size() / 2], (float)c / (float)(numNeurons - numMotors));
+      }
+      else
+      {
+         printf("Synapses: total=0, minimum=-1, maximum=-1, median=-1, mean=0.0f\n");
+      }
 
       printf("Sensor to motors:\n");
       printf("sensor\tmotors\n");
-      min = max = -1;
-      sum = 0;
+      minConnections     = maxConnections = -1;
+      sumConnections     = 0;
+      minLength          = maxLength = -1;
+      sumLengths         = countLengths = 0;
+      sumShortestLengths = countShortestLengths = 0;
+      values.clear();
+      values2.clear();
       for (i = 0; i < numSensors; i++)
       {
          sensor = neurons[i];
@@ -623,24 +672,53 @@ void Network::print(bool network, bool connectivity)
             printf("%s", sensor->label.c_str());
          }
          printf("\t");
+         while (!open.empty())
+         {
+            open.pop();
+         }
+         open.push(pair<Neuron *, int>(sensor, 0));
+         closed.clear();
          endpoints.clear();
-         visited.clear();
-         visited.push_back(sensor);
-         visitEndpoints(endpoints, visited, true);
+         visitEndpoints(open, closed, endpoints, true);
          n = (int)endpoints.size();
-         if ((min == -1) || (n < min))
+         if ((minConnections == -1) || (n < minConnections))
          {
-            min = n;
+            minConnections = n;
          }
-         if ((max == -1) || (n > max))
+         if ((maxConnections == -1) || (n > maxConnections))
          {
-            max = n;
+            maxConnections = n;
          }
-         sum += n;
+         values2.push_back(n);
+         sumConnections += n;
+         for (j = 0; j < n; j++)
+         {
+            lengths = endpoints[j].second;
+            sort(lengths->begin(), lengths->end());
+            if (lengths->size() > 0)
+            {
+               sumShortestLengths += (*lengths)[0];
+               countShortestLengths++;
+            }
+            for (p = 0, q = (int)lengths->size(); p < q; p++)
+            {
+               values.push_back((*lengths)[p]);
+               if ((minLength == -1) || ((*lengths)[p] < minLength))
+               {
+                  minLength = (*lengths)[p];
+               }
+               if ((maxLength == -1) || ((*lengths)[p] > maxLength))
+               {
+                  maxLength = (*lengths)[p];
+               }
+               sumLengths += (*lengths)[p];
+               countLengths++;
+            }
+         }
          sort(endpoints.begin(), endpoints.end(), compareNeurons);
          for (j = 0, n = (int)endpoints.size(); j < n; j++)
          {
-            motor = endpoints[j];
+            motor = endpoints[j].first;
             if (motor->label.empty())
             {
                printf("%d", motor->index);
@@ -653,17 +731,41 @@ void Network::print(bool network, bool connectivity)
             {
                printf(" ");
             }
+            delete endpoints[j].second;
          }
          printf("\n");
       }
-      if (numSensors > 0)
+      if (((int)values2.size() > 0) && (numSensors > 0))
       {
-         printf("minimum=%d, maximum=%d, average=%0.2f\n", min, max, (float)sum / (float)numSensors);
+         sort(values2.begin(), values2.end());
+         printf("Connections: minimum=%d, maximum=%d, median=%d, mean=%0.2f\n",
+                minConnections, maxConnections, values2[(int)values2.size() / 2],
+                (float)sumConnections / (float)numSensors);
+      }
+      else
+      {
+         printf("Connections: minimum=-1, maximum=-1, median=-1, mean=0.0f\n");
+      }
+      if (((int)values.size() > 0) && (countLengths > 0))
+      {
+         sort(values.begin(), values.end());
+         printf("Path lengths: minimum=%d, maximum=%d, median=%d, mean=%0.2f, mean shortest=%0.2f\n",
+                minLength, maxLength, values[(int)values.size() / 2], (float)sumLengths / (float)countLengths,
+                (float)sumShortestLengths / (float)countShortestLengths);
+      }
+      else
+      {
+         printf("Path lengths: minimum=-1, maximum=-1, median=-1, mean=0.0f, mean shortest=0.0f\n");
       }
       printf("Motor to sensors:\n");
       printf("motor\tsensors\n");
-      min = max = -1;
-      sum = 0;
+      minConnections     = maxConnections = -1;
+      sumConnections     = 0;
+      minLength          = maxLength = -1;
+      sumLengths         = countLengths = 0;
+      sumShortestLengths = countShortestLengths = 0;
+      values.clear();
+      values2.clear();
       for (i = numSensors, j = numSensors + numMotors; i < j; i++)
       {
          motor = neurons[i];
@@ -676,24 +778,53 @@ void Network::print(bool network, bool connectivity)
             printf("%s", motor->label.c_str());
          }
          printf("\t");
+         while (!open.empty())
+         {
+            open.pop();
+         }
+         open.push(pair<Neuron *, int>(motor, 0));
+         closed.clear();
          endpoints.clear();
-         visited.clear();
-         visited.push_back(motor);
-         visitEndpoints(endpoints, visited, false);
+         visitEndpoints(open, closed, endpoints, false);
          n = (int)endpoints.size();
-         if ((min == -1) || (n < min))
+         if ((minConnections == -1) || (n < minConnections))
          {
-            min = n;
+            minConnections = n;
          }
-         if ((max == -1) || (n > max))
+         if ((maxConnections == -1) || (n > maxConnections))
          {
-            max = n;
+            maxConnections = n;
          }
-         sum += n;
+         values2.push_back(n);
+         sumConnections += n;
+         for (k = 0; k < n; k++)
+         {
+            lengths = endpoints[k].second;
+            sort(lengths->begin(), lengths->end());
+            if (lengths->size() > 0)
+            {
+               sumShortestLengths += (*lengths)[0];
+               countShortestLengths++;
+            }
+            for (p = 0, q = (int)lengths->size(); p < q; p++)
+            {
+               values.push_back((*lengths)[p]);
+               if ((minLength == -1) || ((*lengths)[p] < minLength))
+               {
+                  minLength = (*lengths)[p];
+               }
+               if ((maxLength == -1) || ((*lengths)[p] > maxLength))
+               {
+                  maxLength = (*lengths)[p];
+               }
+               sumLengths += (*lengths)[p];
+               countLengths++;
+            }
+         }
          sort(endpoints.begin(), endpoints.end(), compareNeurons);
          for (k = 0, n = (int)endpoints.size(); k < n; k++)
          {
-            sensor = endpoints[k];
+            sensor = endpoints[k].first;
             if (sensor->label.empty())
             {
                printf("%d", sensor->index);
@@ -706,31 +837,322 @@ void Network::print(bool network, bool connectivity)
             {
                printf(" ");
             }
+            delete endpoints[k].second;
          }
          printf("\n");
       }
-      if (numMotors > 0)
+      if (((int)values2.size() > 0) && (numMotors > 0))
       {
-         printf("minimum=%d, maximum=%d, average=%0.2f\n", min, max, (float)sum / (float)numMotors);
+         sort(values2.begin(), values2.end());
+         printf("Connections: minimum=%d, maximum=%d, median=%d, mean=%0.2f\n",
+                minConnections, maxConnections, values2[(int)values2.size() / 2],
+                (float)sumConnections / (float)numMotors);
+      }
+      else
+      {
+         printf("Connections: minimum=-1, maximum=-1, median=-1, mean=0.0f\n");
+      }
+      if (((int)values.size() > 0) && (countLengths > 0))
+      {
+         sort(values.begin(), values.end());
+         printf("Path lengths: minimum=%d, maximum=%d, median=%d, mean=%0.2f, mean shortest=%0.2f\n",
+                minLength, maxLength, values[(int)values.size() / 2], (float)sumLengths / (float)countLengths,
+                (float)sumShortestLengths / (float)countShortestLengths);
+      }
+      else
+      {
+         printf("Path lengths: minimum=-1, maximum=-1, median=-1, mean=0.0f, mean shortest=0.0f\n");
       }
    }
 }
 
 
+// Get network metrics.
+void Network::getMetrics(struct SynapseMetrics&    synapseMetrics,
+                         struct ConnectionMetrics& sensorsToMotorsConnectionMetrics,
+                         struct PathLengthMetrics& sensorsToMotorsPathLengthMetrics,
+                         struct ConnectionMetrics& motorsToSensorsConnectionMetrics,
+                         struct PathLengthMetrics& motorsToSensorsPathLengthMetrics)
+{
+   int    i, j, k, n, c, p, q;
+   Neuron *sensor, *motor;
+
+   queue<pair<Neuron *, int> >            open;
+   vector<Neuron *>                       closed;
+   vector<pair<Neuron *, vector<int> *> > endpoints;
+   int         minConnections, maxConnections, sumConnections;
+   int         minLength, maxLength;
+   int         sumLengths, countLengths;
+   int         sumShortestLengths, countShortestLengths;
+   vector<int> *lengths;
+   vector<int> values, values2;
+
+   values.clear();
+   p = q = -1;
+   for (i = c = 0; i < numNeurons; i++)
+   {
+      for (j = k = 0; j < numNeurons; j++)
+      {
+         if (synapses[i][j] != NULL)
+         {
+            c++;
+            k++;
+         }
+      }
+      if (k > 0)
+      {
+         values.push_back(k);
+         if ((p == -1) || (k < p))
+         {
+            p = k;
+         }
+         if ((q == -1) || (k > q))
+         {
+            q = k;
+         }
+      }
+   }
+   if (((int)values.size() > 0) && ((numNeurons - numMotors) > 0))
+   {
+      synapseMetrics.total   = c;
+      synapseMetrics.minimum = p;
+      synapseMetrics.maximum = q;
+      sort(values.begin(), values.end());
+      synapseMetrics.median = values[(int)values.size() / 2];
+      synapseMetrics.mean   = (float)c / (float)(numNeurons - numMotors);
+   }
+   else
+   {
+      synapseMetrics.total   = 0;
+      synapseMetrics.minimum = -1;
+      synapseMetrics.maximum = -1;
+      synapseMetrics.median  = -1;
+      synapseMetrics.mean    = 0.0f;
+   }
+
+   minConnections     = maxConnections = -1;
+   sumConnections     = 0;
+   minLength          = maxLength = -1;
+   sumLengths         = countLengths = 0;
+   sumShortestLengths = countShortestLengths = 0;
+   values.clear();
+   values2.clear();
+   for (i = 0; i < numSensors; i++)
+   {
+      sensor = neurons[i];
+      while (!open.empty())
+      {
+         open.pop();
+      }
+      open.push(pair<Neuron *, int>(sensor, 0));
+      closed.clear();
+      endpoints.clear();
+      visitEndpoints(open, closed, endpoints, true);
+      n = (int)endpoints.size();
+      if ((minConnections == -1) || (n < minConnections))
+      {
+         minConnections = n;
+      }
+      if ((maxConnections == -1) || (n > maxConnections))
+      {
+         maxConnections = n;
+      }
+      values2.push_back(n);
+      sumConnections += n;
+      for (j = 0; j < n; j++)
+      {
+         lengths = endpoints[j].second;
+         sort(lengths->begin(), lengths->end());
+         if (lengths->size() > 0)
+         {
+            sumShortestLengths += (*lengths)[0];
+            countShortestLengths++;
+         }
+         for (p = 0, q = (int)lengths->size(); p < q; p++)
+         {
+            values.push_back((*lengths)[p]);
+            if ((minLength == -1) || ((*lengths)[p] < minLength))
+            {
+               minLength = (*lengths)[p];
+            }
+            if ((maxLength == -1) || ((*lengths)[p] > maxLength))
+            {
+               maxLength = (*lengths)[p];
+            }
+            sumLengths += (*lengths)[p];
+            countLengths++;
+         }
+         delete endpoints[j].second;
+      }
+   }
+   if ((sumConnections > 0) && (numSensors > 0))
+   {
+      sensorsToMotorsConnectionMetrics.minimum = minConnections;
+      sensorsToMotorsConnectionMetrics.maximum = maxConnections;
+      sort(values2.begin(), values2.end());
+      sensorsToMotorsConnectionMetrics.median = values2[(int)values2.size() / 2];
+      sensorsToMotorsConnectionMetrics.mean   = (float)sumConnections / (float)numSensors;
+   }
+   else
+   {
+      sensorsToMotorsConnectionMetrics.minimum = -1;
+      sensorsToMotorsConnectionMetrics.maximum = -1;
+      sensorsToMotorsConnectionMetrics.median  = -1;
+      sensorsToMotorsConnectionMetrics.mean    = 0.0f;
+   }
+   if (((int)values.size() > 0) && (countLengths > 0))
+   {
+      sensorsToMotorsPathLengthMetrics.minimum = minLength;
+      sensorsToMotorsPathLengthMetrics.maximum = maxLength;
+      sort(values.begin(), values.end());
+      sensorsToMotorsPathLengthMetrics.median       = values[(int)values.size() / 2];
+      sensorsToMotorsPathLengthMetrics.mean         = (float)sumLengths / (float)countLengths;
+      sensorsToMotorsPathLengthMetrics.shortestMean = (float)sumShortestLengths / (float)countShortestLengths;
+   }
+   else
+   {
+      sensorsToMotorsPathLengthMetrics.minimum      = -1;
+      sensorsToMotorsPathLengthMetrics.maximum      = -1;
+      sensorsToMotorsPathLengthMetrics.median       = -1;
+      sensorsToMotorsPathLengthMetrics.mean         = 0.0f;
+      sensorsToMotorsPathLengthMetrics.shortestMean = 0.0f;
+   }
+
+   minConnections     = maxConnections = -1;
+   sumConnections     = 0;
+   minLength          = maxLength = -1;
+   sumLengths         = countLengths = 0;
+   sumShortestLengths = countShortestLengths = 0;
+   values.clear();
+   values2.clear();
+   for (i = numSensors, j = numSensors + numMotors; i < j; i++)
+   {
+      motor = neurons[i];
+      while (!open.empty())
+      {
+         open.pop();
+      }
+      open.push(pair<Neuron *, int>(motor, 0));
+      closed.clear();
+      endpoints.clear();
+      visitEndpoints(open, closed, endpoints, false);
+      n = (int)endpoints.size();
+      if ((minConnections == -1) || (n < minConnections))
+      {
+         minConnections = n;
+      }
+      if ((maxConnections == -1) || (n > maxConnections))
+      {
+         maxConnections = n;
+      }
+      values2.push_back(n);
+      sumConnections += n;
+      for (k = 0; k < n; k++)
+      {
+         lengths = endpoints[k].second;
+         sort(lengths->begin(), lengths->end());
+         if (lengths->size() > 0)
+         {
+            sumShortestLengths += (*lengths)[0];
+            countShortestLengths++;
+         }
+         for (p = 0, q = (int)lengths->size(); p < q; p++)
+         {
+            values.push_back((*lengths)[p]);
+            if ((minLength == -1) || ((*lengths)[p] < minLength))
+            {
+               minLength = (*lengths)[p];
+            }
+            if ((maxLength == -1) || ((*lengths)[p] > maxLength))
+            {
+               maxLength = (*lengths)[p];
+            }
+            sumLengths += (*lengths)[p];
+            countLengths++;
+         }
+         delete endpoints[k].second;
+      }
+   }
+   if ((sumConnections > 0) && (numMotors > 0))
+   {
+      motorsToSensorsConnectionMetrics.minimum = minConnections;
+      motorsToSensorsConnectionMetrics.maximum = maxConnections;
+      sort(values2.begin(), values2.end());
+      motorsToSensorsConnectionMetrics.median = values2[(int)values2.size() / 2];
+      motorsToSensorsConnectionMetrics.mean   = (float)sumConnections / (float)numMotors;
+   }
+   else
+   {
+      motorsToSensorsConnectionMetrics.minimum = -1;
+      motorsToSensorsConnectionMetrics.maximum = -1;
+      motorsToSensorsConnectionMetrics.median  = -1;
+      motorsToSensorsConnectionMetrics.mean    = 0.0f;
+   }
+   if (((int)values.size() > 0) && (countLengths > 0))
+   {
+      motorsToSensorsPathLengthMetrics.minimum = minLength;
+      motorsToSensorsPathLengthMetrics.maximum = maxLength;
+      sort(values.begin(), values.end());
+      motorsToSensorsPathLengthMetrics.median       = values[(int)values.size() / 2];
+      motorsToSensorsPathLengthMetrics.mean         = (float)sumLengths / (float)countLengths;
+      motorsToSensorsPathLengthMetrics.shortestMean = (float)sumShortestLengths / (float)countShortestLengths;
+   }
+   else
+   {
+      motorsToSensorsPathLengthMetrics.minimum      = -1;
+      motorsToSensorsPathLengthMetrics.maximum      = -1;
+      motorsToSensorsPathLengthMetrics.median       = -1;
+      motorsToSensorsPathLengthMetrics.mean         = 0.0f;
+      motorsToSensorsPathLengthMetrics.shortestMean = 0.0f;
+   }
+}
+
+
 // Visit motor/sensor endpoints.
-void Network::visitEndpoints(vector<Neuron *>& endpoints,
-                             vector<Neuron *>& visited, bool motorEndpoints)
+void Network::visitEndpoints(queue<pair<Neuron *, int> >& open,
+                             vector<Neuron *>& closed,
+                             vector<pair<Neuron *, vector<int> *> >& endpoints,
+                             bool motorEndpoints)
 {
    int i, j, k;
 
-   Neuron *neuron = visited.back();
+   vector<int> *lengths;
+
+   if (open.empty())
+   {
+      return;
+   }
+   pair<Neuron *, int> current = open.front();
+   open.pop();
+   Neuron *neuron = current.first;
    int    index   = neuron->index;
+   int    depth   = current.second;
+   closed.push_back(neuron);
 
    if (motorEndpoints)
    {
       if ((index >= numSensors) && (index < (numSensors + numMotors)))
       {
-         endpoints.push_back(neuron);
+         for (i = 0, j = (int)endpoints.size(); i < j; i++)
+         {
+            if (endpoints[i].first == neuron)
+            {
+               break;
+            }
+         }
+         if (i == j)
+         {
+            lengths = new vector<int>();
+            assert(lengths != NULL);
+            lengths->push_back(depth);
+            endpoints.push_back(pair<Neuron *, vector<int> *>(neuron, lengths));
+         }
+         else
+         {
+            lengths = endpoints[i].second;
+            lengths->push_back(depth);
+            endpoints[i] = pair<Neuron *, vector<int> *>(neuron, lengths);
+         }
       }
       else
       {
@@ -739,17 +1161,16 @@ void Network::visitEndpoints(vector<Neuron *>& endpoints,
             if (synapses[index][i] != NULL)
             {
                neuron = neurons[i];
-               for (j = 0, k = (int)visited.size(); j < k; j++)
+               for (j = 0, k = (int)closed.size(); j < k; j++)
                {
-                  if (neuron == visited[j])
+                  if (neuron == closed[j])
                   {
                      break;
                   }
                }
                if (j == k)
                {
-                  visited.push_back(neuron);
-                  visitEndpoints(endpoints, visited, motorEndpoints);
+                  open.push(pair<Neuron *, int>(neuron, depth + 1));
                }
             }
          }
@@ -759,7 +1180,26 @@ void Network::visitEndpoints(vector<Neuron *>& endpoints,
    {
       if (index < numSensors)
       {
-         endpoints.push_back(neuron);
+         for (i = 0, j = (int)endpoints.size(); i < j; i++)
+         {
+            if (endpoints[i].first == neuron)
+            {
+               break;
+            }
+         }
+         if (i == j)
+         {
+            lengths = new vector<int>();
+            assert(lengths != NULL);
+            lengths->push_back(depth);
+            endpoints.push_back(pair<Neuron *, vector<int> *>(neuron, lengths));
+         }
+         else
+         {
+            lengths = endpoints[i].second;
+            lengths->push_back(depth);
+            endpoints[i] = pair<Neuron *, vector<int> *>(neuron, lengths);
+         }
       }
       else
       {
@@ -768,22 +1208,22 @@ void Network::visitEndpoints(vector<Neuron *>& endpoints,
             if (synapses[i][index] != NULL)
             {
                neuron = neurons[i];
-               for (j = 0, k = (int)visited.size(); j < k; j++)
+               for (j = 0, k = (int)closed.size(); j < k; j++)
                {
-                  if (neuron == visited[j])
+                  if (neuron == closed[j])
                   {
                      break;
                   }
                }
                if (j == k)
                {
-                  visited.push_back(neuron);
-                  visitEndpoints(endpoints, visited, motorEndpoints);
+                  open.push(pair<Neuron *, int>(neuron, depth + 1));
                }
             }
          }
       }
    }
+   visitEndpoints(open, closed, endpoints, motorEndpoints);
 }
 
 

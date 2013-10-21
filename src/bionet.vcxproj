@@ -44,16 +44,20 @@
     <OutDir>Debug\</OutDir>
     <IntDir>Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\include;..\include\win32;$(IncludePath)</IncludePath>
+    <LibraryPath>..\lib;..\lib\win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>Release\</OutDir>
     <IntDir>Release\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\include;..\include\win32;$(IncludePath)</IncludePath>
+    <LibraryPath>..\lib;..\lib\win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>THREADS;WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -63,7 +67,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\bin\bionet.exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)bionet.pdb</ProgramDatabaseFile>
@@ -75,7 +79,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>THREADS;WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader />
@@ -83,7 +87,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\bin\bionet.exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -96,19 +100,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bionet.cpp" />
-    <ClCompile Include="networkMorph.cpp" />
     <ClCompile Include="fileio.cpp" />
     <ClCompile Include="gettime.cpp" />
+    <ClCompile Include="mutableParm.cpp" />
     <ClCompile Include="network.cpp" />
+    <ClCompile Include="networkHomomorph.cpp" />
+    <ClCompile Include="networkIsomorph.cpp" />
+    <ClCompile Include="networkMorph.cpp" />
     <ClCompile Include="neuron.cpp" />
     <ClCompile Include="random.cpp" />
     <ClCompile Include="behavior.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="networkMorph.hpp" />
     <ClInclude Include="fileio.h" />
     <ClInclude Include="gettime.h" />
+    <ClInclude Include="mutableParm.hpp" />
     <ClInclude Include="network.hpp" />
+    <ClInclude Include="networkHomomorph.hpp" />
+    <ClInclude Include="networkIsomorph.hpp" />
+    <ClInclude Include="networkMorph.hpp" />
     <ClInclude Include="neuron.hpp" />
     <ClInclude Include="random.hpp" />
     <ClInclude Include="behavior.hpp" />
