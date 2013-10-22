@@ -112,6 +112,7 @@ bionet (new morph)
    -synapseOptimizedPathLength <synapse path length optimized as a group>
    -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
    [-randomSeed <random seed>]
+   [-logMorph <morph log file name> (instead of standard output)]
    [-numThreads <number of threads> (defaults to system capacity)]
 
 bionet (resume morph)
@@ -127,6 +128,7 @@ bionet (resume morph)
    [-synapseCrossoverBondStrength <probability of connected neurons crossing over together>]
    [-synapseOptimizedPathLength <synapse path length optimized as a group>]
    -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
+   [-logMorph <morph log file name> (instead of standard output)]
    [-numThreads <number of threads> (defaults to system capacity)]
 
 Merge homomorphic network populations:
@@ -153,6 +155,7 @@ bionet (new morph)
    -synapseWeights <minimum> <maximum> <max delta> <probability of random change>
    -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
    [-randomSeed <random seed>]
+   [-logMorph <morph log file name> (instead of standard output)]
    [-numThreads <number of threads> (defaults to system capacity)]
 
 bionet (resume morph)
@@ -161,4 +164,5 @@ bionet (resume morph)
    -loadMorph <morph file name>
    -numGenerations <number of evolution generations>
    -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
+   [-logMorph <morph log file name> (instead of standard output)]
    [-numThreads <number of threads> (defaults to system capacity)]

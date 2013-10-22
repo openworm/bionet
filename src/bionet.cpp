@@ -2,8 +2,8 @@
 
 #include "networkHomomorph.hpp"
 #include "networkIsomorph.hpp"
-#ifdef THREADS
-#include <thread>
+#ifndef WIN32
+#include <sys/sysinfo.h>
 #endif
 
 // Usage.
@@ -84,6 +84,7 @@ char *Usage[] =
    (char *)"   -synapseOptimizedPathLength <synapse path length optimized as a group>",
    (char *)"   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default=\"network_\")>]",
    (char *)"   [-randomSeed <random seed>]",
+   (char *)"   [-logMorph <log file name>]",
 #ifdef THREADS
    (char *)"   [-numThreads <number of threads> (defaults to system capacity)]",
 #endif
@@ -101,6 +102,7 @@ char *Usage[] =
    (char *)"   [-synapseBondStrength <probability of connected neurons crossing over together> (defaults to loaded value)]",
    (char *)"   [-synapseChainSize <number of chained synapses optimized as a group> (defaults to loaded value)]",
    (char *)"   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default=\"network_\")>]",
+   (char *)"   [-logMorph <morph log file name> (instead of standard output)]",
 #ifdef THREADS
    (char *)"   [-numThreads <number of threads> (defaults to system capacity)]",
 #endif
@@ -110,7 +112,7 @@ char *Usage[] =
    (char *)"bionet",
    (char *)"   -mergeHomomorphicNetworks",
    (char *)"   -loadMorph <morph file name> <morph file name>",
-   (char *)"   -saveMorph <morph file name>",
+   (char *)"   -saveMorph <morph log file name> (instead of standard output)",
    (char *)"   [-randomSeed <random seed>]",
    (char *)"",
    (char *)"Create isomorphic networks:",
@@ -129,6 +131,7 @@ char *Usage[] =
    (char *)"   -synapseWeights <minimum> <maximum> <max delta> <probability of random change>",
    (char *)"   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default=\"network_\")>]",
    (char *)"   [-randomSeed <random seed>]",
+   (char *)"   [-logMorph <morph log file name> (instead of standard output)]",
 #ifdef THREADS
    (char *)"   [-numThreads <number of threads> (defaults to system capacity)]",
 #endif
@@ -139,6 +142,7 @@ char *Usage[] =
    (char *)"   -loadMorph <morph file name>",
    (char *)"   -numGenerations <number of evolution generations>",
    (char *)"   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default=\"network_\")>]",
+   (char *)"   [-logMorph <morph log file name> (instead of standard output)]",
 #ifdef THREADS
    (char *)"   [-numThreads <number of threads> (defaults to system capacity)]",
 #endif
@@ -751,6 +755,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
    RANDOM      randomSeed     = Network::DEFAULT_RANDOM_SEED;
    char        *morphSaveFile = NULL;
    char        *morphLoadFile = NULL;
+   char        *logFile       = NULL;
 
 #ifdef THREADS
    int numThreads = -1;
@@ -1063,6 +1068,17 @@ int createHomomorphicNetworks(int argc, char *argv[])
          randomSeed = atoi(argv[i]);
          continue;
       }
+      if (strcmp(argv[i], "-logMorph") == 0)
+      {
+         i++;
+         if (i >= argc)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         logFile = argv[i];
+         continue;
+      }
 #ifdef THREADS
       if (strcmp(argv[i], "-numThreads") == 0)
       {
@@ -1107,7 +1123,13 @@ int createHomomorphicNetworks(int argc, char *argv[])
 #ifdef THREADS
    if (numThreads == -1)
    {
-      numThreads = (int)thread::hardware_concurrency();
+#ifdef WIN32
+      SYSTEM_INFO info;
+      GetSystemInfo(&info);
+      numThreads = info.dwNumberOfProcessors;
+#else
+      numThreads = get_nprocs();
+#endif
       if (numThreads <= 0)
       {
          numThreads = 1;
@@ -1162,7 +1184,6 @@ int createHomomorphicNetworks(int argc, char *argv[])
       assert(morphoGenesis != NULL);
       if (fitnessMotorList.size() > 0)
       {
-         std::sort(fitnessMotorList.begin(), fitnessMotorList.end());
          n = morphoGenesis->homomorph->numMotors;
          ((NetworkMorphoGenesis *)morphoGenesis)->fitnessMotorList.resize(n, false);
          for (i = 0, j = (int)fitnessMotorList.size(); i < j; i++)
@@ -1190,9 +1211,9 @@ int createHomomorphicNetworks(int argc, char *argv[])
       }
    }
 #ifdef THREADS
-   morphoGenesis->morph(numGenerations, numThreads, behaveCutoff);
+   morphoGenesis->morph(numGenerations, numThreads, behaveCutoff, logFile);
 #else
-   morphoGenesis->morph(numGenerations, behaveCutoff);
+   morphoGenesis->morph(numGenerations, behaveCutoff, logFile);
 #endif
    if (morphSaveFile != NULL)
    {
@@ -1338,6 +1359,7 @@ int createIsomorphicNetworks(int argc, char *argv[])
    RANDOM      randomSeed     = Network::DEFAULT_RANDOM_SEED;
    char        *morphSaveFile = NULL;
    char        *morphLoadFile = NULL;
+   char        *logFile       = NULL;
 
 #ifdef THREADS
    int numThreads = -1;
@@ -1542,6 +1564,17 @@ int createIsomorphicNetworks(int argc, char *argv[])
          randomSeed = atoi(argv[i]);
          continue;
       }
+      if (strcmp(argv[i], "-logMorph") == 0)
+      {
+         i++;
+         if (i >= argc)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         logFile = argv[i];
+         continue;
+      }
 #ifdef THREADS
       if (strcmp(argv[i], "-numThreads") == 0)
       {
@@ -1585,7 +1618,13 @@ int createIsomorphicNetworks(int argc, char *argv[])
 #ifdef THREADS
    if (numThreads == -1)
    {
-      numThreads = (int)thread::hardware_concurrency();
+#ifdef WIN32
+      SYSTEM_INFO info;
+      GetSystemInfo(&info);
+      numThreads = info.dwNumberOfProcessors;
+#else
+      numThreads = get_nprocs();
+#endif
       if (numThreads <= 0)
       {
          numThreads = 1;
@@ -1630,9 +1669,9 @@ int createIsomorphicNetworks(int argc, char *argv[])
       assert(morphoGenesis != NULL);
    }
 #ifdef THREADS
-   morphoGenesis->morph(numGenerations, numThreads);
+   morphoGenesis->morph(numGenerations, numThreads, logFile);
 #else
-   morphoGenesis->morph(numGenerations);
+   morphoGenesis->morph(numGenerations, logFile);
 #endif
    if (morphSaveFile != NULL)
    {

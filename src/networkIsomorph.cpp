@@ -2,6 +2,7 @@
 
 #include "networkIsomorph.hpp"
 #include <math.h>
+#include <errno.h>
 
 // Constructor.
 NetworkIsomorph::NetworkIsomorph(MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
@@ -558,16 +559,19 @@ void NetworkIsomorph::save(FILE *fp)
 
 
 // Print.
-void NetworkIsomorph::print()
+void NetworkIsomorph::print(bool printNetwork)
 {
-   printf("Network:\n");
-   if (network != NULL)
+   if (printNetwork)
    {
-      network->print();
-   }
-   else
-   {
-      printf("NULL\n");
+      printf("Network:\n");
+      if (network != NULL)
+      {
+         network->print();
+      }
+      else
+      {
+         printf("NULL\n");
+      }
    }
    printf("tag=%d\n", tag);
    printf("error=%f\n", error);
@@ -580,6 +584,14 @@ void NetworkIsomorph::print()
    {
       printf("false\n");
    }
+   printf("excitatoryNeuronsParm:\n");
+   excitatoryNeuronsParm.print();
+   printf("inhibitoryNeuronsParm:\n");
+   inhibitoryNeuronsParm.print();
+   printf("synapsePropensitiesParm:\n");
+   synapsePropensitiesParm.print();
+   printf("synapseWeightsParm:\n");
+   synapseWeightsParm.print();
 }
 
 
@@ -660,14 +672,19 @@ NetworkIsomorphoGenesis::~NetworkIsomorphoGenesis()
 
 // Morph networks.
 #ifdef THREADS
-void NetworkIsomorphoGenesis::morph(int numGenerations, int numThreads)
+void NetworkIsomorphoGenesis::morph(int numGenerations,
+                                    int numThreads, char *logFile)
 #else
-void NetworkIsomorphoGenesis::morph(int numGenerations)
+void NetworkIsomorphoGenesis::morph(int numGenerations, char *logFile)
 #endif
 {
    int i, c, g, n;
    int maxBehaviorStep;
 
+   if (logFile != NULL)
+   {
+      startMorphLog(logFile);
+   }
 #ifdef THREADS
    // Start additional morph threads.
    assert(numThreads > 0);
@@ -701,7 +718,7 @@ void NetworkIsomorphoGenesis::morph(int numGenerations)
          }
       }
    }
-   printf("Threads=%d\n", numThreads);
+   fprintf(morphfp, "Threads=%d\n", numThreads);
 #endif
 
    if (behaviorStep != -1)
@@ -716,28 +733,29 @@ void NetworkIsomorphoGenesis::morph(int numGenerations)
    }
    evaluate();
    sort();
-   printf("Generation=%d\n", generation);
-   printf("Population:\n");
-   printf("Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Generation=%d\n", generation);
+   fprintf(morphfp, "Population:\n");
+   fprintf(morphfp, "Member\tgeneration\tfitness\n");
    for (i = 0, n = (int)population.size(); i < n; i++)
    {
-      printf("%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
+      fprintf(morphfp, "%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
    }
    if (behaviorStep != -1)
    {
-      printf("Behavior testing step=%d\n", behaviorStep);
+      fprintf(morphfp, "Behavior testing step=%d\n", behaviorStep);
    }
+   fflush(morphfp);
    for (g = 0; g < numGenerations; g++)
    {
       generation++;
-      printf("Generation=%d\n", generation);
+      fprintf(morphfp, "Generation=%d\n", generation);
       mutate();
       prune();
-      printf("Population:\n");
-      printf("Member\tgeneration\tfitness\n");
+      fprintf(morphfp, "Population:\n");
+      fprintf(morphfp, "Member\tgeneration\tfitness\n");
       for (i = c = 0, n = (int)population.size(); i < n; i++)
       {
-         printf("%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
+         fprintf(morphfp, "%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
          if (population[i]->behaves)
          {
             c++;
@@ -745,7 +763,7 @@ void NetworkIsomorphoGenesis::morph(int numGenerations)
       }
       if (behaviorStep != -1)
       {
-         printf("Behavior testing step=%d\n", behaviorStep);
+         fprintf(morphfp, "Behavior testing step=%d\n", behaviorStep);
          if ((c >= fitnessQuorum) && (behaviorStep < maxBehaviorStep))
          {
             behaviorStep++;
@@ -753,6 +771,7 @@ void NetworkIsomorphoGenesis::morph(int numGenerations)
             sort();
          }
       }
+      fflush(morphfp);
    }
 
 #ifdef THREADS
@@ -772,6 +791,11 @@ void NetworkIsomorphoGenesis::morph(int numGenerations)
       delete threads;
    }
 #endif
+
+   if (logFile != NULL)
+   {
+      stopMorphLog();
+   }
 }
 
 
@@ -798,8 +822,8 @@ void *NetworkIsomorphoGenesis::morphThread(void *arg)
 // Mutate members.
 void NetworkIsomorphoGenesis::mutate()
 {
-   printf("Mutate:\n");
-   printf("Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Mutate:\n");
+   fprintf(morphfp, "Member\tgeneration\tfitness\n");
    mutate(0);
 }
 
@@ -851,7 +875,7 @@ void NetworkIsomorphoGenesis::mutate(int threadNum)
       offspring[i]->tag++;
       ((NetworkIsomorph *)offspring[i])->mutate();
       offspring[i]->evaluate(behaviors, behaviorStep);
-      printf("%d\t%d\t\t%f\n", i, offspring[i]->tag, offspring[i]->error);
+      fprintf(morphfp, "%d\t%d\t\t%f\n", i, offspring[i]->tag, offspring[i]->error);
    }
 
 #ifdef THREADS
@@ -869,11 +893,11 @@ void NetworkIsomorphoGenesis::prune()
 {
    int i, j, n;
 
-   printf("Prune:\n");
-   printf("Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Prune:\n");
+   fprintf(morphfp, "Member\tgeneration\tfitness\n");
    for (n = (int)population.size(), i = n - numOffspring, j = 0; i < n; i++, j++)
    {
-      printf("%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
+      fprintf(morphfp, "%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
       delete (NetworkIsomorph *)population[i];
       population[i] = offspring[j];
    }
@@ -952,7 +976,7 @@ bool NetworkIsomorphoGenesis::save(char *filename)
 
 
 // Print.
-void NetworkIsomorphoGenesis::print()
+void NetworkIsomorphoGenesis::print(bool printNetwork)
 {
    int i, n;
 
@@ -968,6 +992,6 @@ void NetworkIsomorphoGenesis::print()
    printf("Population:\n");
    for (i = 0, n = (int)population.size(); i < n; i++)
    {
-      ((NetworkIsomorph *)population[i])->print();
+      ((NetworkIsomorph *)population[i])->print(printNetwork);
    }
 }

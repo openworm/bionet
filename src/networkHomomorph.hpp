@@ -5,7 +5,6 @@
 #define __NET_HOMOMORPH_HPP__
 
 #include "networkMorph.hpp"
-#include <algorithm>
 #ifdef THREADS
 #include <pthread.h>
 #endif
@@ -43,7 +42,7 @@ public:
    void save(FILE *fp);
 
    // Print.
-   void print();
+   void print(bool printNetwork = false);
 
 private:
 
@@ -86,10 +85,12 @@ public:
 
    // Morph networks.
 #ifdef THREADS
-   void morph(int numGenerations, int numThreads, int behaveCutoff = -1);
+   void morph(int numGenerations, int numThreads,
+              int behaveCutoff = -1, char *logFile = NULL);
 
 #else
-   void morph(int numGenerations, int behaveCutoff = -1);
+   void morph(int numGenerations,
+              int behaveCutoff = -1, char *logFile = NULL);
 #endif
 
    // Mate members.
@@ -108,7 +109,7 @@ public:
    bool save(char *filename);
 
    // Print.
-   void print();
+   void print(bool printNetwork = false);
 
 private:
 

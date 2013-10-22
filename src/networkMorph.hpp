@@ -78,8 +78,12 @@ public:
    // Save networks.
    void saveNetworks(char *filePrefix);
 
+   bool startMorphLog(char *logFile);
+   void stopMorphLog();
+
 protected:
 
    Random *randomizer;
+   FILE   *morphfp;
 };
 #endif

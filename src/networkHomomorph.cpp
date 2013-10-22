@@ -2,6 +2,7 @@
 
 #include "networkHomomorph.hpp"
 #include <math.h>
+#include <errno.h>
 
 // Constructor.
 NetworkHomomorph::NetworkHomomorph(Network *homomorph, MutableParm& synapseWeightsParm,
@@ -257,16 +258,19 @@ void NetworkHomomorph::save(FILE *fp)
 
 
 // Print.
-void NetworkHomomorph::print()
+void NetworkHomomorph::print(bool printNetwork)
 {
-   printf("Network:\n");
-   if (network != NULL)
+   if (printNetwork)
    {
-      network->print();
-   }
-   else
-   {
-      printf("NULL\n");
+      printf("Network:\n");
+      if (network != NULL)
+      {
+         network->print();
+      }
+      else
+      {
+         printf("NULL\n");
+      }
    }
    printf("tag=%d\n", tag);
    printf("error=%f\n", error);
@@ -280,6 +284,8 @@ void NetworkHomomorph::print()
       printf("false\n");
    }
    printf("offspringCount=%d\n", offspringCount);
+   printf("synapseWeightsParm:\n");
+   synapseWeightsParm.print();
 }
 
 
@@ -308,7 +314,6 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(vector<Behavior *>& behaviors
    this->parentLongevity = parentLongevity;
    if (fitnessMotorList.size() > 0)
    {
-      std::sort(fitnessMotorList.begin(), fitnessMotorList.end());
       n = homomorph->numMotors;
       this->fitnessMotorList.resize(n, false);
       for (i = 0, j = (int)fitnessMotorList.size(); i < j; i++)
@@ -374,14 +379,20 @@ NetworkHomomorphoGenesis::~NetworkHomomorphoGenesis()
 
 // Morph networks.
 #ifdef THREADS
-void NetworkHomomorphoGenesis::morph(int numGenerations, int numThreads, int behaveCutoff)
+void NetworkHomomorphoGenesis::morph(int numGenerations, int numThreads,
+                                     int behaveCutoff, char *logFile)
 #else
-void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff)
+void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
+                                     char *logFile)
 #endif
 {
    int i, c, g, n;
    int maxBehaviorStep;
 
+   if (logFile != NULL)
+   {
+      startMorphLog(logFile);
+   }
 #ifdef THREADS
    // Start additional morph threads.
    assert(numThreads > 0);
@@ -415,21 +426,8 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff)
          }
       }
    }
-   printf("Threads=%d\n", numThreads);
+   fprintf(morphfp, "Threads=%d\n", numThreads);
 #endif
-
-   if (fitnessMotorList.size() > 0)
-   {
-      printf("Fitness motor list:\n");
-      for (i = 0, n = (int)fitnessMotorList.size(); i < n; i++)
-      {
-         if (fitnessMotorList[i])
-         {
-            printf("%d ", i);
-         }
-      }
-      printf("\n");
-   }
 
    if (behaviorStep != -1)
    {
@@ -443,30 +441,31 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff)
    }
    evaluate();
    sort();
-   printf("Generation=%d\n", generation);
-   printf("Population:\n");
-   printf("Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Generation=%d\n", generation);
+   fprintf(morphfp, "Population:\n");
+   fprintf(morphfp, "Member\tgeneration\tfitness\n");
    for (i = 0, n = (int)population.size(); i < n; i++)
    {
-      printf("%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
+      fprintf(morphfp, "%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
    }
    if (behaviorStep != -1)
    {
-      printf("Behavior testing step=%d\n", behaviorStep);
+      fprintf(morphfp, "Behavior testing step=%d\n", behaviorStep);
    }
+   fflush(morphfp);
    for (g = 0; g < numGenerations; g++)
    {
       generation++;
-      printf("Generation=%d\n", generation);
+      fprintf(morphfp, "Generation=%d\n", generation);
       offspring.resize(numOffspring);
       mate();
       optimize();
       prune();
-      printf("Population:\n");
-      printf("Member\tgeneration\tfitness\n");
+      fprintf(morphfp, "Population:\n");
+      fprintf(morphfp, "Member\tgeneration\tfitness\n");
       for (i = c = 0, n = (int)population.size(); i < n; i++)
       {
-         printf("%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
+         fprintf(morphfp, "%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
          if (population[i]->behaves)
          {
             c++;
@@ -474,7 +473,7 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff)
       }
       if (behaviorStep != -1)
       {
-         printf("Behavior testing step=%d\n", behaviorStep);
+         fprintf(morphfp, "Behavior testing step=%d\n", behaviorStep);
          if ((c >= fitnessQuorum) && (behaviorStep < maxBehaviorStep))
          {
             behaviorStep++;
@@ -493,10 +492,11 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff)
          }
          if (c >= behaveCutoff)
          {
-            printf("Reached behaving member cutoff=%d\n", behaveCutoff);
+            fprintf(morphfp, "Reached behaving member cutoff=%d\n", behaveCutoff);
             break;
          }
       }
+      fflush(morphfp);
    }
 
 #ifdef THREADS
@@ -516,6 +516,11 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff)
       delete threads;
    }
 #endif
+
+   if (logFile != NULL)
+   {
+      stopMorphLog();
+   }
 }
 
 
@@ -542,8 +547,8 @@ void *NetworkHomomorphoGenesis::morphThread(void *arg)
 // Mate members.
 void NetworkHomomorphoGenesis::mate()
 {
-   printf("Mate:\n");
-   printf("Member\tgeneration\tfitness\t\tparents\n");
+   fprintf(morphfp, "Mate:\n");
+   fprintf(morphfp, "Member\tgeneration\tfitness\t\tparents\n");
    mate(0);
 }
 
@@ -650,12 +655,12 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
             crossover(child, parent, j, 0);
          }
          offspring[i]->evaluate(behaviors, fitnessMotorList, behaviorStep);
-         printf("%d\t%d\t\t%f\t%d %d\n", i, offspring[i]->tag, offspring[i]->error, p1, p2);
+         fprintf(morphfp, "%d\t%d\t\t%f\t%d %d\n", i, offspring[i]->tag, offspring[i]->error, p1, p2);
       }
       else   // No crossover.
       {
          offspring[i]->tag++;
-         printf("%d\t%d\t\t%f\t%d\n", i, offspring[i]->tag, offspring[i]->error, p1);
+         fprintf(morphfp, "%d\t%d\t\t%f\t%d\n", i, offspring[i]->tag, offspring[i]->error, p1);
       }
    }
 #ifdef THREADS
@@ -724,8 +729,8 @@ void NetworkHomomorphoGenesis::crossover(Network *child, Network *parent,
 // Optimize offspring.
 void NetworkHomomorphoGenesis::optimize()
 {
-   printf("Optimize:\n");
-   printf("Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Optimize:\n");
+   fprintf(morphfp, "Member\tgeneration\tfitness\n");
    optimize(0);
 }
 
@@ -760,7 +765,7 @@ void NetworkHomomorphoGenesis::optimize(int threadNum)
       }
       networkMorph->harmonize(behaviors, fitnessMotorList,
                               synapseOptimizedPathLength, behaviorStep);
-      printf("%d\t%d\t\t%f\n", i, offspring[i]->tag, offspring[i]->error);
+      fprintf(morphfp, "%d\t%d\t\t%f\n", i, offspring[i]->tag, offspring[i]->error);
    }
 
 #ifdef THREADS
@@ -779,27 +784,31 @@ void NetworkHomomorphoGenesis::prune()
    int              i, j, n;
    NetworkHomomorph *networkMorph;
 
-   printf("Prune:\n");
-   printf("Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Prune:\n");
+   fprintf(morphfp, "Member\tgeneration\tfitness\n");
    for (n = (int)population.size(), i = n - numOffspring, j = 0; i < n; i++, j++)
    {
-      printf("%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
+      fprintf(morphfp, "%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
       delete (NetworkHomomorph *)population[i];
       population[i] = offspring[j];
    }
    offspring.clear();
    if (parentLongevity != -1)
    {
+      fprintf(morphfp, "Longevity replace:\n");
+      fprintf(morphfp, "Member\tgeneration\told fitness\tnew fitness\n");
       for (i = 0; i < n; i++)
       {
          if (population[i]->offspringCount > parentLongevity)
          {
+            fprintf(morphfp, "%d\t%d\t\t%f", i, population[i]->tag, population[i]->error);
             networkMorph  = (NetworkHomomorph *)population[i];
             population[i] = (NetworkMorph *)new NetworkHomomorph(
                homomorph, networkMorph->synapseWeightsParm, randomizer);
             assert(population[i] != NULL);
             delete networkMorph;
             population[i]->evaluate(behaviors, fitnessMotorList, behaviorStep);
+            fprintf(morphfp, "\t%f\n", population[i]->error);
          }
       }
    }
@@ -917,7 +926,7 @@ bool NetworkHomomorphoGenesis::save(char *filename)
 
 
 // Print.
-void NetworkHomomorphoGenesis::print()
+void NetworkHomomorphoGenesis::print(bool printNetwork)
 {
    int i, n;
 
@@ -926,29 +935,35 @@ void NetworkHomomorphoGenesis::print()
    {
       behaviors[i]->print();
    }
-   printf("homomorph:\n");
-   homomorph->print();
+   if (printNetwork)
+   {
+      printf("homomorph:\n");
+      homomorph->print();
+   }
+   printf("populationSize=%d\n", populationSize);
+   printf("numOffspring=%d\n", numOffspring);
+   printf("parentLongevity=%d\n", parentLongevity);
+   if (fitnessMotorList.size() > 0)
+   {
+      printf("Fitness motor list:\n");
+      for (i = 0, n = (int)fitnessMotorList.size(); i < n; i++)
+      {
+         if (fitnessMotorList[i])
+         {
+            printf("%d ", i);
+         }
+      }
+      printf("\n");
+   }
+   printf("fitnessQuorum=%d\n", fitnessQuorum);
    printf("crossoverRate=%f\n", crossoverRate);
    printf("mutationRate=%f\n", mutationRate);
    printf("synapseCrossoverBondStrength=%f\n", synapseCrossoverBondStrength);
    printf("synapseOptimizedPathLength=%d\n", synapseOptimizedPathLength);
-   printf("populationSize=%d\n", populationSize);
-   printf("numOffspring=%d\n", numOffspring);
-   printf("parentLongevity=%d\n", parentLongevity);
-   printf("fitnessMotorList:\n");
-   for (i = 0, n = (int)fitnessMotorList.size(); i < n; i++)
-   {
-      if (fitnessMotorList[i])
-      {
-         printf("%d ", i);
-      }
-   }
-   printf("\n");
-   printf("fitnessQuorum=%d\n", fitnessQuorum);
    printf("randomSeed=%lu\n", randomSeed);
    printf("Population:\n");
    for (i = 0, n = (int)population.size(); i < n; i++)
    {
-      ((NetworkHomomorph *)population[i])->print();
+      ((NetworkHomomorph *)population[i])->print(printNetwork);
    }
 }

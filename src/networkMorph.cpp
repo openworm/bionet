@@ -91,6 +91,7 @@ NetworkMorphoGenesis::NetworkMorphoGenesis()
    behaviorStep    = -1;
    randomSeed      = 4517;
    generation      = 0;
+   morphfp         = stdout;
 }
 
 
@@ -151,5 +152,36 @@ void NetworkMorphoGenesis::saveNetworks(char *filePrefix)
       {
          fprintf(stderr, "Cannot save network %d to file %s\n", i, buf);
       }
+   }
+}
+
+
+// Start morph logging to file.
+bool NetworkMorphoGenesis::startMorphLog(char *logFile)
+{
+   if (morphfp != stdout)
+   {
+      fclose(morphfp);
+   }
+   if ((morphfp = fopen(logFile, "w")) == NULL)
+   {
+      fprintf(stderr, "Cannot open morph log file %s\n", logFile);
+      morphfp = stdout;
+      return(false);
+   }
+   else
+   {
+      return(true);
+   }
+}
+
+
+// Stop morph logging.
+void NetworkMorphoGenesis::stopMorphLog()
+{
+   if (morphfp != stdout)
+   {
+      fclose(morphfp);
+      morphfp = stdout;
    }
 }

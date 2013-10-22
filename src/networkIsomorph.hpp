@@ -40,7 +40,7 @@ public:
    void save(FILE *fp);
 
    // Print.
-   void print();
+   void print(bool printNetwork = false);
 
 private:
 
@@ -67,10 +67,10 @@ public:
 
    // Morph networks.
 #ifdef THREADS
-   void morph(int numGenerations, int numThreads);
+   void morph(int numGenerations, int numThreads, char *logFile = NULL);
 
 #else
-   void morph(int numGenerations);
+   void morph(int numGenerations, char *logFile = NULL);
 #endif
 
    // Mutate members.
@@ -86,7 +86,7 @@ public:
    bool save(char *filename);
 
    // Print.
-   void print();
+   void print(bool printNetwork = false);
 
 private:
 
