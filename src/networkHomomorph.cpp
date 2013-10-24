@@ -8,27 +8,11 @@
 NetworkHomomorph::NetworkHomomorph(Network *homomorph, MutableParm& synapseWeightsParm,
                                    Random *randomizer, int tag)
 {
-   int     i, j, n;
-   Synapse *synapse;
-
    this->synapseWeightsParm = synapseWeightsParm;
    this->synapseWeightsParm.initValue(randomizer);
    this->randomizer = randomizer;
    this->tag        = tag;
    network          = homomorph->clone();
-   n = network->numNeurons;
-   for (i = 0; i < n; i++)
-   {
-      for (j = 0; j < n; j++)
-      {
-         synapse = network->synapses[i][j];
-         if (synapse != NULL)
-         {
-            synapse->weight = (float)randomizer->RAND_INTERVAL(
-               synapseWeightsParm.minimum, synapseWeightsParm.maximum);
-         }
-      }
-   }
 }
 
 
@@ -299,6 +283,8 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(vector<Behavior *>& behaviors
 {
    int              i, j, k, n;
    NetworkHomomorph *networkMorph;
+   Network          *network;
+   Synapse          *synapse;
 
    this->randomSeed = randomSeed;
    randomizer       = new Random(randomSeed);
@@ -342,6 +328,20 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(vector<Behavior *>& behaviors
       networkMorph = new NetworkHomomorph(
          homomorph, synapseWeightsParm, randomizer);
       assert(networkMorph != NULL);
+      network = ((NetworkMorph *)networkMorph)->network;
+      n       = network->numNeurons;
+      for (j = 0; j < n; j++)
+      {
+         for (k = 0; k < n; k++)
+         {
+            synapse = network->synapses[j][k];
+            if (synapse != NULL)
+            {
+               synapse->weight = (float)randomizer->RAND_INTERVAL(
+                  synapseWeightsParm.minimum, synapseWeightsParm.maximum);
+            }
+         }
+      }
       population.push_back((NetworkMorph *)networkMorph);
    }
 }
@@ -386,7 +386,8 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
                                      char *logFile)
 #endif
 {
-   int i, c, g, n;
+   int i, g, n;
+   int behaveCount;
    int maxBehaviorStep;
 
    if (logFile != NULL)
@@ -398,18 +399,18 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
    assert(numThreads > 0);
    terminate        = false;
    this->numThreads = numThreads;
+   if (pthread_barrier_init(&morphBarrier, NULL, numThreads) != 0)
+   {
+      fprintf(stderr, "pthread_barrier_init failed, errno=%d\n", errno);
+      exit(1);
+   }
+   if (pthread_mutex_init(&morphMutex, NULL) != 0)
+   {
+      fprintf(stderr, "pthread_mutex_init failed, errno=%d\n", errno);
+      exit(1);
+   }
    if (numThreads > 1)
    {
-      if (pthread_barrier_init(&morphBarrier, NULL, numThreads) != 0)
-      {
-         fprintf(stderr, "pthread_barrier_init failed, errno=%d\n", errno);
-         exit(1);
-      }
-      if (pthread_mutex_init(&morphMutex, NULL) != 0)
-      {
-         fprintf(stderr, "pthread_mutex_init failed, errno=%d\n", errno);
-         exit(1);
-      }
       threads = new pthread_t[numThreads - 1];
       assert(threads != NULL);
       struct ThreadInfo *info;
@@ -444,9 +445,13 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
    fprintf(morphfp, "Generation=%d\n", generation);
    fprintf(morphfp, "Population:\n");
    fprintf(morphfp, "Member\tgeneration\tfitness\n");
-   for (i = 0, n = (int)population.size(); i < n; i++)
+   for (i = behaveCount = 0, n = (int)population.size(); i < n; i++)
    {
       fprintf(morphfp, "%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
+      if (population[i]->behaves)
+      {
+         behaveCount++;
+      }
    }
    if (behaviorStep != -1)
    {
@@ -455,6 +460,15 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
    fflush(morphfp);
    for (g = 0; g < numGenerations; g++)
    {
+      if ((behaveCutoff != -1) && ((behaviorStep == -1) || (behaviorStep == maxBehaviorStep)))
+      {
+         if (behaveCount >= behaveCutoff)
+         {
+            fprintf(morphfp, "Reached behaving member cutoff=%d\n", behaveCutoff);
+            fflush(morphfp);
+            break;
+         }
+      }
       generation++;
       fprintf(morphfp, "Generation=%d\n", generation);
       offspring.resize(numOffspring);
@@ -463,37 +477,29 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
       prune();
       fprintf(morphfp, "Population:\n");
       fprintf(morphfp, "Member\tgeneration\tfitness\n");
-      for (i = c = 0, n = (int)population.size(); i < n; i++)
+      for (i = behaveCount = 0, n = (int)population.size(); i < n; i++)
       {
          fprintf(morphfp, "%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
          if (population[i]->behaves)
          {
-            c++;
+            behaveCount++;
          }
       }
       if (behaviorStep != -1)
       {
          fprintf(morphfp, "Behavior testing step=%d\n", behaviorStep);
-         if ((c >= fitnessQuorum) && (behaviorStep < maxBehaviorStep))
+         if ((behaveCount >= fitnessQuorum) && (behaviorStep < maxBehaviorStep))
          {
             behaviorStep++;
             evaluate();
             sort();
-         }
-      }
-      if ((behaveCutoff != -1) && ((behaviorStep == -1) || (behaviorStep == maxBehaviorStep)))
-      {
-         for (i = c = 0, n = (int)population.size(); i < n; i++)
-         {
-            if (population[i]->behaves)
+            for (i = behaveCount = 0, n = (int)population.size(); i < n; i++)
             {
-               c++;
+               if (population[i]->behaves)
+               {
+                  behaveCount++;
+               }
             }
-         }
-         if (c >= behaveCutoff)
-         {
-            fprintf(morphfp, "Reached behaving member cutoff=%d\n", behaveCutoff);
-            break;
          }
       }
       fflush(morphfp);
@@ -511,10 +517,10 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
          pthread_join(threads[i], NULL);
          pthread_detach(threads[i]);
       }
-      pthread_mutex_destroy(&morphMutex);
-      pthread_barrier_destroy(&morphBarrier);
       delete threads;
    }
+   pthread_mutex_destroy(&morphMutex);
+   pthread_barrier_destroy(&morphBarrier);
 #endif
 
    if (logFile != NULL)
@@ -663,6 +669,7 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
          fprintf(morphfp, "%d\t%d\t\t%f\t%d\n", i, offspring[i]->tag, offspring[i]->error, p1);
       }
    }
+
 #ifdef THREADS
    // Re-group threads.
    if (numThreads > 1)

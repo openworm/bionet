@@ -690,18 +690,18 @@ void NetworkIsomorphoGenesis::morph(int numGenerations, char *logFile)
    assert(numThreads > 0);
    terminate        = false;
    this->numThreads = numThreads;
+   if (pthread_barrier_init(&morphBarrier, NULL, numThreads) != 0)
+   {
+      fprintf(stderr, "pthread_barrier_init failed, errno=%d\n", errno);
+      exit(1);
+   }
+   if (pthread_mutex_init(&morphMutex, NULL) != 0)
+   {
+      fprintf(stderr, "pthread_mutex_init failed, errno=%d\n", errno);
+      exit(1);
+   }
    if (numThreads > 1)
    {
-      if (pthread_barrier_init(&morphBarrier, NULL, numThreads) != 0)
-      {
-         fprintf(stderr, "pthread_barrier_init failed, errno=%d\n", errno);
-         exit(1);
-      }
-      if (pthread_mutex_init(&morphMutex, NULL) != 0)
-      {
-         fprintf(stderr, "pthread_mutex_init failed, errno=%d\n", errno);
-         exit(1);
-      }
       threads = new pthread_t[numThreads - 1];
       assert(threads != NULL);
       struct ThreadInfo *info;
@@ -786,10 +786,10 @@ void NetworkIsomorphoGenesis::morph(int numGenerations, char *logFile)
          pthread_join(threads[i], NULL);
          pthread_detach(threads[i]);
       }
-      pthread_mutex_destroy(&morphMutex);
-      pthread_barrier_destroy(&morphBarrier);
       delete threads;
    }
+   pthread_mutex_destroy(&morphMutex);
+   pthread_barrier_destroy(&morphBarrier);
 #endif
 
    if (logFile != NULL)
