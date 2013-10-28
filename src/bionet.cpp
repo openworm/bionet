@@ -744,9 +744,10 @@ int createHomomorphicNetworks(int argc, char *argv[])
    int  behaveCutoff       = -1;
 
    vector<int> fitnessMotorList;
-   int         fitnessQuorum = -1;
-   float       crossoverRate = -1.0f;
-   float       mutationRate  = -1.0f;
+   bool        gotFitnessMotorList = false;
+   int         fitnessQuorum       = -1;
+   float       crossoverRate       = -1.0f;
+   float       mutationRate        = -1.0f;
    MutableParm synapseWeightsParm;
    float       synapseCrossoverBondStrength = -1.0f;
    int         synapseOptimizedPathLength   = -1;
@@ -871,11 +872,12 @@ int createHomomorphicNetworks(int argc, char *argv[])
       }
       if (strcmp(argv[i], "-fitnessMotorList") == 0)
       {
+         gotFitnessMotorList = true;
          i++;
          if ((i >= argc) || (argv[i][0] == '-'))
          {
-            printUsageError(argv[i - 1]);
-            return(1);
+            i--;
+            continue;
          }
          char comma[] = ",";
          char *token  = strtok(argv[i], comma);
@@ -1192,6 +1194,10 @@ int createHomomorphicNetworks(int argc, char *argv[])
             assert(k >= 0 && k < n);
             ((NetworkMorphoGenesis *)morphoGenesis)->fitnessMotorList[k] = true;
          }
+      }
+      else if (gotFitnessMotorList)
+      {
+         ((NetworkMorphoGenesis *)morphoGenesis)->fitnessMotorList.clear();
       }
       if (crossoverRate != -1.0f)
       {
