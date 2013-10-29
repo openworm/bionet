@@ -55,6 +55,7 @@ char *Usage[] =
    (char *)"   -testNetworkBehaviors",
    (char *)"   -loadNetwork <network file name>",
    (char *)"   -loadBehaviors <behaviors file name>",
+   (char *)"   [-motorDeltaTolerance <minimum motor delta to print>]",
    (char *)"",
    (char *)"Print network behaviors:",
    (char *)"",
@@ -597,9 +598,10 @@ int createNetworkBehaviors(int argc, char *argv[])
 // Test network behaviors.
 int testNetworkBehaviors(int argc, char *argv[])
 {
-   int  i, n, result;
-   char *networkLoadFile   = NULL;
-   char *behaviorsLoadFile = NULL;
+   int   i, n, result;
+   char  *networkLoadFile    = NULL;
+   char  *behaviorsLoadFile  = NULL;
+   float motorDeltaTolerance = 0.0f;
 
    for (i = 1; i < argc; i++)
    {
@@ -627,6 +629,17 @@ int testNetworkBehaviors(int argc, char *argv[])
             return(1);
          }
          behaviorsLoadFile = argv[i];
+         continue;
+      }
+      if (strcmp(argv[i], "-motorDeltaTolerance") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         motorDeltaTolerance = (float)atof(argv[i]);
          continue;
       }
       printUsageError((char *)"invalid option");
@@ -667,6 +680,7 @@ int testNetworkBehaviors(int argc, char *argv[])
       assert(testBehavior != NULL);
       printf("Test:\n");
       testBehavior->print();
+      testBehavior->printMotorDeltas(behavior, motorDeltaTolerance);
       delete testBehavior;
    }
    for (i = 0, n = (int)behaviors.size(); i < n; i++)

@@ -29,6 +29,9 @@ public:
    // Print.
    void print();
 
+   // Print motor deltas.
+   void printMotorDeltas(Behavior *behavior, float tolerance = 0.0f);
+
    // Load behaviors from file.
    static bool loadBehaviors(char *filename, vector<Behavior *>& behaviors);
 

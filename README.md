@@ -83,6 +83,7 @@ bionet
    -testNetworkBehaviors
    -loadNetwork <network file name>
    -loadBehaviors <behaviors file name>
+   [-motorDeltaTolerance <minimum motor delta to print>]
 
 Print network behaviors:
 

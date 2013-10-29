@@ -149,17 +149,52 @@ void Behavior::print()
    int i, j;
 
    printf("Sensory-motor sequence:\n");
+   printf("sensors:\n");
    for (i = 0; i < (int)sensorSequence.size(); i++)
    {
-      printf("  sensors: ");
+      printf("           ");
       for (j = 0; j < (int)sensorSequence[i].size(); j++)
       {
          printf("%0.2f ", sensorSequence[i][j]);
       }
-      printf("  motors: ");
+      printf("\n");
+   }
+   printf("motors:\n");
+   for (i = 0; i < (int)motorSequence.size(); i++)
+   {
+      printf("           ");
       for (j = 0; j < (int)motorSequence[i].size(); j++)
       {
          printf("%0.2f ", motorSequence[i][j]);
+      }
+      printf("\n");
+   }
+}
+
+
+// Print motor deltas.
+void Behavior::printMotorDeltas(Behavior *behavior, float tolerance)
+{
+   int   i, j;
+   float delta;
+
+   printf("Motor deltas (tolerance=%0.2f):\n", tolerance);
+   assert(motorSequence.size() == behavior->motorSequence.size());
+   for (i = 0; i < (int)motorSequence.size(); i++)
+   {
+      assert(motorSequence[i].size() == behavior->motorSequence[i].size());
+      printf("           ");
+      for (j = 0; j < (int)motorSequence[i].size(); j++)
+      {
+         delta = fabs(motorSequence[i][j] - behavior->motorSequence[i][j]);
+         if (delta >= tolerance)
+         {
+            printf("%0.2f ", delta);
+         }
+         else
+         {
+            printf("     ");
+         }
       }
       printf("\n");
    }
