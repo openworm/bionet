@@ -17,6 +17,7 @@ Behavior::Behavior(Network *network, int length, Random *randomizer)
       for (j = 0; j < network->numSensors; j++)
       {
          sensors[j] = (float)randomizer->RAND_PROB();
+#ifdef NEVER
          if ((j % 2) == (i % 2))
          {
             sensors[j] = 1.0f;
@@ -25,6 +26,7 @@ Behavior::Behavior(Network *network, int length, Random *randomizer)
          {
             sensors[j] = 0.0f;
          }
+#endif
          network->neurons[j]->bias = sensors[j];
       }
       sensorSequence.push_back(sensors);
