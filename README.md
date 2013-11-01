@@ -167,3 +167,5 @@ bionet (resume morph)
    -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
    [-logMorph <morph log file name> (instead of standard output)]
    [-numThreads <number of threads> (defaults to system capacity)]
+   
+Create C Elegans bionet: see CElegans/Readme.txt

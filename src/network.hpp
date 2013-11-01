@@ -53,7 +53,7 @@ public:
    bool load(char *filename);
    void load(FILE *fp);
 
-   // save network.
+   // Save network.
    bool save(char *filename);
    void save(FILE *fp);
 
