@@ -276,9 +276,12 @@ void NetworkHomomorph::print(bool printNetwork)
 // Constructor.
 NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(vector<Behavior *>& behaviors, Network *homomorph,
                                                    int populationSize, int numOffspring, int parentLongevity,
-                                                   vector<int>& fitnessMotorList, int fitnessQuorum,
-                                                   float crossoverRate, float mutationRate, MutableParm& synapseWeightsParm,
-                                                   float synapseCrossoverBondStrength, int synapseOptimizedPathLength,
+                                                   vector<int>& fitnessMotorList,
+                                                   int behaveQuorum, int behaveQuorumMaxGenerations,
+                                                   float crossoverRate, float mutationRate,
+                                                   MutableParm& synapseWeightsParm,
+                                                   float synapseCrossoverBondStrength,
+                                                   int synapseOptimizedPathLength,
                                                    RANDOM randomSeed)
 {
    int              i, j, k, n;
@@ -309,14 +312,23 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(vector<Behavior *>& behaviors
          this->fitnessMotorList[k] = true;
       }
    }
-   this->fitnessQuorum = fitnessQuorum;
-   if (fitnessQuorum == -1)
+   this->behaveQuorum = behaveQuorum;
+   if (behaveQuorum == -1)
    {
       behaviorStep = -1;
    }
    else
    {
       behaviorStep = 0;
+   }
+   this->behaveQuorumMaxGenerations = behaveQuorumMaxGenerations;
+   if (behaveQuorumMaxGenerations == -1)
+   {
+      behaveQuorumGenerationCount = -1;
+   }
+   else
+   {
+      behaveQuorumGenerationCount = 0;
    }
    this->crossoverRate = crossoverRate;
    this->mutationRate  = mutationRate;
@@ -488,7 +500,18 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
       if (behaviorStep != -1)
       {
          fprintf(morphfp, "Behavior testing step=%d\n", behaviorStep);
-         if ((behaveCount >= fitnessQuorum) && (behaviorStep < maxBehaviorStep))
+         bool maxGenerations = false;
+         if (behaveQuorumMaxGenerations != -1)
+         {
+            behaveQuorumGenerationCount++;
+            if (behaveQuorumGenerationCount >= behaveQuorumMaxGenerations)
+            {
+               maxGenerations = true;
+               behaveQuorumGenerationCount = 0;
+            }
+         }
+         if (((behaveCount >= behaveQuorum) || maxGenerations) &&
+             (behaviorStep < maxBehaviorStep))
          {
             behaviorStep++;
             evaluate();
@@ -880,8 +903,10 @@ bool NetworkHomomorphoGenesis::load(char *filename)
          fitnessMotorList[j] = true;
       }
    }
-   FREAD_INT(&fitnessQuorum, fp);
+   FREAD_INT(&behaveQuorum, fp);
+   FREAD_INT(&behaveQuorumMaxGenerations, fp);
    FREAD_INT(&behaviorStep, fp);
+   FREAD_INT(&behaveQuorumGenerationCount, fp);
    FREAD_LONG(&randomSeed, fp);
    FREAD_INT(&generation, fp);
    return(true);
@@ -930,8 +955,10 @@ bool NetworkHomomorphoGenesis::save(char *filename)
          FWRITE_INT(&i, fp);
       }
    }
-   FWRITE_INT(&fitnessQuorum, fp);
+   FWRITE_INT(&behaveQuorum, fp);
+   FWRITE_INT(&behaveQuorumMaxGenerations, fp);
    FWRITE_INT(&behaviorStep, fp);
+   FWRITE_INT(&behaveQuorumGenerationCount, fp);
    FWRITE_LONG(&randomSeed, fp);
    FWRITE_INT(&generation, fp);
    return(true);
@@ -968,7 +995,8 @@ void NetworkHomomorphoGenesis::print(bool printNetwork)
       }
       printf("\n");
    }
-   printf("fitnessQuorum=%d\n", fitnessQuorum);
+   printf("behaveQuorum=%d\n", behaveQuorum);
+   printf("behaveQuorumMaxGenerations=%d\n", behaveQuorumMaxGenerations);
    printf("crossoverRate=%f\n", crossoverRate);
    printf("mutationRate=%f\n", mutationRate);
    printf("synapseCrossoverBondStrength=%f\n", synapseCrossoverBondStrength);

@@ -74,10 +74,11 @@ char *Usage[] =
    (char *)"   [-parentLongevity <parent dies after this many offspring>]",
    (char *)"   -numGenerations <number of evolution generations>",
    (char *)"   [-behaveCutoff <stop evolution when this many members behave>]",
+   (char *)"   [-behaveQuorum <behaving member quorum required to advance behavior testing to next sensory-motor step>",
+   (char *)"      (defaults to immediate testing of entire behavior sequences)",
+   (char *)"      [<maximum generations before advancing without a quorum>]]",
    (char *)"   [-fitnessMotorList <list of motor outputs evaluated for fitness (0-n, comma-separated)>",
    (char *)"      (defaults to fitness evaluation of all motor outputs)]",
-   (char *)"   [-fitnessQuorum <fit member quorum required to advance behavior testing to next sensory-motor step>",
-   (char *)"      (defaults to immediate testing of entire behavior sequences)]",
    (char *)"   -crossoverRate <probability>",
    (char *)"   -mutationRate <probability>",
    (char *)"   -synapseWeights <minimum> <maximum> <max delta>",
@@ -124,8 +125,9 @@ char *Usage[] =
    (char *)"   -populationSize <number population members>",
    (char *)"   -numMutants <number mutants per generation>",
    (char *)"   -numGenerations <number of evolution generations>",
-   (char *)"   [-fitnessQuorum <fit member quorum required to advance behavior testing to next sensory-motor step>",
-   (char *)"      (defaults to immediate testing of entire behavior sequences)]",
+   (char *)"   [-behaveQuorum <behaving member quorum required to advance behavior testing to next sensory-motor step>",
+   (char *)"      (defaults to immediate testing of entire behavior sequences)",
+   (char *)"      [<maximum generations before advancing without a quorum>]]",
    (char *)"   -excitatoryNeurons <minimum number> <maximum> <max delta> <probability of random change>",
    (char *)"   -inhibitoryNeurons <minimum number> <maximum> <max delta> <probability of random change>",
    (char *)"   -synapsePropensities <minimum> <maximum> <max delta> <probability of random change>",
@@ -570,6 +572,7 @@ int createNetworkBehaviors(int argc, char *argv[])
    vector<Behavior *> behaviors;
    for (i = 0; i < (int)behaviorSequenceLengths.size(); i++)
    {
+      network->clear();
       Behavior *behavior = new Behavior(network, behaviorSequenceLengths[i], randomizer);
       assert(behavior != NULL);
       behaviors.push_back(behavior);
@@ -749,17 +752,18 @@ int printNetworkBehaviors(int argc, char *argv[])
 int createHomomorphicNetworks(int argc, char *argv[])
 {
    int  i, j, k, n, result;
-   char *behaviorsLoadFile = NULL;
-   char *networkLoadFile   = NULL;
-   int  populationSize     = -1;
-   int  numOffspring       = -1;
-   int  parentLongevity    = -1;
-   int  numGenerations     = -1;
-   int  behaveCutoff       = -1;
+   char *behaviorsLoadFile         = NULL;
+   char *networkLoadFile           = NULL;
+   int  populationSize             = -1;
+   int  numOffspring               = -1;
+   int  parentLongevity            = -1;
+   int  numGenerations             = -1;
+   int  behaveCutoff               = -1;
+   int  behaveQuorum               = -1;
+   int  behaveQuorumMaxGenerations = -1;
 
    vector<int> fitnessMotorList;
    bool        gotFitnessMotorList = false;
-   int         fitnessQuorum       = -1;
    float       crossoverRate       = -1.0f;
    float       mutationRate        = -1.0f;
    MutableParm synapseWeightsParm;
@@ -768,6 +772,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
    bool        saveNetworks   = false;
    char        *filesPrefix   = (char *)"network_";
    RANDOM      randomSeed     = Network::DEFAULT_RANDOM_SEED;
+   bool        gotRandomSeed  = false;
    char        *morphSaveFile = NULL;
    char        *morphLoadFile = NULL;
    char        *logFile       = NULL;
@@ -884,6 +889,32 @@ int createHomomorphicNetworks(int argc, char *argv[])
          }
          continue;
       }
+      if (strcmp(argv[i], "-behaveQuorum") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         behaveQuorum = atoi(argv[i]);
+         if (behaveQuorum < 0)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         if (((i + 1) < argc) && (argv[i + 1][0] != '-'))
+         {
+            i++;
+            behaveQuorumMaxGenerations = atoi(argv[i]);
+            if (behaveQuorumMaxGenerations < 0)
+            {
+               printUsageError(argv[i - 2]);
+               return(1);
+            }
+         }
+         continue;
+      }
       if (strcmp(argv[i], "-fitnessMotorList") == 0)
       {
          gotFitnessMotorList = true;
@@ -913,22 +944,6 @@ int createHomomorphicNetworks(int argc, char *argv[])
             }
             fitnessMotorList.push_back(n);
             token = strtok(NULL, comma);
-         }
-         continue;
-      }
-      if (strcmp(argv[i], "-fitnessQuorum") == 0)
-      {
-         i++;
-         if ((i >= argc) || (argv[i][0] == '-'))
-         {
-            printUsageError(argv[i - 1]);
-            return(1);
-         }
-         fitnessQuorum = atoi(argv[i]);
-         if (fitnessQuorum < 0)
-         {
-            printUsageError(argv[i - 1]);
-            return(1);
          }
          continue;
       }
@@ -1075,6 +1090,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
       }
       if (strcmp(argv[i], "-randomSeed") == 0)
       {
+         gotRandomSeed = true;
          i++;
          if (i >= argc)
          {
@@ -1167,9 +1183,9 @@ int createHomomorphicNetworks(int argc, char *argv[])
          printUsageError((char *)"missing required option");
          return(1);
       }
-      if (fitnessQuorum > populationSize)
+      if (behaveQuorum > populationSize)
       {
-         printUsageError((char *)"fitnessQuorum > populationSize");
+         printUsageError((char *)"behaveQuorum > populationSize");
          return(1);
       }
       if (numOffspring > populationSize)
@@ -1188,7 +1204,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
          new NetworkHomomorphoGenesis(
             behaviors, homomorph,
             populationSize, numOffspring, parentLongevity,
-            fitnessMotorList, fitnessQuorum,
+            fitnessMotorList, behaveQuorum, behaveQuorumMaxGenerations,
             crossoverRate, mutationRate, synapseWeightsParm,
             synapseCrossoverBondStrength, synapseOptimizedPathLength,
             randomSeed);
@@ -1196,6 +1212,17 @@ int createHomomorphicNetworks(int argc, char *argv[])
    }
    else   // Resume morph.
    {
+      if ((networkLoadFile != NULL) ||
+          (populationSize >= 0) ||
+          (numOffspring >= 0) ||
+          (parentLongevity >= 0) ||
+          (behaveQuorum >= 0) ||
+          (synapseWeightsParm.randomProbability >= 0.0f) ||
+          (gotRandomSeed))
+      {
+         printUsageError((char *)"invalid option");
+         return(1);
+      }
       morphoGenesis = new NetworkHomomorphoGenesis(behaviors, morphLoadFile);
       assert(morphoGenesis != NULL);
       if (fitnessMotorList.size() > 0)
@@ -1365,11 +1392,12 @@ int mergeHomomorphicNetworks(int argc, char *argv[])
 int createIsomorphicNetworks(int argc, char *argv[])
 {
    int         i, n, result;
-   char        *behaviorsLoadFile = NULL;
-   int         populationSize     = -1;
-   int         numMutants         = -1;
-   int         numGenerations     = -1;
-   int         fitnessQuorum      = -1;
+   char        *behaviorsLoadFile         = NULL;
+   int         populationSize             = -1;
+   int         numMutants                 = -1;
+   int         numGenerations             = -1;
+   int         behaveQuorum               = -1;
+   int         behaveQuorumMaxGenerations = -1;
    MutableParm excitatoryNeuronsParm;
    MutableParm inhibitoryNeuronsParm;
    MutableParm synapsePropensitiesParm;
@@ -1377,6 +1405,7 @@ int createIsomorphicNetworks(int argc, char *argv[])
    bool        saveNetworks   = false;
    char        *filesPrefix   = (char *)"network_";
    RANDOM      randomSeed     = Network::DEFAULT_RANDOM_SEED;
+   bool        gotRandomSeed  = false;
    char        *morphSaveFile = NULL;
    char        *morphLoadFile = NULL;
    char        *logFile       = NULL;
@@ -1450,7 +1479,7 @@ int createIsomorphicNetworks(int argc, char *argv[])
          }
          continue;
       }
-      if (strcmp(argv[i], "-fitnessQuorum") == 0)
+      if (strcmp(argv[i], "-behaveQuorum") == 0)
       {
          i++;
          if ((i >= argc) || (argv[i][0] == '-'))
@@ -1458,11 +1487,21 @@ int createIsomorphicNetworks(int argc, char *argv[])
             printUsageError(argv[i - 1]);
             return(1);
          }
-         fitnessQuorum = atoi(argv[i]);
-         if (fitnessQuorum < 0)
+         behaveQuorum = atoi(argv[i]);
+         if (behaveQuorum < 0)
          {
             printUsageError(argv[i - 1]);
             return(1);
+         }
+         if (((i + 1) < argc) && (argv[i + 1][0] != '-'))
+         {
+            i++;
+            behaveQuorumMaxGenerations = atoi(argv[i]);
+            if (behaveQuorumMaxGenerations < 0)
+            {
+               printUsageError(argv[i - 2]);
+               return(1);
+            }
          }
          continue;
       }
@@ -1575,6 +1614,7 @@ int createIsomorphicNetworks(int argc, char *argv[])
       }
       if (strcmp(argv[i], "-randomSeed") == 0)
       {
+         gotRandomSeed = true;
          i++;
          if (i >= argc)
          {
@@ -1664,9 +1704,9 @@ int createIsomorphicNetworks(int argc, char *argv[])
          printUsageError((char *)"missing required option");
          return(1);
       }
-      if (fitnessQuorum > populationSize)
+      if (behaveQuorum > populationSize)
       {
-         printUsageError((char *)"fitnessQuorum > populationSize");
+         printUsageError((char *)"behaveQuorum > populationSize");
          return(1);
       }
       if (numMutants > populationSize)
@@ -1677,7 +1717,8 @@ int createIsomorphicNetworks(int argc, char *argv[])
       morphoGenesis =
          new NetworkIsomorphoGenesis(
             behaviors,
-            populationSize, numMutants, fitnessQuorum,
+            populationSize, numMutants,
+            behaveQuorum, behaveQuorumMaxGenerations,
             excitatoryNeuronsParm, inhibitoryNeuronsParm,
             synapsePropensitiesParm, synapseWeightsParm,
             randomSeed);
@@ -1685,6 +1726,15 @@ int createIsomorphicNetworks(int argc, char *argv[])
    }
    else   // Resume morph.
    {
+      if ((populationSize >= 0) ||
+          (numMutants >= 0) ||
+          (behaveQuorum >= 0) ||
+          (synapseWeightsParm.randomProbability >= 0.0f) ||
+          (gotRandomSeed))
+      {
+         printUsageError((char *)"invalid option");
+         return(1);
+      }
       morphoGenesis = new NetworkIsomorphoGenesis(behaviors, morphLoadFile);
       assert(morphoGenesis != NULL);
    }

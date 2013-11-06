@@ -84,14 +84,16 @@ void NetworkMorph::evaluate(vector<Behavior *>& behaviors,
 // Constructor.
 NetworkMorphoGenesis::NetworkMorphoGenesis()
 {
-   populationSize  = 0;
-   numOffspring    = 0;
-   parentLongevity = -1;
-   fitnessQuorum   = -1;
-   behaviorStep    = -1;
-   randomSeed      = 4517;
-   generation      = 0;
-   morphfp         = stdout;
+   populationSize              = 0;
+   numOffspring                = 0;
+   parentLongevity             = -1;
+   behaveQuorum                = -1;
+   behaveQuorumMaxGenerations  = -1;
+   behaviorStep                = -1;
+   behaveQuorumGenerationCount = -1;
+   randomSeed = 4517;
+   generation = 0;
+   morphfp    = stdout;
 }
 
 

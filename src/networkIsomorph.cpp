@@ -597,7 +597,8 @@ void NetworkIsomorph::print(bool printNetwork)
 
 // Constructor.
 NetworkIsomorphoGenesis::NetworkIsomorphoGenesis(vector<Behavior *>& behaviors,
-                                                 int populationSize, int numOffspring, int fitnessQuorum,
+                                                 int populationSize, int numOffspring,
+                                                 int behaveQuorum, int behaveQuorumMaxGenerations,
                                                  MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
                                                  MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
                                                  RANDOM randomSeed)
@@ -616,14 +617,23 @@ NetworkIsomorphoGenesis::NetworkIsomorphoGenesis(vector<Behavior *>& behaviors,
    this->populationSize = populationSize;
    this->numOffspring   = numOffspring;
    numOffspring         = -1;
-   this->fitnessQuorum  = fitnessQuorum;
-   if (fitnessQuorum == -1)
+   this->behaveQuorum   = behaveQuorum;
+   if (behaveQuorum == -1)
    {
       behaviorStep = -1;
    }
    else
    {
       behaviorStep = 0;
+   }
+   this->behaveQuorumMaxGenerations = behaveQuorumMaxGenerations;
+   if (behaveQuorumMaxGenerations == -1)
+   {
+      behaveQuorumGenerationCount = -1;
+   }
+   else
+   {
+      behaveQuorumGenerationCount = 0;
    }
    generation = 0;
    assert(behaviors.size() > 0);
@@ -678,7 +688,8 @@ void NetworkIsomorphoGenesis::morph(int numGenerations,
 void NetworkIsomorphoGenesis::morph(int numGenerations, char *logFile)
 #endif
 {
-   int i, c, g, n;
+   int i, g, n;
+   int behaveCount;
    int maxBehaviorStep;
 
    if (logFile != NULL)
@@ -753,18 +764,29 @@ void NetworkIsomorphoGenesis::morph(int numGenerations, char *logFile)
       prune();
       fprintf(morphfp, "Population:\n");
       fprintf(morphfp, "Member\tgeneration\tfitness\n");
-      for (i = c = 0, n = (int)population.size(); i < n; i++)
+      for (i = behaveCount = 0, n = (int)population.size(); i < n; i++)
       {
          fprintf(morphfp, "%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
          if (population[i]->behaves)
          {
-            c++;
+            behaveCount++;
          }
       }
       if (behaviorStep != -1)
       {
          fprintf(morphfp, "Behavior testing step=%d\n", behaviorStep);
-         if ((c >= fitnessQuorum) && (behaviorStep < maxBehaviorStep))
+         bool maxGenerations = false;
+         if (behaveQuorumMaxGenerations != -1)
+         {
+            behaveQuorumGenerationCount++;
+            if (behaveQuorumGenerationCount >= behaveQuorumMaxGenerations)
+            {
+               maxGenerations = true;
+               behaveQuorumGenerationCount = 0;
+            }
+         }
+         if (((behaveCount >= behaveQuorum) || maxGenerations) &&
+             (behaviorStep < maxBehaviorStep))
          {
             behaviorStep++;
             evaluate();
@@ -945,8 +967,10 @@ bool NetworkIsomorphoGenesis::load(char *filename)
       assert(networkMorph != NULL);
       population.push_back((NetworkMorph *)networkMorph);
    }
-   FREAD_INT(&fitnessQuorum, fp);
+   FREAD_INT(&behaveQuorum, fp);
+   FREAD_INT(&behaveQuorumMaxGenerations, fp);
    FREAD_INT(&behaviorStep, fp);
+   FREAD_INT(&behaveQuorumGenerationCount, fp);
    FREAD_LONG(&randomSeed, fp);
    FREAD_INT(&generation, fp);
    return(true);
@@ -973,8 +997,10 @@ bool NetworkIsomorphoGenesis::save(char *filename)
    {
       ((NetworkIsomorph *)population[i])->save(fp);
    }
-   FWRITE_INT(&fitnessQuorum, fp);
+   FWRITE_INT(&behaveQuorum, fp);
+   FWRITE_INT(&behaveQuorumMaxGenerations, fp);
    FWRITE_INT(&behaviorStep, fp);
+   FWRITE_INT(&behaveQuorumGenerationCount, fp);
    FWRITE_LONG(&randomSeed, fp);
    FWRITE_INT(&generation, fp);
    return(true);
@@ -993,7 +1019,8 @@ void NetworkIsomorphoGenesis::print(bool printNetwork)
    }
    printf("populationSize=%d\n", populationSize);
    printf("numOffspring=%d\n", numOffspring);
-   printf("fitnessQuorum=%d\n", fitnessQuorum);
+   printf("behaveQuorum=%d\n", behaveQuorum);
+   printf("behaveQuorumMaxGenerations=%d\n", behaveQuorumMaxGenerations);
    printf("randomSeed=%lu\n", randomSeed);
    printf("Population:\n");
    for (i = 0, n = (int)population.size(); i < n; i++)

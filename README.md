@@ -102,10 +102,11 @@ bionet (new morph)
    [-parentLongevity <parent dies after this many offspring>]
    -numGenerations <number of evolution generations>
    [-behaveCutoff <stop evolution when this many members behave>]
+   [-behaveQuorum <behaving member quorum required to advance behavior testing to next sensory-motor step>
+      (defaults to immediate testing of entire behavior sequences)
+	  [<maximum generations before advancing without a quorum>]]
    [-fitnessMotorList <list of motor outputs evaluated for fitness (0-n, comma-separated)>
       (defaults to fitness evaluation of all motor outputs)]
-   [-fitnessQuorum <fit member quorum required to advance behavior testing to next sensory-motor step>
-      (defaults to immediate testing of entire behavior sequences)]
    -crossoverRate <probability>
    -mutationRate <probability>
    -synapseWeights <minimum> <maximum> <max delta>
@@ -148,8 +149,9 @@ bionet (new morph)
    -populationSize <number population members>
    -numMutants <number mutants per generation>
    -numGenerations <number of evolution generations>
-   [-fitnessQuorum <fit member quorum required to advance behavior testing to next sensory-motor step>
-      (defaults to immediate testing of entire behavior sequences)]
+   [-behaveQuorum <behaving member quorum required to advance behavior testing to next sensory-motor step>
+      (defaults to immediate testing of entire behavior sequences)
+	  [<maximum generations before advancing without a quorum>]]
    -excitatoryNeurons <minimum number> <maximum> <max delta> <probability of random change>
    -inhibitoryNeurons <minimum number> <maximum> <max delta> <probability of random change>
    -synapsePropensities <minimum> <maximum> <max delta> <probability of random change>
@@ -167,5 +169,3 @@ bionet (resume morph)
    -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
    [-logMorph <morph log file name> (instead of standard output)]
    [-numThreads <number of threads> (defaults to system capacity)]
-   
-Create C Elegans bionet: see CElegans/Readme.txt

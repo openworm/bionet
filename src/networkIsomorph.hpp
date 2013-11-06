@@ -55,7 +55,8 @@ public:
 
    // Constructors.
    NetworkIsomorphoGenesis(vector<Behavior *>& behaviors,
-                           int populationSize, int numOffspring, int fitnessQuorum,
+                           int populationSize, int numOffspring,
+                           int behaveQuorum, int behaveQuorumMaxGenerations,
                            MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
                            MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
                            RANDOM randomSeed);

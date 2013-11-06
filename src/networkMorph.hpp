@@ -59,9 +59,11 @@ public:
    // Fitness motor list.
    vector<bool> fitnessMotorList;
 
-   // Fitness quorum.
-   int fitnessQuorum;
+   // Behave quorum.
+   int behaveQuorum;
+   int behaveQuorumMaxGenerations;
    int behaviorStep;
+   int behaveQuorumGenerationCount;
 
    // Random seed.
    RANDOM randomSeed;

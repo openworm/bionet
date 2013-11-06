@@ -60,9 +60,13 @@ public:
 
    // Constructors.
    NetworkHomomorphoGenesis(vector<Behavior *>& behaviors, Network *homomorph,
-                            int populationSize, int numOffspring, int parentLongevity, vector<int>& fitnessMotorList,
-                            int fitnessQuorum, float crossoverRate, float mutationRate, MutableParm& synapseWeightsParm,
-                            float synapseCrossoverBondStrength, int synapseOptimizedPathLength,
+                            int populationSize, int numOffspring, int parentLongevity,
+                            vector<int>& fitnessMotorList,
+                            int behaveQuorum, int behaveQuorumMaxGenerations,
+                            float crossoverRate, float mutationRate,
+                            MutableParm& synapseWeightsParm,
+                            float synapseCrossoverBondStrength,
+                            int synapseOptimizedPathLength,
                             RANDOM randomSeed);
 
    NetworkHomomorphoGenesis(vector<Behavior *>& behaviors, char *filename);
