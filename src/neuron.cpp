@@ -1,6 +1,5 @@
 // Neuron.
 
-#include <math.h>
 #include "network.hpp"
 #include "neuron.hpp"
 #include "fileio.h"

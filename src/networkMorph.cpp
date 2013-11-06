@@ -1,7 +1,6 @@
 // Network morph implementation.
 
 #include "networkMorph.hpp"
-#include <math.h>
 
 // Maximum tolerated motor output error.
 const float NetworkMorph::MAX_ERROR_TOLERANCE = 0.05f;

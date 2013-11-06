@@ -1,8 +1,6 @@
 // Network homomorph implementation.
 
 #include "networkHomomorph.hpp"
-#include <math.h>
-#include <errno.h>
 
 // Constructor.
 NetworkHomomorph::NetworkHomomorph(Network *homomorph, MutableParm& synapseWeightsParm,

@@ -5,6 +5,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <errno.h>
 #include <vector>
 #include <string>
 using namespace std;

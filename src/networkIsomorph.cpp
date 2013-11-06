@@ -1,8 +1,6 @@
 // Network isomorph implementation.
 
 #include "networkIsomorph.hpp"
-#include <math.h>
-#include <errno.h>
 
 // Constructor.
 NetworkIsomorph::NetworkIsomorph(MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,

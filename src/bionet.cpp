@@ -1949,8 +1949,6 @@ int main(int argc, char *argv[])
 }
 
 
-#include <math.h>
-
 // Usage.
 char *Usage2[] =
 {
