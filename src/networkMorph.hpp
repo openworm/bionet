@@ -18,11 +18,12 @@ public:
    // Constructor.
    NetworkMorph();
 
-   Network *network;
-   int     tag;
-   float   error;
-   bool    behaves;
-   int     offspringCount;
+   Network      *network;
+   int          tag;
+   float        error;
+   vector<bool> motorErrors;
+   bool         behaves;
+   int          offspringCount;
 
    // Evaluate behavior.
    void evaluate(vector<Behavior *>& behaviors, int maxStep);

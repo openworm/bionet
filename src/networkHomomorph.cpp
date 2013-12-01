@@ -3,22 +3,29 @@
 #include "networkHomomorph.hpp"
 
 // Constructor.
-NetworkHomomorph::NetworkHomomorph(Network *homomorph, MutableParm& synapseWeightsParm,
+NetworkHomomorph::NetworkHomomorph(Network *homomorph,
+                                   MutableParm& synapseWeightsParm,
+                                   vector<vector<pair<int, int> > > *motorConnections,
                                    Random *randomizer, int tag)
 {
    this->synapseWeightsParm = synapseWeightsParm;
    this->synapseWeightsParm.initValue(randomizer);
-   this->randomizer = randomizer;
-   this->tag        = tag;
-   network          = homomorph->clone();
+   this->motorConnections = motorConnections;
+   this->randomizer       = randomizer;
+   this->tag = tag;
+   network   = homomorph->clone();
+   motorErrors.resize(network->numMotors, false);
 }
 
 
-NetworkHomomorph::NetworkHomomorph(FILE *fp, Random *randomizer)
+NetworkHomomorph::NetworkHomomorph(FILE *fp,
+                                   vector<vector<pair<int, int> > > *motorConnections,
+                                   Random *randomizer)
 {
    network          = NULL;
    this->randomizer = randomizer;
    load(fp);
+   this->motorConnections = motorConnections;
 }
 
 
@@ -35,15 +42,8 @@ void NetworkHomomorph::mutate()
    int     i, j, n;
    Synapse *synapse;
 
+   i = randomNeuron(true);
    n = network->numNeurons;
-   while (true)
-   {
-      i = randomizer->RAND_CHOICE(n);
-      if ((i < network->numSensors) || (i >= (network->numSensors + network->numMotors)))
-      {
-         break;
-      }
-   }
    for (j = 0; j < n; j++)
    {
       if ((synapse = network->synapses[i][j]) != NULL)
@@ -70,8 +70,7 @@ void NetworkHomomorph::harmonize(vector<Behavior *>& behaviors,
    vector<vector<float> > permutations;
    vector<float>          permutation;
 
-   n = network->numNeurons;
-   i = randomizer->RAND_CHOICE(n);
+   i = randomNeuron();
    if (i < network->numSensors)
    {
       forward = true;
@@ -85,6 +84,7 @@ void NetworkHomomorph::harmonize(vector<Behavior *>& behaviors,
    {
       forward = randomizer->RAND_BOOL();
    }
+   n = network->numNeurons;
    for (j = 0; j < synapseOptimizedPathLength; j++)
    {
       k = randomizer->RAND_CHOICE(n);
@@ -175,6 +175,62 @@ void NetworkHomomorph::harmonize(vector<Behavior *>& behaviors,
 }
 
 
+// Select random neuron.
+int NetworkHomomorph::randomNeuron(bool nonMotor)
+{
+   int  i, j, k, m, n, s, t;
+   bool f;
+
+   vector<int> indices;
+
+   s = network->numSensors;
+   t = s + network->numMotors;
+   for (i = 0, n = (int)motorErrors.size(), f = false; i < n; i++)
+   {
+      if (motorErrors[i])
+      {
+         for (j = 0, k = (int)(*motorConnections)[i].size(); j < k; j++)
+         {
+            m = (*motorConnections)[i][j].first;
+            indices.push_back(m);
+            if ((m < s) || (m >= t))
+            {
+               f = true;
+            }
+         }
+      }
+   }
+   if (nonMotor && !f)
+   {
+      nonMotor = false;
+   }
+   while (true)
+   {
+      n = (int)indices.size();
+      if ((n > 0) && randomizer->RAND_BOOL())
+      {
+         n = indices[randomizer->RAND_CHOICE(n)];
+      }
+      else
+      {
+         n = randomizer->RAND_CHOICE(network->numNeurons);
+      }
+      if (nonMotor)
+      {
+         if ((n < s) || (n >= t))
+         {
+            break;
+         }
+      }
+      else
+      {
+         break;
+      }
+   }
+   return(n);
+}
+
+
 // Permute weights.
 void NetworkHomomorph::permuteWeights(vector<vector<float> >& weightRanges,
                                       vector<vector<float> >& permutations,
@@ -199,12 +255,18 @@ void NetworkHomomorph::permuteWeights(vector<vector<float> >& weightRanges,
 // Clone.
 NetworkHomomorph *NetworkHomomorph::clone()
 {
+   int              i, n;
    NetworkHomomorph *networkMorph;
 
    networkMorph = new NetworkHomomorph(
-      network, synapseWeightsParm, randomizer, tag);
+      network, synapseWeightsParm,
+      motorConnections, randomizer, tag);
    assert(networkMorph != NULL);
-   networkMorph->error   = error;
+   networkMorph->error = error;
+   for (i = 0, n = (int)motorErrors.size(); i < n; i++)
+   {
+      networkMorph->motorErrors[i] = motorErrors[i];
+   }
    networkMorph->behaves = behaves;
    return(networkMorph);
 }
@@ -213,6 +275,9 @@ NetworkHomomorph *NetworkHomomorph::clone()
 // Load.
 void NetworkHomomorph::load(FILE *fp)
 {
+   int  i, n;
+   bool b;
+
    synapseWeightsParm.load(fp);
    if (network != NULL)
    {
@@ -222,6 +287,13 @@ void NetworkHomomorph::load(FILE *fp)
    assert(network != NULL);
    FREAD_INT(&tag, fp);
    FREAD_FLOAT(&error, fp);
+   n = (int)network->numMotors;
+   motorErrors.resize(n, false);
+   for (i = 0; i < n; i++)
+   {
+      FREAD_BOOL(&b, fp);
+      motorErrors[i] = b;
+   }
    FREAD_BOOL(&behaves, fp);
    FREAD_INT(&offspringCount, fp);
 }
@@ -230,10 +302,19 @@ void NetworkHomomorph::load(FILE *fp)
 // Save.
 void NetworkHomomorph::save(FILE *fp)
 {
+   int  i, n;
+   bool b;
+
    synapseWeightsParm.save(fp);
    network->save(fp);
    FWRITE_INT(&tag, fp);
    FWRITE_FLOAT(&error, fp);
+   n = (int)motorErrors.size();
+   for (i = 0; i < n; i++)
+   {
+      b = motorErrors[i];
+      FWRITE_BOOL(&b, fp);
+   }
    FWRITE_BOOL(&behaves, fp);
    FWRITE_INT(&offspringCount, fp);
 }
@@ -242,6 +323,8 @@ void NetworkHomomorph::save(FILE *fp)
 // Print.
 void NetworkHomomorph::print(bool printNetwork)
 {
+   int i, n;
+
    if (printNetwork)
    {
       printf("Network:\n");
@@ -256,6 +339,15 @@ void NetworkHomomorph::print(bool printNetwork)
    }
    printf("tag=%d\n", tag);
    printf("error=%f\n", error);
+   printf("motorErrors: ");
+   for (i = 0, n = (int)motorErrors.size(); i < n; i++)
+   {
+      if (motorErrors[i])
+      {
+         printf("%d ", i);
+      }
+   }
+   printf("\n");
    printf("behaves=");
    if (behaves)
    {
@@ -332,11 +424,12 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(vector<Behavior *>& behaviors
    this->mutationRate  = mutationRate;
    this->synapseCrossoverBondStrength = synapseCrossoverBondStrength;
    this->synapseOptimizedPathLength   = synapseOptimizedPathLength;
+   getMotorConnections();
    generation = 0;
    for (i = 0; i < populationSize; i++)
    {
       networkMorph = new NetworkHomomorph(
-         homomorph, synapseWeightsParm, randomizer);
+         homomorph, synapseWeightsParm, &motorConnections, randomizer);
       assert(networkMorph != NULL);
       network = ((NetworkMorph *)networkMorph)->network;
       n       = network->numNeurons;
@@ -372,6 +465,7 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(vector<Behavior *>& behaviors
       fprintf(stderr, "Cannot load morph from file %s\n", filename);
       assert(false);
    }
+   getMotorConnections();
 }
 
 
@@ -384,6 +478,105 @@ NetworkHomomorphoGenesis::~NetworkHomomorphoGenesis()
    }
    population.clear();
    delete randomizer;
+}
+
+
+// Get motor connections.
+void NetworkHomomorphoGenesis::getMotorConnections()
+{
+   int    i, j, k, m, n;
+   Neuron *motor;
+
+   queue<pair<Neuron *, int> > open;
+   vector<Neuron *>            closed;
+   vector<pair<int, int> >     connections, culledConnections;
+   pair<int, int>              node;
+
+   motorConnections.clear();
+   for (i = homomorph->numSensors, j = homomorph->numSensors + homomorph->numMotors; i < j; i++)
+   {
+      motor = homomorph->neurons[i];
+      while (!open.empty())
+      {
+         open.pop();
+      }
+      open.push(pair<Neuron *, int>(motor, 0));
+      closed.clear();
+      connections.clear();
+      getMotorConnectionsSub(open, closed, connections);
+      for (k = m = 0, n = (int)connections.size(); k < n; k++)
+      {
+         node = connections[k];
+         m    = node.second;
+         if (node.first < homomorph->numSensors)
+         {
+            break;
+         }
+      }
+      culledConnections.clear();
+      for (k = 0; k < n; k++)
+      {
+         node = connections[k];
+         if (node.second <= m)
+         {
+            culledConnections.push_back(node);
+         }
+      }
+      motorConnections.push_back(culledConnections);
+   }
+}
+
+
+void NetworkHomomorphoGenesis::getMotorConnectionsSub(
+   queue<pair<Neuron *, int> >& open,
+   vector<Neuron *>& closed,
+   vector<pair<int, int> >& connections)
+{
+   int i, j, k;
+
+   if (open.empty())
+   {
+      return;
+   }
+   pair<Neuron *, int> current = open.front();
+   open.pop();
+   Neuron *neuron = current.first;
+   int    index   = neuron->index;
+   int    depth   = current.second;
+   closed.push_back(neuron);
+   for (i = 0, j = (int)connections.size(); i < j; i++)
+   {
+      if (connections[i].first == index)
+      {
+         break;
+      }
+   }
+   if (i == j)
+   {
+      connections.push_back(pair<int, int>(index, depth));
+   }
+   if (index >= homomorph->numSensors)
+   {
+      for (i = 0; i < homomorph->numNeurons; i++)
+      {
+         if (homomorph->synapses[i][index] != NULL)
+         {
+            neuron = homomorph->neurons[i];
+            for (j = 0, k = (int)closed.size(); j < k; j++)
+            {
+               if (neuron == closed[j])
+               {
+                  break;
+               }
+            }
+            if (j == k)
+            {
+               open.push(pair<Neuron *, int>(neuron, depth + 1));
+            }
+         }
+      }
+   }
+   getMotorConnectionsSub(open, closed, connections);
 }
 
 
@@ -838,7 +1031,7 @@ void NetworkHomomorphoGenesis::prune()
             fprintf(morphfp, "%d\t%d\t\t%f", i, population[i]->tag, population[i]->error);
             networkMorph  = (NetworkHomomorph *)population[i];
             population[i] = (NetworkMorph *)new NetworkHomomorph(
-               homomorph, networkMorph->synapseWeightsParm, randomizer);
+               homomorph, networkMorph->synapseWeightsParm, &motorConnections, randomizer);
             assert(population[i] != NULL);
             delete networkMorph;
             population[i]->evaluate(behaviors, fitnessMotorList, behaviorStep);
@@ -885,7 +1078,7 @@ bool NetworkHomomorphoGenesis::load(char *filename)
    FREAD_INT(&n, fp);
    for (i = 0; i < n; i++)
    {
-      NetworkHomomorph *networkMorph = new NetworkHomomorph(fp, randomizer);
+      NetworkHomomorph *networkMorph = new NetworkHomomorph(fp, &motorConnections, randomizer);
       assert(networkMorph != NULL);
       population.push_back((NetworkMorph *)networkMorph);
    }

@@ -15,9 +15,13 @@ class NetworkHomomorph : NetworkMorph
 public:
 
    // Constructors.
-   NetworkHomomorph(Network *homomorph, MutableParm& synapseWeightsParm,
+   NetworkHomomorph(Network *homomorph,
+                    MutableParm& synapseWeightsParm,
+                    vector<vector<pair<int, int> > > *motorConnections,
                     Random *randomizer, int tag = 0);
-   NetworkHomomorph(FILE *fp, Random *randomizer);
+   NetworkHomomorph(FILE *fp,
+                    vector<vector<pair<int, int> > > *motorConnections,
+                    Random *randomizer);
 
    // Destructor.
    ~NetworkHomomorph();
@@ -44,7 +48,13 @@ public:
    // Print.
    void print(bool printNetwork = false);
 
+   // Neurons connected to motors (indices).
+   vector<vector<pair<int, int> > > *motorConnections;
+
 private:
+
+   // Select random neuron.
+   int randomNeuron(bool nonMotor = false);
 
    // Permute weights.
    void permuteWeights(vector<vector<float> >& weightRanges,
@@ -115,6 +125,9 @@ public:
    // Print.
    void print(bool printNetwork = false);
 
+   // Neurons connected to motors (indices).
+   vector<vector<pair<int, int> > > motorConnections;
+
 private:
 
    void mate(int threadNum);
@@ -138,5 +151,11 @@ private:
 
    // Crossover neurons.
    void crossover(Network *child, Network *parent, int index, int distance);
+
+   // Get motor connections.
+   void getMotorConnections();
+   void getMotorConnectionsSub(queue<pair<Neuron *, int> >& open,
+                               vector<Neuron *>& closed,
+                               vector<pair<int, int> >& connections);
 };
 #endif

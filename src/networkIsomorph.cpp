@@ -31,6 +31,7 @@ NetworkIsomorph::NetworkIsomorph(MutableParm& excitatoryNeuronsParm, MutableParm
                          inhibitorDensity, synapsePropensity,
                          synapseWeightsParm.minimum, synapseWeightsParm.maximum,
                          randomizer->RAND());
+   motorErrors.resize(network->numMotors, false);
    assert(network != NULL);
 }
 
@@ -508,6 +509,7 @@ void NetworkIsomorph::addIndexedNeuron(int index, bool excitatory)
 // Clone.
 NetworkIsomorph *NetworkIsomorph::clone()
 {
+   int             i, n;
    NetworkIsomorph *networkMorph;
 
    networkMorph = new NetworkIsomorph(
@@ -515,7 +517,11 @@ NetworkIsomorph *NetworkIsomorph::clone()
       synapsePropensitiesParm, synapseWeightsParm,
       network->numSensors, network->numMotors, randomizer, tag);
    assert(networkMorph != NULL);
-   networkMorph->error   = error;
+   networkMorph->error = error;
+   for (i = 0, n = (int)motorErrors.size(); i < n; i++)
+   {
+      networkMorph->motorErrors[i] = motorErrors[i];
+   }
    networkMorph->behaves = behaves;
    delete networkMorph->network;
    networkMorph->network = network->clone();
@@ -526,6 +532,9 @@ NetworkIsomorph *NetworkIsomorph::clone()
 // Load.
 void NetworkIsomorph::load(FILE *fp)
 {
+   int  i, n;
+   bool b;
+
    excitatoryNeuronsParm.load(fp);
    inhibitoryNeuronsParm.load(fp);
    synapsePropensitiesParm.load(fp);
@@ -538,6 +547,13 @@ void NetworkIsomorph::load(FILE *fp)
    assert(network != NULL);
    FREAD_INT(&tag, fp);
    FREAD_FLOAT(&error, fp);
+   n = (int)network->numMotors;
+   motorErrors.resize(n, false);
+   for (i = 0; i < n; i++)
+   {
+      FREAD_BOOL(&b, fp);
+      motorErrors[i] = b;
+   }
    FREAD_BOOL(&behaves, fp);
 }
 
@@ -545,6 +561,9 @@ void NetworkIsomorph::load(FILE *fp)
 // Save.
 void NetworkIsomorph::save(FILE *fp)
 {
+   int  i, n;
+   bool b;
+
    excitatoryNeuronsParm.save(fp);
    inhibitoryNeuronsParm.save(fp);
    synapsePropensitiesParm.save(fp);
@@ -552,6 +571,12 @@ void NetworkIsomorph::save(FILE *fp)
    network->save(fp);
    FWRITE_INT(&tag, fp);
    FWRITE_FLOAT(&error, fp);
+   n = (int)motorErrors.size();
+   for (i = 0; i < n; i++)
+   {
+      b = motorErrors[i];
+      FWRITE_BOOL(&b, fp);
+   }
    FWRITE_BOOL(&behaves, fp);
 }
 
@@ -559,6 +584,8 @@ void NetworkIsomorph::save(FILE *fp)
 // Print.
 void NetworkIsomorph::print(bool printNetwork)
 {
+   int i, n;
+
    if (printNetwork)
    {
       printf("Network:\n");
@@ -573,6 +600,15 @@ void NetworkIsomorph::print(bool printNetwork)
    }
    printf("tag=%d\n", tag);
    printf("error=%f\n", error);
+   printf("motorErrors: ");
+   for (i = 0, n = (int)motorErrors.size(); i < n; i++)
+   {
+      if (motorErrors[i])
+      {
+         printf("%d ", i);
+      }
+   }
+   printf("\n");
    printf("behaves=");
    if (behaves)
    {

@@ -32,7 +32,8 @@ void NetworkMorph::evaluate(vector<Behavior *>& behaviors,
    float    delta;
    Behavior *testBehavior;
 
-   error   = 0.0f;
+   error = 0.0f;
+   fill(motorErrors.begin(), motorErrors.end(), false);
    behaves = true;
    count   = exceed = 0;
    if (fitnessMotorList.size() > 0)
@@ -65,6 +66,10 @@ void NetworkMorph::evaluate(vector<Behavior *>& behaviors,
             {
                exceed++;
                behaves = false;
+               if (motorErrors.size() > 0)
+               {
+                  motorErrors[k] = true;
+               }
             }
             error += delta;
             count++;
