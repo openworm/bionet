@@ -46,8 +46,16 @@ char *Usage[] =
    (char *)"  -createNetworkBehaviors",
    (char *)"  -loadNetwork <network file name>",
    (char *)"  -behaviorLengths <sensory-motor sequence length list (blank separator)>",
-   (char *)"  [-randomSeed <random seed>]",
    (char *)"  [-saveBehaviors <behaviors file name>]",
+   (char *)"  [-randomSeed <random seed>]",
+   (char *)"",
+   (char *)"bionet",
+   (char *)"  -createNetworkBehaviors",
+   (char *)"  -loadNetwork <network file name>",
+   (char *)"  -loadSensorBehaviors <behaviors file name>",
+   (char *)"     (produce motor outputs from given sensor inputs)",
+   (char *)"  [-saveBehaviors <behaviors file name>]",
+   (char *)"  [-randomSeed <random seed>]",
    (char *)"",
    (char *)"Test network behaviors:",
    (char *)"",
@@ -494,12 +502,15 @@ int graphNetwork(int argc, char *argv[])
 // Create network behaviors.
 int createNetworkBehaviors(int argc, char *argv[])
 {
-   int    i, j, result;
-   RANDOM randomSeed       = Network::DEFAULT_RANDOM_SEED;
-   char   *networkLoadFile = NULL;
+   int  i, j, result;
+   char *networkLoadFile = NULL;
 
-   vector<int> behaviorSequenceLengths;
-   char        *behaviorsSaveFile = NULL;
+   vector<int>        behaviorSequenceLengths;
+   char               *sensorBehaviorsLoadFile = NULL;
+   char               *behaviorsSaveFile       = NULL;
+   RANDOM             randomSeed = Network::DEFAULT_RANDOM_SEED;
+   vector<Behavior *> sensorBehaviors;
+   vector<Behavior *> behaviors;
 
    for (i = 1; i < argc; i++)
    {
@@ -533,15 +544,15 @@ int createNetworkBehaviors(int argc, char *argv[])
          }
          continue;
       }
-      if (strcmp(argv[i], "-randomSeed") == 0)
+      if (strcmp(argv[i], "-loadSensorBehaviors") == 0)
       {
          i++;
-         if (i >= argc)
+         if ((i >= argc) || (argv[i][0] == '-'))
          {
             printUsageError(argv[i - 1]);
             return(1);
          }
-         randomSeed = atoi(argv[i]);
+         sensorBehaviorsLoadFile = argv[i];
          continue;
       }
       if (strcmp(argv[i], "-saveBehaviors") == 0)
@@ -555,31 +566,79 @@ int createNetworkBehaviors(int argc, char *argv[])
          behaviorsSaveFile = argv[i];
          continue;
       }
+      if (strcmp(argv[i], "-randomSeed") == 0)
+      {
+         i++;
+         if (i >= argc)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         randomSeed = atoi(argv[i]);
+         continue;
+      }
       printUsageError((char *)"invalid option");
       return(1);
    }
 
-   if ((networkLoadFile == NULL) || (behaviorSequenceLengths.size() == 0))
+   if (networkLoadFile == NULL)
+   {
+      printUsageError((char *)"missing loadNetwork option");
+      return(1);
+   }
+   if ((sensorBehaviorsLoadFile == NULL) && (behaviorSequenceLengths.size() == 0))
    {
       printUsageError((char *)"missing required option");
+      return(1);
+   }
+   if ((sensorBehaviorsLoadFile != NULL) && (behaviorSequenceLengths.size() > 0))
+   {
+      printUsageError((char *)"conflicting options");
       return(1);
    }
 
    // Create behaviors.
    Network *network = new Network(networkLoadFile);
    assert(network != NULL);
-   Random             *randomizer = new Random(randomSeed);
-   vector<Behavior *> behaviors;
-   for (i = 0; i < (int)behaviorSequenceLengths.size(); i++)
-   {
-      network->clear();
-      Behavior *behavior = new Behavior(network, behaviorSequenceLengths[i], randomizer);
-      assert(behavior != NULL);
-      behaviors.push_back(behavior);
-      printf("Behavior %d:\n", i);
-      behavior->print();
-   }
+   Random *randomizer = new Random(randomSeed);
    result = 0;
+   if ((j = (int)behaviorSequenceLengths.size()) > 0)
+   {
+      for (i = 0; i < j; i++)
+      {
+         network->clear();
+         Behavior *behavior = new Behavior(network, behaviorSequenceLengths[i], randomizer);
+         assert(behavior != NULL);
+         behaviors.push_back(behavior);
+         printf("Behavior %d:\n", i);
+         behavior->print();
+      }
+   }
+   else
+   {
+      if (!Behavior::loadBehaviors(sensorBehaviorsLoadFile, sensorBehaviors))
+      {
+         fprintf(stderr, "Cannot load behaviors from file %s\n", sensorBehaviorsLoadFile);
+         delete network;
+         return(1);
+      }
+      for (i = 0, j = (int)sensorBehaviors.size(); i < j; i++)
+      {
+         Behavior *sensorBehavior = sensorBehaviors[i];
+         if ((sensorBehavior->sensorSequence.size() > 0) &&
+             ((int)sensorBehavior->sensorSequence[0].size() != network->numSensors))
+         {
+            fprintf(stderr, "Number of sensors not equal\n");
+            result = 1;
+            break;
+         }
+         Behavior *behavior = new Behavior(network, sensorBehavior->sensorSequence);
+         assert(behavior != NULL);
+         behaviors.push_back(behavior);
+         printf("Behavior %d:\n", i);
+         behavior->print();
+      }
+   }
    if (behaviorsSaveFile != NULL)
    {
       if (!Behavior::saveBehaviors(behaviorsSaveFile, behaviors))
@@ -588,7 +647,12 @@ int createNetworkBehaviors(int argc, char *argv[])
          result = 1;
       }
    }
-   for (i = 0; i < (int)behaviors.size(); i++)
+   for (i = 0, j = (int)sensorBehaviors.size(); i < j; i++)
+   {
+      delete sensorBehaviors[i];
+   }
+   sensorBehaviors.clear();
+   for (i = 0, j = (int)behaviors.size(); i < j; i++)
    {
       delete behaviors[i];
    }
@@ -605,6 +669,8 @@ int testNetworkBehaviors(int argc, char *argv[])
    char  *networkLoadFile    = NULL;
    char  *behaviorsLoadFile  = NULL;
    float motorDeltaTolerance = 0.0f;
+
+   vector<Behavior *> behaviors;
 
    for (i = 1; i < argc; i++)
    {
@@ -659,7 +725,6 @@ int testNetworkBehaviors(int argc, char *argv[])
    Network *network = new Network(networkLoadFile);
    assert(network != NULL);
    network->print();
-   vector<Behavior *> behaviors;
    if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
    {
       fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
@@ -702,6 +767,8 @@ int printNetworkBehaviors(int argc, char *argv[])
    int  i, n;
    char *behaviorsLoadFile = NULL;
 
+   vector<Behavior *> behaviors;
+
    for (i = 1; i < argc; i++)
    {
       if (strcmp(argv[i], "-printNetworkBehaviors") == 0)
@@ -730,7 +797,6 @@ int printNetworkBehaviors(int argc, char *argv[])
    }
 
    // Print behaviors.
-   vector<Behavior *> behaviors;
    if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
    {
       fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);

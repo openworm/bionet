@@ -74,8 +74,16 @@ bionet
    -createNetworkBehaviors
    -loadNetwork <network file name>
    -behaviorLengths <sensory-motor sequence length list (blank separator)>
-   [-randomSeed <random seed>]
    [-saveBehaviors <behaviors file name>]
+   [-randomSeed <random seed>]
+
+bionet
+   -createNetworkBehaviors
+   -loadNetwork <network file name>
+   -loadSensorBehaviors <behaviors file name>
+      (produce motor outputs from given sensor inputs)
+   [-saveBehaviors <behaviors file name>]
+   [-randomSeed <random seed>]
 
 Test network behaviors: 
 

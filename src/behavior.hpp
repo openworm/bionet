@@ -13,6 +13,7 @@ class Behavior
 public:
    Behavior(Network *network, int length, Random *randomizer);
    Behavior(Network *network, vector<vector<float> >& sensors);
+   Behavior() {}
    Behavior(FILE *fp);
    ~Behavior();
 
