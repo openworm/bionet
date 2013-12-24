@@ -1,4 +1,4 @@
-Create C Elegans bionet from connectome.
-Connectome: data/CElegansNeuronTables.xls
-To build code: bin/build.sh
-To create bionet: bin/run.sh [<random number>]
+C elegans specific utilities:
+connectome: create bionet network from connectome.
+behavior: create bionet sinusoidal movement (wriggling) behavior.
+

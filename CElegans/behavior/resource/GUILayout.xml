@@ -1,0 +1,81 @@
+<Panel visible     = "true"
+       name        = "Main Frame">
+
+  <Texture  type        = "TEXTURE_2D"
+            path        = "GUIElements.PNG" 
+            mode        = "MODULATE"
+            mipmap      = "true">
+
+    <Wrap   s           = "REPEAT"
+            t           = "REPEAT" />
+
+    <Filter mag         = "LINEAR" 
+            min         = "LINEAR_MIPMAP_LINEAR" />
+  </Texture>
+  
+  <Font path = "ArialSmall.tga" />
+
+  <Panel name       = "TouchY"
+         layout     = "YAXIS">
+    
+    <Position     y = "+20"/>
+    
+    <Panel name           = "TouchX"
+           layout         = "XAXIS"
+           anchorPoint    = "CORNERLU">
+
+      <BordersColor x = "216" y = "169" z =  "0" />
+      <BGColor      x =  "50" y =  "50" z = "50" />
+      
+      <CheckBox callbackString = "touch"
+            checked    = "false">
+        <Text   string  = "Touch ALML/ALMR" />
+      </CheckBox>
+
+    </Panel>
+
+  </Panel>
+
+  <Panel name       = "RunY"
+         layout     = "YAXIS">
+    
+    <Position     y = "-5"/>
+    
+    <Panel name        = "RunX"
+           layout      = "XAXIS"           
+           anchorPoint = "CORNERLD">
+      
+      <BordersColor r = "216" g = "169" b =  "0" />
+      <BGColor      r =  "0" g =  "0" b = "0" />
+ 
+      <Panel name        = "Pause"
+             layout      = "XAXIS"           
+             anchorPoint = "CORNERLD">
+ 
+        <CheckBox callbackString = "pause"
+              checked    = "true">
+          <Text   string  = "Pause" />
+        </CheckBox>
+
+      </Panel>
+
+      <Panel name        = "Step"
+             layout      = "XAXIS"           
+             anchorPoint = "CORNERRD">
+ 
+        <Button callbackString = "step">
+          <EdgeOffsets x = "0.0" y = "0.0" />
+          <Text    string  = "Step" />
+        </Button>
+
+      </Panel>
+
+    </Panel>
+
+  </Panel>
+  <TexCoordsDesc xStart = "201" yStart = "2" xEnd = "233" yEnd = "34" type = "SLIDER"/>
+  <TexCoordsDesc xStart = "167" yStart = "2" xEnd = "199" yEnd = "34" type = "CHECK_BOX"/>
+  <TexCoordsDesc xStart = "131" yStart = "1" xEnd = "165" yEnd = "35" type = "CHECK_BOX_MARK"/>
+  <TexCoordsDesc xStart =   "1" yStart = "1" xEnd =  "65" yEnd = "66" type = "RADIO_BUTTON"/>
+  <TexCoordsDesc xStart =  "66" yStart = "2" xEnd = "130" yEnd = "66" type = "CHECK_RB_MARK"/>
+</Panel>
