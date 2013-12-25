@@ -5,14 +5,14 @@ CC = gcc
 CCFLAGS = -I../include -I../../../src -O3 -c
 LINKLIBS = -L../lib -lsxmlgui -lglpng -lglut -lGLU -lGL -lm -lstdc++
 
-all: ../bin/CElegansBody
+all: ../bin/CElegansBehavior
 
-../bin/CElegansBody: CElegansBody.o network.o neuron.o behavior.o random.o fileio.o gettime.o
-	$(CC) -o ../bin/CElegansBody CElegansBody.o network.o neuron.o behavior.o \
+../bin/CElegansBehavior: CElegansBehavior.o network.o neuron.o behavior.o random.o fileio.o gettime.o
+	$(CC) -o ../bin/CElegansBehavior CElegansBehavior.o network.o neuron.o behavior.o \
         random.o fileio.o gettime.o $(LINKLIBS)
 
-CElegansBody.o: CElegansBody.cpp
-	$(CC) $(CCFLAGS) CElegansBody.cpp
+CElegansBehavior.o: CElegansBehavior.cpp
+	$(CC) $(CCFLAGS) CElegansBehavior.cpp
 
 network.o: ../../../src/network.hpp ../../../src/network.cpp ../../../src/neuron.hpp
 	$(CC) $(CCFLAGS) ../../../src/network.cpp

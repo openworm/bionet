@@ -1,4 +1,4 @@
-// Artificial C. elegans body model.
+// Bionet sinusoidal movement (locomotion) behavior.
 
 #ifdef WIN32
 #include <windows.h>
@@ -26,11 +26,11 @@ char *Usage[] =
    (char *)"",
    (char *)"Run:",
    (char *)"",
-   (char *)"CElegansBody",
+   (char *)"CElegansBehavior",
    (char *)"",
    (char *)"Create network behavior:",
    (char *)"",
-   (char *)"CElegansBody",
+   (char *)"CElegansBehavior",
    (char *)"  -behaviorLength <sensory-motor sequence length>",
    (char *)"  [-motorOutputDelay <delay for motor output> (for signal propagation)]",
    (char *)"  [-initialPhase <initial sinusoid phase>]",
@@ -38,7 +38,7 @@ char *Usage[] =
    (char *)"",
    (char *)"Load and run network behavior:",
    (char *)"",
-   (char *)"CElegansBody",
+   (char *)"CElegansBehavior",
    (char *)"   -loadBehavior <behavior file name>",
    NULL
 };
@@ -930,7 +930,6 @@ void mouseClicked(int button, int state, int x, int y)
 void mouseDragged(int x, int y)
 {
    MouseEvent event = MouseEvent(MB_UNKNOWN_BUTTON, x, y, GuiFrame->getHeight() - y);
-
    GuiFrame->checkMouseEvents(event, ME_DRAGGED);
 }
 
@@ -938,7 +937,6 @@ void mouseDragged(int x, int y)
 void mouseMoved(int x, int y)
 {
    MouseEvent event = MouseEvent(MB_UNKNOWN_BUTTON, x, y, GuiFrame->getHeight() - y);
-
    GuiFrame->checkMouseEvents(event, ME_MOVED);
 }
 

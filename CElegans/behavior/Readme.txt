@@ -1,14 +1,14 @@
-Create C Elegans bionet sinusoidal movement (wriggling) behavior.
+C. Elegans bionet sinusoidal movement (locomotion) behavior.
 
 Usage:
 
 Run:
 
-CElegansBody
+CElegansBehavior
 
 Create network behavior:
 
-CElegansBody
+CElegansBehavior
   -behaviorLength <sensory-motor sequence length>
   [-motorOutputDelay <delay for motor output> (for signal propagation)]
   [-initialPhase <initial sinusoid phase>]
@@ -16,5 +16,5 @@ CElegansBody
 
 Load and run network behavior:
 
-CElegansBody
+CElegansBehavior
    -loadBehavior <behavior file name>

@@ -59,7 +59,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
-      <TypeLibraryName>.\Release/CElegansBody.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Release/CElegansBehavior.tlb</TypeLibraryName>
       <HeaderFileName />
     </Midl>
     <ClCompile>
@@ -70,7 +70,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader />
-      <PrecompiledHeaderOutputFile>.\Release/CElegansBody.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderOutputFile>.\Release/CElegansBehavior.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
       <ObjectFileName>.\Release/</ObjectFileName>
       <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
@@ -82,9 +82,9 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>..\bin\CElegansBody.exe</OutputFile>
+      <OutputFile>..\bin\CElegansBehavior.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ProgramDatabaseFile>..\bin/CElegansBody.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>..\bin/CElegansBehavior.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
@@ -94,7 +94,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
-      <TypeLibraryName>.\Debug/CElegansBody.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Debug/CElegansBehavior.tlb</TypeLibraryName>
       <HeaderFileName />
     </Midl>
     <ClCompile>
@@ -103,7 +103,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader />
-      <PrecompiledHeaderOutputFile>.\Debug/CElegansBody.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderOutputFile>.\Debug/CElegansBehavior.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
       <ObjectFileName>.\Debug/</ObjectFileName>
       <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
@@ -116,10 +116,10 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>..\bin\CElegansBody.exe</OutputFile>
+      <OutputFile>..\bin\CElegansBehavior.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>..\bin/CElegansBody.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>..\bin/CElegansBehavior.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
@@ -134,7 +134,7 @@
     <ClCompile Include="..\..\..\src\network.cpp" />
     <ClCompile Include="..\..\..\src\neuron.cpp" />
     <ClCompile Include="..\..\..\src\random.cpp" />
-    <ClCompile Include="CElegansBody.cpp">
+    <ClCompile Include="CElegansBehavior.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
