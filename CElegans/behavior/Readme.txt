@@ -1,4 +1,4 @@
-C. Elegans bionet sinusoidal movement (locomotion) behavior.
+Bionet sinusoidal movement (locomotion) behavior.
 
 Usage:
 
