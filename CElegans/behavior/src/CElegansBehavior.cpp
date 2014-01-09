@@ -34,12 +34,12 @@ char *Usage[] =
    (char *)"  -behaviorLength <sensory-motor sequence length>",
    (char *)"  [-motorOutputDelay <delay for motor output> (for signal propagation)]",
    (char *)"  [-initialPhase <initial sinusoid phase>]",
-   (char *)"  -saveBehavior <behavior file name>",
+   (char *)"  -saveBehaviors <behaviors file name>",
    (char *)"",
    (char *)"Load and run network behavior:",
    (char *)"",
    (char *)"CElegansBehavior",
-   (char *)"   -loadBehavior <behavior file name>",
+   (char *)"   -loadBehaviors <behaviors file name>",
    NULL
 };
 
@@ -66,16 +66,16 @@ void printUsageError(char *error)
 
 // Behavior load/save.
 int  MotorSequenceLength = -1;
-char *BehaviorLoadFile   = NULL;
-char *BehaviorSaveFile   = NULL;
+char *BehaviorsLoadFile  = NULL;
+char *BehaviorsSaveFile  = NULL;
 vector<vector<float> > VentralMotorSequence;
 vector<vector<float> > DorsalMotorSequence;
 int   MotorSequenceIndex = 0;
 int   MotorOutputDelay   = -1;
 int   MotorDelayCount    = 0;
 float InitialPhase       = 0.0f;
-void loadBehavior();
-void saveBehavior();
+void loadBehaviors();
+void saveBehaviors();
 
 // Connectome cell index.
 struct CellIndex
@@ -307,7 +307,7 @@ int main(int argc, char *argv[])
          gotInitialPhase = true;
          continue;
       }
-      if (strcmp(argv[i], "-saveBehavior") == 0)
+      if (strcmp(argv[i], "-saveBehaviors") == 0)
       {
          i++;
          if ((i >= argc) || (argv[i][0] == '-'))
@@ -315,10 +315,10 @@ int main(int argc, char *argv[])
             printUsageError(argv[i - 1]);
             return(1);
          }
-         BehaviorSaveFile = argv[i];
+         BehaviorsSaveFile = argv[i];
          continue;
       }
-      if (strcmp(argv[i], "-loadBehavior") == 0)
+      if (strcmp(argv[i], "-loadBehaviors") == 0)
       {
          i++;
          if ((i >= argc) || (argv[i][0] == '-'))
@@ -326,15 +326,25 @@ int main(int argc, char *argv[])
             printUsageError(argv[i - 1]);
             return(1);
          }
-         BehaviorLoadFile = argv[i];
+         BehaviorsLoadFile = argv[i];
          continue;
+      }
+      if ((strcmp(argv[i], "-h") == 0) ||
+          (strcmp(argv[i], "-help") == 0) ||
+          (strcmp(argv[i], "--h") == 0) ||
+          (strcmp(argv[i], "--help") == 0) ||
+          (strcmp(argv[i], "-?") == 0) ||
+          (strcmp(argv[i], "--?") == 0))
+      {
+         printUsage();
+         return(0);
       }
       printUsageError((char *)"invalid option");
       return(1);
    }
-   if (BehaviorSaveFile != NULL)
+   if (BehaviorsSaveFile != NULL)
    {
-      if (BehaviorLoadFile != NULL)
+      if (BehaviorsLoadFile != NULL)
       {
          printUsageError((char *)"incompatible options");
          return(1);
@@ -362,9 +372,9 @@ int main(int argc, char *argv[])
          printUsageError((char *)"invalid option");
          return(1);
       }
-      if (BehaviorLoadFile != NULL)
+      if (BehaviorsLoadFile != NULL)
       {
-         loadBehavior();
+         loadBehaviors();
       }
    }
    if (MotorOutputDelay == -1)
@@ -411,8 +421,8 @@ int main(int argc, char *argv[])
 }
 
 
-// Load behavior.
-void loadBehavior()
+// Load behaviors.
+void loadBehaviors()
 {
    int   i, j, k;
    float m;
@@ -421,14 +431,14 @@ void loadBehavior()
    vector<Behavior *> behaviors;
    Behavior           *behavior;
 
-   if (!Behavior::loadBehaviors(BehaviorLoadFile, behaviors))
+   if (!Behavior::loadBehaviors(BehaviorsLoadFile, behaviors))
    {
-      fprintf(stderr, (char *)"Cannot load behavior file %s\n", BehaviorLoadFile);
+      fprintf(stderr, (char *)"Cannot load behavior file %s\n", BehaviorsLoadFile);
       exit(1);
    }
    if (behaviors.size() != 1)
    {
-      fprintf(stderr, (char *)"Behavior file %s contains %d behaviors; must contain 1 behavior\n", BehaviorLoadFile, behaviors.size());
+      fprintf(stderr, (char *)"Behavior file %s contains %d behaviors; must contain 1 behavior\n", BehaviorsLoadFile, behaviors.size());
       exit(1);
    }
    behavior            = behaviors[0];
@@ -466,8 +476,8 @@ void loadBehavior()
 }
 
 
-// Save behavior.
-void saveBehavior()
+// Save behaviors.
+void saveBehaviors()
 {
    int   i, j, k;
    float m;
@@ -507,9 +517,9 @@ void saveBehavior()
       }
    }
    behaviors.push_back(behavior);
-   if (!Behavior::saveBehaviors(BehaviorSaveFile, behaviors))
+   if (!Behavior::saveBehaviors(BehaviorsSaveFile, behaviors))
    {
-      fprintf(stderr, (char *)"Cannot save behavior file %s\n", BehaviorSaveFile);
+      fprintf(stderr, (char *)"Cannot save behavior file %s\n", BehaviorsSaveFile);
       exit(1);
    }
 }
@@ -589,13 +599,10 @@ void display()
    {
       xdelta = 0.0f;
    }
-   if (Run)
+   if (isTouched && BehaviorsLoadFile)
    {
-      if (BehaviorLoadFile)
-      {
-         dorsalMagnitudes  = DorsalMotorSequence[MotorSequenceIndex];
-         ventralMagnitudes = VentralMotorSequence[MotorSequenceIndex];
-      }
+      dorsalMagnitudes  = DorsalMotorSequence[MotorSequenceIndex];
+      ventralMagnitudes = VentralMotorSequence[MotorSequenceIndex];
    }
    radius  = WindowWidth * BodyRadius;
    point.y = bodyOffset + radius;
@@ -604,7 +611,7 @@ void display()
    {
       if (isTouched && (MotorDelayCount == MotorOutputDelay))
       {
-         if (BehaviorLoadFile)
+         if (BehaviorsLoadFile)
          {
             point.x = dorsalMagnitudes[i] - ventralMagnitudes[i];
          }
@@ -643,13 +650,10 @@ void display()
       ventrals.push_back(point);
       point.y += ydelta;
    }
-   if (Run)
+   if (Run && BehaviorsSaveFile)
    {
-      if (BehaviorSaveFile)
-      {
-         DorsalMotorSequence.push_back(dorsalMagnitudes);
-         VentralMotorSequence.push_back(ventralMagnitudes);
-      }
+      DorsalMotorSequence.push_back(dorsalMagnitudes);
+      VentralMotorSequence.push_back(ventralMagnitudes);
    }
    glColor3f(0.5f, 0.5f, 0.5f);
    for (i = 0, j = (int)dorsals.size() - 1; i < j; i++)
@@ -771,12 +775,12 @@ void display()
    renderBitmapString(10, 15, FONT, (char *)"MV R/L");
    renderBitmapString((int)(WindowWidth * 0.75f) + 10, 15, FONT, (char *)"MD R/L");
 
-   if (BehaviorLoadFile)
+   if (BehaviorsLoadFile)
    {
       sprintf(buf, "Load: %d/%d", MotorSequenceIndex + 1, MotorSequenceLength);
       renderBitmapString(10, WindowHeight - 15, FONT, buf);
    }
-   else if (BehaviorSaveFile)
+   else if (BehaviorsSaveFile)
    {
       sprintf(buf, "Save: %d/%d", MotorSequenceIndex + 1, MotorSequenceLength);
       renderBitmapString(10, WindowHeight - 15, FONT, buf);
@@ -803,7 +807,7 @@ void display()
 
       // Behavior complete?
       MotorSequenceIndex++;
-      if (BehaviorLoadFile)
+      if (BehaviorsLoadFile)
       {
          if (MotorSequenceIndex == MotorSequenceLength)
          {
@@ -815,11 +819,11 @@ void display()
             exit(0);
          }
       }
-      else if (BehaviorSaveFile)
+      else if (BehaviorsSaveFile)
       {
          if (MotorSequenceIndex == MotorSequenceLength)
          {
-            saveBehavior();
+            saveBehaviors();
 #ifdef WIN32
             Sleep(5000);
 #else
@@ -899,7 +903,7 @@ void idle()
       BodyPhase          = InitialPhase;
       MotorSequenceIndex = 0;
       MotorDelayCount    = 0;
-      if (BehaviorSaveFile)
+      if (BehaviorsSaveFile)
       {
          DorsalMotorSequence.clear();
          VentralMotorSequence.clear();
@@ -930,6 +934,7 @@ void mouseClicked(int button, int state, int x, int y)
 void mouseDragged(int x, int y)
 {
    MouseEvent event = MouseEvent(MB_UNKNOWN_BUTTON, x, y, GuiFrame->getHeight() - y);
+
    GuiFrame->checkMouseEvents(event, ME_DRAGGED);
 }
 
@@ -937,6 +942,7 @@ void mouseDragged(int x, int y)
 void mouseMoved(int x, int y)
 {
    MouseEvent event = MouseEvent(MB_UNKNOWN_BUTTON, x, y, GuiFrame->getHeight() - y);
+
    GuiFrame->checkMouseEvents(event, ME_MOVED);
 }
 

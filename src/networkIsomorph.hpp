@@ -9,7 +9,7 @@
 #endif
 
 // Network isomorph.
-class NetworkIsomorph : NetworkMorph
+class NetworkIsomorph : public NetworkMorph
 {
 public:
 

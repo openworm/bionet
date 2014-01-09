@@ -10,7 +10,7 @@
 #endif
 
 // Network homomorph.
-class NetworkHomomorph : NetworkMorph
+class NetworkHomomorph : public NetworkMorph
 {
 public:
 
@@ -19,6 +19,7 @@ public:
                     MutableParm& synapseWeightsParm,
                     vector<vector<pair<int, int> > > *motorConnections,
                     Random *randomizer, int tag = 0);
+   NetworkHomomorph();
    NetworkHomomorph(FILE *fp,
                     vector<vector<pair<int, int> > > *motorConnections,
                     Random *randomizer);
@@ -51,7 +52,7 @@ public:
    // Neurons connected to motors (indices).
    vector<vector<pair<int, int> > > *motorConnections;
 
-private:
+protected:
 
    // Select random neuron.
    int randomNeuron(bool nonMotor = false);
@@ -63,12 +64,73 @@ private:
                        int level, int depth);
 };
 
-// Network homomorphogenesis.
-class NetworkHomomorphoGenesis : NetworkMorphoGenesis
+// Locomotion behavior network homomorph.
+class LocomotionNetworkHomomorph : public NetworkHomomorph
 {
 public:
 
    // Constructors.
+   LocomotionNetworkHomomorph(int locomotionMovements, Network *homomorph,
+                              MutableParm& synapseWeightsParm,
+                              vector<vector<pair<int, int> > > *motorConnections,
+                              Random *randomizer, int tag = 0);
+   LocomotionNetworkHomomorph(FILE *fp, int locomotionMovements,
+                              vector<vector<pair<int, int> > > *motorConnections,
+                              Random *randomizer);
+
+   // Harmonize synapses.
+   void harmonize(int synapseOptimizedPathLength);
+
+   // Fitness.
+   float fitness;
+
+   // Evaluate locomotion behavior fitness.
+   int locomotionMovements;
+   void evaluate();
+
+   // Clone.
+   LocomotionNetworkHomomorph *clone();
+
+   // Load.
+   void load(FILE *fp);
+
+   // Save.
+   void save(FILE *fp);
+
+   // Print.
+   void print(bool printNetwork = false);
+
+   // Connectome cell index.
+   struct CellIndex
+   {
+      char *name;
+      int  index;
+   };
+
+   // Sensor indices.
+   static const struct CellIndex sensorIndices[];
+
+   // Muscle indices.
+   static const struct CellIndex muscleIndices[];
+
+   // Body joint.
+   struct BodyJoint
+   {
+      int dorsalMuscles[4];
+      int ventralMuscles[4];
+   };
+
+   // Body joints.
+   static const enum { NUM_BODY_JOINTS=12 };
+   static const struct BodyJoint bodyJoints[NUM_BODY_JOINTS];
+};
+
+// Network homomorphogenesis.
+class NetworkHomomorphoGenesis : public NetworkMorphoGenesis
+{
+public:
+
+   // Constructor.
    NetworkHomomorphoGenesis(vector<Behavior *>& behaviors, Network *homomorph,
                             int populationSize, int numOffspring, int parentLongevity,
                             vector<int>& fitnessMotorList,
@@ -79,13 +141,27 @@ public:
                             int synapseOptimizedPathLength,
                             RANDOM randomSeed);
 
+   // Locomotion behavior constructor.
+   NetworkHomomorphoGenesis(int locomotionMovements, Network *homomorph,
+                            int populationSize, int numOffspring, int parentLongevity,
+                            float crossoverRate, float mutationRate,
+                            MutableParm& synapseWeightsParm,
+                            float synapseCrossoverBondStrength,
+                            int synapseOptimizedPathLength,
+                            RANDOM randomSeed);
+
    NetworkHomomorphoGenesis(vector<Behavior *>& behaviors, char *filename);
+   NetworkHomomorphoGenesis(int locomotionMovements, char *filename);
 
    // Destructor.
    ~NetworkHomomorphoGenesis();
 
    // Homomorphic network.
    Network *homomorph;
+
+   // Locomotion behavior.
+   bool locomotionBehavior;
+   int  locomotionMovements;
 
    // Crossover and mutation rates.
    float crossoverRate;
@@ -116,6 +192,12 @@ public:
    // Prune members.
    void prune();
 
+   // Evaluate behavior.
+   void evaluate();
+
+   // Sort population by fitness.
+   void sort();
+
    // Load.
    bool load(char *filename);
 
@@ -129,6 +211,14 @@ public:
    vector<vector<pair<int, int> > > motorConnections;
 
 private:
+
+   void init(Network *homomorph,
+             int populationSize, int numOffspring, int parentLongevity,
+             float crossoverRate, float mutationRate,
+             MutableParm& synapseWeightsParm,
+             float synapseCrossoverBondStrength,
+             int synapseOptimizedPathLength,
+             RANDOM randomSeed);
 
    void mate(int threadNum);
    void optimize(int threadNum);
@@ -155,7 +245,7 @@ private:
    // Get motor connections.
    void getMotorConnections();
    void getMotorConnectionsSub(queue<pair<Neuron *, int> >& open,
-                               vector<Neuron *>& closed,
+                               vector<bool>& closed,
                                vector<pair<int, int> >& connections);
 };
 #endif

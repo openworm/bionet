@@ -70,18 +70,24 @@ bionet
 
 Create network behaviors:
 
-bionet
+bionet (create random behaviors)
    -createNetworkBehaviors
    -loadNetwork <network file name>
    -behaviorLengths <sensory-motor sequence length list (blank separator)>
    [-saveBehaviors <behaviors file name>]
    [-randomSeed <random seed>]
 
-bionet
+bionet (create motor outputs from given sensor inputs)
    -createNetworkBehaviors
    -loadNetwork <network file name>
    -loadSensorBehaviors <behaviors file name>
-      (produce motor outputs from given sensor inputs)
+   [-saveBehaviors <behaviors file name>]
+   [-randomSeed <random seed>]
+
+bionet (create locomotion behavior movements)
+   -createNetworkBehaviors
+   -loadNetwork <network file name>
+   -locomotionMovements <number of sinusoidal (wriggling) movements>
    [-saveBehaviors <behaviors file name>]
    [-randomSeed <random seed>]
 
@@ -133,6 +139,37 @@ bionet (resume morph)
    [-behaveCutoff <stop evolution when this many members behave>]
    [-fitnessMotorList <list of motor outputs evaluated for fitness (0-n, comma-separated)>
       (defaults to loaded list)]
+   [-crossoverRate <probability> (defaults to loaded value)]
+   [-mutationRate <probability> (defaults to loaded value)]
+   [-synapseCrossoverBondStrength <probability of connected neurons crossing over together>]
+   [-synapseOptimizedPathLength <synapse path length optimized as a group>]
+   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
+   [-logMorph <morph log file name> (instead of standard output)]
+   [-numThreads <number of threads> (defaults to system capacity)]
+
+bionet (new locomotion behavior morph)
+   -createHomomorphicNetworks
+   -locomotionMovements <number of sinusoidal (wriggling) movements>
+   -loadNetwork <homomorph network file name>
+   -populationSize <number population members>
+   -numOffspring <number offspring per generation>
+   [-parentLongevity <parent dies after this many offspring>]
+   -numGenerations <number of evolution generations>
+   -crossoverRate <probability>
+   -mutationRate <probability>
+   -synapseWeights <minimum> <maximum> <max delta>
+   -synapseCrossoverBondStrength <probability of connected neurons crossing over together>
+   -synapseOptimizedPathLength <synapse path length optimized as a group>
+   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
+   [-randomSeed <random seed>]
+   [-logMorph <morph log file name> (instead of standard output)]
+   [-numThreads <number of threads> (defaults to system capacity)]
+
+bionet (resume locomotion behavior morph)
+   -createHomomorphicNetworks
+   -locomotionMovements <number of sinusoidal (wriggling) movements>
+   -loadMorph <morph file name>
+   -numGenerations <number of evolution generations>
    [-crossoverRate <probability> (defaults to loaded value)]
    [-mutationRate <probability> (defaults to loaded value)]
    [-synapseCrossoverBondStrength <probability of connected neurons crossing over together>]

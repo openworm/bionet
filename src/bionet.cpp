@@ -42,18 +42,24 @@ char *Usage[] =
    (char *)"",
    (char *)"Create network behaviors:",
    (char *)"",
-   (char *)"bionet",
+   (char *)"bionet (create random behaviors)",
    (char *)"  -createNetworkBehaviors",
    (char *)"  -loadNetwork <network file name>",
    (char *)"  -behaviorLengths <sensory-motor sequence length list (blank separator)>",
    (char *)"  [-saveBehaviors <behaviors file name>]",
    (char *)"  [-randomSeed <random seed>]",
    (char *)"",
-   (char *)"bionet",
+   (char *)"bionet (create motor outputs from given sensor inputs)",
    (char *)"  -createNetworkBehaviors",
    (char *)"  -loadNetwork <network file name>",
    (char *)"  -loadSensorBehaviors <behaviors file name>",
-   (char *)"     (produce motor outputs from given sensor inputs)",
+   (char *)"  [-saveBehaviors <behaviors file name>]",
+   (char *)"  [-randomSeed <random seed>]",
+   (char *)"",
+   (char *)"bionet (create locomotion behavior movements)",
+   (char *)"  -createNetworkBehaviors",
+   (char *)"  -loadNetwork <network file name>",
+   (char *)"  -locomotionMovements <number of sinusoidal (wriggling) movements>",
    (char *)"  [-saveBehaviors <behaviors file name>]",
    (char *)"  [-randomSeed <random seed>]",
    (char *)"",
@@ -116,6 +122,37 @@ char *Usage[] =
 #ifdef THREADS
    (char *)"   [-numThreads <number of threads> (defaults to system capacity)]",
 #endif
+   (char *)"",
+   (char *)"bionet(new locomotion behavior morph)",
+   (char *)"   -createHomomorphicNetworks",
+   (char *)"   -locomotionMovements <number of sinusoidal (wriggling) movements>",
+   (char *)"   -loadNetwork <homomorph network file name>",
+   (char *)"   -populationSize <number population members>",
+   (char *)"   -numOffspring <number offspring per generation>",
+   (char *)"   [-parentLongevity <parent dies after this many offspring>]",
+   (char *)"   -numGenerations <number of evolution generations>",
+   (char *)"   -crossoverRate <probability>",
+   (char *)"   -mutationRate <probability>",
+   (char *)"   -synapseWeights <minimum> <maximum> <max delta>",
+   (char *)"   -synapseCrossoverBondStrength <probability of connected neurons crossing over together>",
+   (char *)"   -synapseOptimizedPathLength <synapse path length optimized as a group>",
+   (char *)"   -saveMorph <morph file name> and / or - saveNetworks[<files prefix(default = \"network_\")>]",
+   (char *)"   [-randomSeed <random seed>]",
+   (char *)"   [-logMorph <morph log file name>(instead of standard output)]",
+   (char *)"   [-numThreads <number of threads>(defaults to system capacity)]",
+   (char *)"",
+   (char *)"bionet(resume locomotion behavior morph)",
+   (char *)"   -createHomomorphicNetworks",
+   (char *)"   -locomotionMovements <number of sinusoidal (wriggling) movements>",
+   (char *)"   -loadMorph <morph file name>",
+   (char *)"   -numGenerations <number of evolution generations>",
+   (char *)"   [-crossoverRate <probability>(defaults to loaded value)]",
+   (char *)"   [-mutationRate <probability>(defaults to loaded value)]",
+   (char *)"   [-synapseCrossoverBondStrength <probability of connected neurons crossing over together>]",
+   (char *)"   [-synapseOptimizedPathLength <synapse path length optimized as a group>]",
+   (char *)"   -saveMorph <morph file name> and / or - saveNetworks[<files prefix(default = \"network_\")>]",
+   (char *)"   [-logMorph <morph log file name>(instead of standard output)]",
+   (char *)"   [-numThreads <number of threads>(defaults to system capacity)]",
    (char *)"",
    (char *)"Merge homomorphic network populations:",
    (char *)"",
@@ -507,6 +544,7 @@ int createNetworkBehaviors(int argc, char *argv[])
 
    vector<int>        behaviorSequenceLengths;
    char               *sensorBehaviorsLoadFile = NULL;
+   int                locomotionMovements      = -1;
    char               *behaviorsSaveFile       = NULL;
    RANDOM             randomSeed = Network::DEFAULT_RANDOM_SEED;
    vector<Behavior *> sensorBehaviors;
@@ -555,6 +593,22 @@ int createNetworkBehaviors(int argc, char *argv[])
          sensorBehaviorsLoadFile = argv[i];
          continue;
       }
+      if (strcmp(argv[i], "-locomotionMovements") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         locomotionMovements = atoi(argv[i]);
+         if (locomotionMovements < 0)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         continue;
+      }
       if (strcmp(argv[i], "-saveBehaviors") == 0)
       {
          i++;
@@ -586,12 +640,20 @@ int createNetworkBehaviors(int argc, char *argv[])
       printUsageError((char *)"missing loadNetwork option");
       return(1);
    }
-   if ((sensorBehaviorsLoadFile == NULL) && (behaviorSequenceLengths.size() == 0))
+   if ((sensorBehaviorsLoadFile == NULL) &&
+       (behaviorSequenceLengths.size() == 0) &&
+       (locomotionMovements == -1))
    {
       printUsageError((char *)"missing required option");
       return(1);
    }
-   if ((sensorBehaviorsLoadFile != NULL) && (behaviorSequenceLengths.size() > 0))
+   if ((sensorBehaviorsLoadFile != NULL) && ((behaviorSequenceLengths.size() > 0) ||
+                                             (locomotionMovements != -1)))
+   {
+      printUsageError((char *)"conflicting options");
+      return(1);
+   }
+   if ((behaviorSequenceLengths.size() > 0) && (locomotionMovements != -1))
    {
       printUsageError((char *)"conflicting options");
       return(1);
@@ -614,7 +676,7 @@ int createNetworkBehaviors(int argc, char *argv[])
          behavior->print();
       }
    }
-   else
+   else if (sensorBehaviorsLoadFile != NULL)
    {
       if (!Behavior::loadBehaviors(sensorBehaviorsLoadFile, sensorBehaviors))
       {
@@ -638,6 +700,23 @@ int createNetworkBehaviors(int argc, char *argv[])
          printf("Behavior %d:\n", i);
          behavior->print();
       }
+   }
+   else
+   {
+      vector<vector<float> > sensorSequence;
+      Behavior               *behavior;
+      sensorSequence.resize(locomotionMovements);
+      for (i = 0; i < locomotionMovements; i++)
+      {
+         sensorSequence[i].resize(network->numSensors, 0.0f);
+         sensorSequence[i][LocomotionNetworkHomomorph::sensorIndices[0].index] = 1.0f;
+         sensorSequence[i][LocomotionNetworkHomomorph::sensorIndices[1].index] = 1.0f;
+      }
+      behavior = new Behavior(network, sensorSequence);
+      assert(behavior != NULL);
+      behaviors.push_back(behavior);
+      printf("Behavior %d:\n", i);
+      behavior->print();
    }
    if (behaviorsSaveFile != NULL)
    {
@@ -819,6 +898,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
 {
    int  i, j, k, n, result;
    char *behaviorsLoadFile         = NULL;
+   int  locomotionMovements        = -1;
    char *networkLoadFile           = NULL;
    int  populationSize             = -1;
    int  numOffspring               = -1;
@@ -862,6 +942,22 @@ int createHomomorphicNetworks(int argc, char *argv[])
             return(1);
          }
          behaviorsLoadFile = argv[i];
+         continue;
+      }
+      if (strcmp(argv[i], "-locomotionMovements") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         locomotionMovements = atoi(argv[i]);
+         if (locomotionMovements < 0)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
          continue;
       }
       if (strcmp(argv[i], "-loadNetwork") == 0)
@@ -1194,10 +1290,33 @@ int createHomomorphicNetworks(int argc, char *argv[])
       return(1);
    }
 
-   if ((behaviorsLoadFile == NULL))
+   if ((behaviorsLoadFile == NULL) && (locomotionMovements == -1))
    {
-      printUsageError((char *)"missing loadBehaviors option");
+      printUsageError((char *)"missing loadBehaviors or locomotionMovements option");
       return(1);
+   }
+   if ((behaviorsLoadFile != NULL) && (locomotionMovements != -1))
+   {
+      printUsageError((char *)"conflicting loadBehaviors and locomotionMovements options");
+      return(1);
+   }
+   if (locomotionMovements != -1)
+   {
+      if (behaveCutoff != -1)
+      {
+         printUsageError((char *)"conflicting behaveCutoff and locomotionMovements options");
+         return(1);
+      }
+      if (behaveQuorum != -1)
+      {
+         printUsageError((char *)"conflicting behaveQuorum and locomotionMovements options");
+         return(1);
+      }
+      if (fitnessMotorList.size() > 0)
+      {
+         printUsageError((char *)"conflicting fitnessMotorList and locomotionMovements options");
+         return(1);
+      }
    }
    if (numGenerations < 0)
    {
@@ -1211,10 +1330,13 @@ int createHomomorphicNetworks(int argc, char *argv[])
    }
 
    vector<Behavior *> behaviors;
-   if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
+   if (behaviorsLoadFile != NULL)
    {
-      fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
-      return(1);
+      if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
+      {
+         fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
+         return(1);
+      }
    }
    Network *homomorph = NULL;
    NetworkHomomorphoGenesis *morphoGenesis = NULL;
@@ -1266,14 +1388,27 @@ int createHomomorphicNetworks(int argc, char *argv[])
       }
       homomorph = new Network(networkLoadFile);
       assert(homomorph != NULL);
-      morphoGenesis =
-         new NetworkHomomorphoGenesis(
-            behaviors, homomorph,
-            populationSize, numOffspring, parentLongevity,
-            fitnessMotorList, behaveQuorum, behaveQuorumMaxGenerations,
-            crossoverRate, mutationRate, synapseWeightsParm,
-            synapseCrossoverBondStrength, synapseOptimizedPathLength,
-            randomSeed);
+      if (behaviorsLoadFile != NULL)
+      {
+         morphoGenesis =
+            new NetworkHomomorphoGenesis(
+               behaviors, homomorph,
+               populationSize, numOffspring, parentLongevity,
+               fitnessMotorList, behaveQuorum, behaveQuorumMaxGenerations,
+               crossoverRate, mutationRate, synapseWeightsParm,
+               synapseCrossoverBondStrength, synapseOptimizedPathLength,
+               randomSeed);
+      }
+      else
+      {
+         morphoGenesis =
+            new NetworkHomomorphoGenesis(
+               locomotionMovements, homomorph,
+               populationSize, numOffspring, parentLongevity,
+               crossoverRate, mutationRate, synapseWeightsParm,
+               synapseCrossoverBondStrength, synapseOptimizedPathLength,
+               randomSeed);
+      }
       assert(morphoGenesis != NULL);
    }
    else   // Resume morph.
@@ -1289,7 +1424,14 @@ int createHomomorphicNetworks(int argc, char *argv[])
          printUsageError((char *)"invalid option");
          return(1);
       }
-      morphoGenesis = new NetworkHomomorphoGenesis(behaviors, morphLoadFile);
+      if (behaviorsLoadFile != NULL)
+      {
+         morphoGenesis = new NetworkHomomorphoGenesis(behaviors, morphLoadFile);
+      }
+      else
+      {
+         morphoGenesis = new NetworkHomomorphoGenesis(locomotionMovements, morphLoadFile);
+      }
       assert(morphoGenesis != NULL);
       if (fitnessMotorList.size() > 0)
       {
@@ -1967,6 +2109,24 @@ int main(int argc, char *argv[])
          if (command == UNASSIGNED)
          {
             command = BEHAVIOR_SEARCH;
+         }
+         else
+         {
+            printUsageError((char *)"multiple commands");
+            return(1);
+         }
+      }
+      if ((strcmp(argv[i], "-h") == 0) ||
+          (strcmp(argv[i], "-help") == 0) ||
+          (strcmp(argv[i], "--h") == 0) ||
+          (strcmp(argv[i], "--help") == 0) ||
+          (strcmp(argv[i], "-?") == 0) ||
+          (strcmp(argv[i], "--?") == 0))
+      {
+         if (command == UNASSIGNED)
+         {
+            printUsage();
+            return(0);
          }
          else
          {
