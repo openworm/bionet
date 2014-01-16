@@ -121,7 +121,7 @@ public:
    };
 
    // Body joints.
-   static const enum { NUM_BODY_JOINTS=12 };
+   static const int              NUM_BODY_JOINTS = 12;
    static const struct BodyJoint bodyJoints[NUM_BODY_JOINTS];
 };
 
