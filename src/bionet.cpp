@@ -60,7 +60,8 @@ char *Usage[] =
    (char *)"  -createNetworkBehaviors",
    (char *)"  -loadNetwork <network file name>",
    (char *)"  -locomotionMovements <number of sinusoidal (wriggling) movements>",
-   (char *)"  [-saveBehaviors <behaviors file name>]",
+   (char *)"  [-saveBehaviors <behaviors file name>",
+   (char *)"      (behavior 0: with light touch stimulation; behavior 1: without stimulation)]",
    (char *)"  [-randomSeed <random seed>]",
    (char *)"",
    (char *)"Test network behaviors:",
@@ -715,7 +716,17 @@ int createNetworkBehaviors(int argc, char *argv[])
       behavior = new Behavior(network, sensorSequence);
       assert(behavior != NULL);
       behaviors.push_back(behavior);
-      printf("Behavior %d:\n", i);
+      printf("Behavior 0 (with light touch stimulation):\n");
+      behavior->print();
+      for (i = 0; i < locomotionMovements; i++)
+      {
+         sensorSequence[i][LocomotionNetworkHomomorph::sensorIndices[0].index] = 0.0f;
+         sensorSequence[i][LocomotionNetworkHomomorph::sensorIndices[1].index] = 0.0f;
+      }
+      behavior = new Behavior(network, sensorSequence);
+      assert(behavior != NULL);
+      behaviors.push_back(behavior);
+      printf("Behavior 1 (without stimulation):\n");
       behavior->print();
    }
    if (behaviorsSaveFile != NULL)

@@ -31,7 +31,7 @@ char *Usage[] =
    (char *)"Create network behavior:",
    (char *)"",
    (char *)"CElegansBehavior",
-   (char *)"  -behaviorLength <sensory-motor sequence length>",
+   (char *)"  -behaviorSequenceLength <sensory-motor sequence length>",
    (char *)"  [-motorOutputDelay <delay for motor output> (for signal propagation)]",
    (char *)"  [-initialPhase <initial sinusoid phase>]",
    (char *)"  -saveBehaviors <behaviors file name>",
@@ -39,7 +39,8 @@ char *Usage[] =
    (char *)"Load and run network behavior:",
    (char *)"",
    (char *)"CElegansBehavior",
-   (char *)"   -loadBehaviors <behaviors file name>",
+   (char *)"  -loadBehaviors <behaviors file name>",
+   (char *)"  [-behaviorNumber <behavior to run> (defaults to 0)]",
    NULL
 };
 
@@ -65,15 +66,17 @@ void printUsageError(char *error)
 #define NUM_NEURONS    396
 
 // Behavior load/save.
-int  MotorSequenceLength = -1;
-char *BehaviorsLoadFile  = NULL;
-char *BehaviorsSaveFile  = NULL;
+char *BehaviorsLoadFile = NULL;
+char *BehaviorsSaveFile = NULL;
+int  BehaviorNumber     = -1;
+vector<vector<float> > SensorSequence;
 vector<vector<float> > VentralMotorSequence;
 vector<vector<float> > DorsalMotorSequence;
-int   MotorSequenceIndex = 0;
-int   MotorOutputDelay   = -1;
-int   MotorDelayCount    = 0;
-float InitialPhase       = 0.0f;
+int   BehaviorSequenceLength = -1;
+int   BehaviorSequenceIndex  = 0;
+int   MotorOutputDelay       = -1;
+int   MotorDelayCount        = 0;
+float InitialPhase           = 0.0f;
 void loadBehaviors();
 void saveBehaviors();
 
@@ -258,7 +261,7 @@ int main(int argc, char *argv[])
 
    for (int i = 1; i < argc; i++)
    {
-      if (strcmp(argv[i], "-behaviorLength") == 0)
+      if (strcmp(argv[i], "-behaviorSequenceLength") == 0)
       {
          i++;
          if ((i >= argc) || (argv[i][0] == '-'))
@@ -266,8 +269,8 @@ int main(int argc, char *argv[])
             printUsageError(argv[i - 1]);
             return(1);
          }
-         MotorSequenceLength = atoi(argv[i]);
-         if (MotorSequenceLength < 0)
+         BehaviorSequenceLength = atoi(argv[i]);
+         if (BehaviorSequenceLength < 0)
          {
             printUsageError(argv[i - 1]);
             return(1);
@@ -329,6 +332,22 @@ int main(int argc, char *argv[])
          BehaviorsLoadFile = argv[i];
          continue;
       }
+      if (strcmp(argv[i], "-behaviorNumber") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         BehaviorNumber = atoi(argv[i]);
+         if (BehaviorNumber < 0)
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         continue;
+      }
       if ((strcmp(argv[i], "-h") == 0) ||
           (strcmp(argv[i], "-help") == 0) ||
           (strcmp(argv[i], "--h") == 0) ||
@@ -344,12 +363,12 @@ int main(int argc, char *argv[])
    }
    if (BehaviorsSaveFile != NULL)
    {
-      if (BehaviorsLoadFile != NULL)
+      if ((BehaviorsLoadFile != NULL) || (BehaviorNumber != -1))
       {
          printUsageError((char *)"incompatible options");
          return(1);
       }
-      if (MotorSequenceLength == -1)
+      if (BehaviorSequenceLength == -1)
       {
          printUsageError((char *)"invalid option");
          return(1);
@@ -357,7 +376,7 @@ int main(int argc, char *argv[])
    }
    else
    {
-      if (MotorSequenceLength != -1)
+      if (BehaviorSequenceLength != -1)
       {
          printUsageError((char *)"invalid option");
          return(1);
@@ -372,14 +391,20 @@ int main(int argc, char *argv[])
          printUsageError((char *)"invalid option");
          return(1);
       }
-      if (BehaviorsLoadFile != NULL)
-      {
-         loadBehaviors();
-      }
    }
    if (MotorOutputDelay == -1)
    {
       MotorOutputDelay = 0;
+   }
+   if (BehaviorNumber == -1)
+   {
+      BehaviorNumber = 0;
+   }
+
+   // Load behaviors?
+   if (BehaviorsLoadFile != NULL)
+   {
+      loadBehaviors();
    }
 
    // Initialize.
@@ -427,6 +452,7 @@ void loadBehaviors()
    int   i, j, k;
    float m;
 
+   vector<float>      sensorMagnitudes;
    vector<float>      dorsalMagnitudes, ventralMagnitudes;
    vector<Behavior *> behaviors;
    Behavior           *behavior;
@@ -436,15 +462,28 @@ void loadBehaviors()
       fprintf(stderr, (char *)"Cannot load behavior file %s\n", BehaviorsLoadFile);
       exit(1);
    }
-   if (behaviors.size() != 1)
+   if (behaviors.size() == 0)
    {
-      fprintf(stderr, (char *)"Behavior file %s contains %d behaviors; must contain 1 behavior\n", BehaviorsLoadFile, behaviors.size());
+      fprintf(stderr, (char *)"Behavior file %s is empty\n", BehaviorsLoadFile);
       exit(1);
    }
-   behavior            = behaviors[0];
-   MotorSequenceLength = (int)behavior->motorSequence.size();
-   for (i = 0; i < MotorSequenceLength; i++)
+   if (BehaviorNumber >= (int)behaviors.size())
    {
+      fprintf(stderr, (char *)"Behavior number %d missing in file %s\n",
+              BehaviorNumber, BehaviorsLoadFile);
+      exit(1);
+   }
+   behavior = behaviors[BehaviorNumber];
+   BehaviorSequenceLength = (int)behavior->motorSequence.size();
+   SensorSequence.clear();
+   DorsalMotorSequence.clear();
+   VentralMotorSequence.clear();
+   for (i = 0; i < BehaviorSequenceLength; i++)
+   {
+      sensorMagnitudes.clear();
+      sensorMagnitudes.push_back(behavior->sensorSequence[i][SensorIndices[0].index]);
+      sensorMagnitudes.push_back(behavior->sensorSequence[i][SensorIndices[1].index]);
+      SensorSequence.push_back(sensorMagnitudes);
       dorsalMagnitudes.clear();
       ventralMagnitudes.clear();
       for (j = 0; j < BodyJoints; j++)
@@ -473,6 +512,10 @@ void loadBehaviors()
       DorsalMotorSequence.push_back(dorsalMagnitudes);
       VentralMotorSequence.push_back(ventralMagnitudes);
    }
+   for (i = 0, j = (int)behaviors.size(); i < j; i++)
+   {
+      delete behaviors[i];
+   }
 }
 
 
@@ -482,19 +525,21 @@ void saveBehaviors()
    int   i, j, k;
    float m;
 
+   vector<float>      sensorMagnitudes;
    vector<float>      dorsalMagnitudes, ventralMagnitudes;
    vector<Behavior *> behaviors;
    Behavior           *behavior;
 
    behavior = new Behavior();
    assert(behavior != NULL);
-   behavior->sensorSequence.resize(MotorSequenceLength);
-   behavior->motorSequence.resize(MotorSequenceLength);
-   for (i = 0; i < MotorSequenceLength; i++)
+   behavior->sensorSequence.resize(BehaviorSequenceLength);
+   behavior->motorSequence.resize(BehaviorSequenceLength);
+   for (i = 0; i < BehaviorSequenceLength; i++)
    {
+      sensorMagnitudes = SensorSequence[i];
       behavior->sensorSequence[i].resize(NUM_SENSORS, 0.0f);
-      behavior->sensorSequence[i][SensorIndices[0].index] = 1.0f;
-      behavior->sensorSequence[i][SensorIndices[1].index] = 1.0f;
+      behavior->sensorSequence[i][SensorIndices[0].index] = sensorMagnitudes[0];
+      behavior->sensorSequence[i][SensorIndices[1].index] = sensorMagnitudes[1];
       behavior->motorSequence[i].resize(NUM_MOTORS, 0.0f);
       dorsalMagnitudes  = DorsalMotorSequence[i];
       ventralMagnitudes = VentralMotorSequence[i];
@@ -561,6 +606,7 @@ void display()
    float angle, xdelta, ydelta, radius;
 
    vector<Point2D> centers, dorsals, ventrals;
+   vector<float>   sensorMagnitudes;
    vector<float>   ventralMagnitudes, dorsalMagnitudes;
    Point2D         point;
    char            buf[50];
@@ -590,7 +636,31 @@ void display()
    GuiFrame->render((float)gettime());
 
    // Body.
+   if (BehaviorsLoadFile)
+   {
+      sensorMagnitudes = SensorSequence[BehaviorSequenceIndex];
+      if ((sensorMagnitudes[0] > 0.0f) || (sensorMagnitudes[1] > 0.0f))
+      {
+         TouchCheck->setChecked(true);
+      }
+      dorsalMagnitudes  = DorsalMotorSequence[BehaviorSequenceIndex];
+      ventralMagnitudes = VentralMotorSequence[BehaviorSequenceIndex];
+   }
    isTouched = TouchCheck->isChecked();
+   if (BehaviorsSaveFile)
+   {
+      sensorMagnitudes.resize(2);
+      if (isTouched)
+      {
+         sensorMagnitudes[0] = 1.0f;
+         sensorMagnitudes[1] = 1.0f;
+      }
+      else
+      {
+         sensorMagnitudes[0] = 0.0f;
+         sensorMagnitudes[1] = 0.0f;
+      }
+   }
    if (isTouched)
    {
       xdelta = M_PI_X2 / (float)(BodyJoints - 1);
@@ -599,23 +669,18 @@ void display()
    {
       xdelta = 0.0f;
    }
-   if (isTouched && BehaviorsLoadFile)
-   {
-      dorsalMagnitudes  = DorsalMotorSequence[MotorSequenceIndex];
-      ventralMagnitudes = VentralMotorSequence[MotorSequenceIndex];
-   }
    radius  = WindowWidth * BodyRadius;
    point.y = bodyOffset + radius;
    ydelta  = (bodyHeight - (radius * 2.0f)) / (float)(BodyJoints - 1);
    for (i = 0, angle = 0.0f; i < BodyJoints; i++, angle += xdelta)
    {
-      if (isTouched && (MotorDelayCount == MotorOutputDelay))
+      if (BehaviorsLoadFile)
       {
-         if (BehaviorsLoadFile)
-         {
-            point.x = dorsalMagnitudes[i] - ventralMagnitudes[i];
-         }
-         else
+         point.x = dorsalMagnitudes[i] - ventralMagnitudes[i];
+      }
+      else
+      {
+         if (isTouched && (MotorDelayCount == MotorOutputDelay))
          {
             point.x = sin(BodyPeriod * (angle - BodyPhase));
             if (point.x > 0.0f)
@@ -634,12 +699,12 @@ void display()
                ventralMagnitudes.push_back(0.0f);
             }
          }
-      }
-      else
-      {
-         point.x = 0.0f;
-         dorsalMagnitudes.push_back(0.0f);
-         ventralMagnitudes.push_back(0.0f);
+         else
+         {
+            point.x = 0.0f;
+            dorsalMagnitudes.push_back(0.0f);
+            ventralMagnitudes.push_back(0.0f);
+         }
       }
       point.x *= (BodyAmplitude * WindowWidth);
       point.x += (WindowWidth * 0.5f);
@@ -652,6 +717,7 @@ void display()
    }
    if (Run && BehaviorsSaveFile)
    {
+      SensorSequence.push_back(sensorMagnitudes);
       DorsalMotorSequence.push_back(dorsalMagnitudes);
       VentralMotorSequence.push_back(ventralMagnitudes);
    }
@@ -777,12 +843,12 @@ void display()
 
    if (BehaviorsLoadFile)
    {
-      sprintf(buf, "Load: %d/%d", MotorSequenceIndex + 1, MotorSequenceLength);
+      sprintf(buf, "Load: %d/%d", BehaviorSequenceIndex + 1, BehaviorSequenceLength);
       renderBitmapString(10, WindowHeight - 15, FONT, buf);
    }
    else if (BehaviorsSaveFile)
    {
-      sprintf(buf, "Save: %d/%d", MotorSequenceIndex + 1, MotorSequenceLength);
+      sprintf(buf, "Save: %d/%d", BehaviorSequenceIndex + 1, BehaviorSequenceLength);
       renderBitmapString(10, WindowHeight - 15, FONT, buf);
    }
 
@@ -806,10 +872,10 @@ void display()
       }
 
       // Behavior complete?
-      MotorSequenceIndex++;
+      BehaviorSequenceIndex++;
       if (BehaviorsLoadFile)
       {
-         if (MotorSequenceIndex == MotorSequenceLength)
+         if (BehaviorSequenceIndex == BehaviorSequenceLength)
          {
 #ifdef WIN32
             Sleep(5000);
@@ -821,7 +887,7 @@ void display()
       }
       else if (BehaviorsSaveFile)
       {
-         if (MotorSequenceIndex == MotorSequenceLength)
+         if (BehaviorSequenceIndex == BehaviorSequenceLength)
          {
             saveBehaviors();
 #ifdef WIN32
@@ -881,32 +947,16 @@ void reshape(int width, int height)
 // Idle.
 void idle()
 {
-   bool isTouched = TouchCheck->isChecked();
-
    if (!PauseCheck->isChecked() || Step)
    {
       Step = false;
-      if (isTouched)
+
+      // Time to run?
+      TIME t = gettime();
+      if ((t - msAnimationTimer) >= MS_ANIMATION_TIMER)
       {
-         // Time to run?
-         TIME t = gettime();
-         if ((t - msAnimationTimer) >= MS_ANIMATION_TIMER)
-         {
-            msAnimationTimer = t;
-            Run = true;
-         }
-      }
-   }
-   if (!isTouched)
-   {
-      // Reset.
-      BodyPhase          = InitialPhase;
-      MotorSequenceIndex = 0;
-      MotorDelayCount    = 0;
-      if (BehaviorsSaveFile)
-      {
-         DorsalMotorSequence.clear();
-         VentralMotorSequence.clear();
+         msAnimationTimer = t;
+         Run = true;
       }
    }
    glutPostRedisplay();
@@ -916,6 +966,10 @@ void idle()
 // Keyboard input.
 void keyInput(unsigned char key, int x, int y)
 {
+   if (key == 'q')
+   {
+      exit(0);
+   }
 }
 
 

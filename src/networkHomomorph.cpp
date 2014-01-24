@@ -681,7 +681,8 @@ const struct LocomotionNetworkHomomorph::BodyJoint LocomotionNetworkHomomorph::b
 };
 
 // Evaluate locomotion behavior fitness.
-// Fitness is a function of the number and magnitude of opposing muscle forces.
+// Fitness is a function of the number and magnitude of opposing muscle forces
+// when the light touch sensors are active.
 void LocomotionNetworkHomomorph::evaluate()
 {
    int i, j, k, m, n;
@@ -794,7 +795,41 @@ void LocomotionNetworkHomomorph::evaluate()
          }
       }
    }
+   delete behavior;
 
+   // Remove touch stimulation.
+   for (i = 0; i < locomotionMovements; i++)
+   {
+      sensorSequence[i][sensorIndices[0].index] = 0.0f;
+      sensorSequence[i][sensorIndices[1].index] = 0.0f;
+   }
+
+   // Get muscle outputs.
+   behavior = new Behavior(network, sensorSequence);
+   assert(behavior != NULL);
+
+   // Decrement fitness for movement.
+   for (i = 0; i < locomotionMovements; i++)
+   {
+      for (j = 0; j < NUM_BODY_JOINTS; j++)
+      {
+         forces[j] = 0.0f;
+         for (k = 0; k < 4; k++)
+         {
+            m = muscleIndices[bodyJoints[j].dorsalMuscles[k]].index;
+            if (m != -1)
+            {
+               forces[j] += behavior->motorSequence[i][m];
+            }
+            m = muscleIndices[bodyJoints[j].ventralMuscles[k]].index;
+            if (m != -1)
+            {
+               forces[j] -= behavior->motorSequence[i][m];
+            }
+         }
+         fitness -= fabs(forces[j]);
+      }
+   }
    delete behavior;
 }
 

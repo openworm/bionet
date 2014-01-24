@@ -88,7 +88,8 @@ bionet (create locomotion behavior movements)
    -createNetworkBehaviors
    -loadNetwork <network file name>
    -locomotionMovements <number of sinusoidal (wriggling) movements>
-   [-saveBehaviors <behaviors file name>]
+   [-saveBehaviors <behaviors file name> 
+      (behavior 0: with light touch stimulation; behavior 1: without stimulation)]
    [-randomSeed <random seed>]
 
 Test network behaviors: 
