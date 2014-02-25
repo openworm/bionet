@@ -1,7 +1,7 @@
 bionet
 ======
 
-Artificial biological neural network
+#Artificial biological neural network
 
 bionet simulates a biologically inspired neural network composed of
 sensory neurons, interneurons, and motor neurons which can be connected
@@ -26,21 +26,21 @@ knowing the original network weights. Since C Elegans has close to
 4000 synapses, this is a daunting task. However, accomplishing it would
 be a huge step toward programming an artificial C Elegans.
 
-Required packages:
+##Required packages:
 
 The UNIX version requires the gcc compiler, make command, and
 the bash shell. The Windows version requires the Microsoft Visual
 C++ 2012 (or later) IDE.
 
-To build:
+###To build:
 
 UNIX: type 'make'
 Windows: use VC++ solution and project files.
 
-Commands:
+###Commands:
 
-Create network:
-
+**Create network:**
+```
 bionet
    -createNetwork
    -numNeurons <number of neurons>
@@ -53,37 +53,41 @@ bionet
    [-randomSeed <random seed>]
    [-saveNetwork <network file name>]
    [-graphNetwork <graph file name ('dot' format)>]
-
-Print network:
-
+```
+**Print network:**
+```
 bionet
    -printNetwork
    [-connectivity (also print connectivity)]   
    -loadNetwork <network file name>
-
-Graph network:
-
+```
+**Graph network:**
+```
 bionet
    -graphNetwork <graph file name ('dot' network)>
    [-title <graph title>]
    -loadNetwork <network file name>
-
-Create network behaviors:
-
+```
+**Create network behaviors:**
+```
 bionet (create random behaviors)
    -createNetworkBehaviors
    -loadNetwork <network file name>
    -behaviorLengths <sensory-motor sequence length list (blank separator)>
    [-saveBehaviors <behaviors file name>]
    [-randomSeed <random seed>]
+```
 
+```
 bionet (create motor outputs from given sensor inputs)
    -createNetworkBehaviors
    -loadNetwork <network file name>
    -loadSensorBehaviors <behaviors file name>
    [-saveBehaviors <behaviors file name>]
    [-randomSeed <random seed>]
+```
 
+```
 bionet (create locomotion behavior movements)
    -createNetworkBehaviors
    -loadNetwork <network file name>
@@ -91,23 +95,25 @@ bionet (create locomotion behavior movements)
    [-saveBehaviors <behaviors file name> 
       (behavior 0: with light touch stimulation; behavior 1: without stimulation)]
    [-randomSeed <random seed>]
-
-Test network behaviors: 
-
+```
+**Test network behaviors:**
+```
 bionet
    -testNetworkBehaviors
    -loadNetwork <network file name>
    -loadBehaviors <behaviors file name>
    [-motorDeltaTolerance <minimum motor delta to print>]
+```
 
-Print network behaviors:
+**Print network behaviors:**
 
+```
 bionet
    -printNetworkBehaviors
    -loadBehaviors <behaviors file name>
-
-Create homomorphic networks:
-
+```
+**Create homomorphic networks:**
+```
 bionet (new morph)
    -createHomomorphicNetworks
    -loadBehaviors <behaviors file name>
@@ -131,7 +137,8 @@ bionet (new morph)
    [-randomSeed <random seed>]
    [-logMorph <morph log file name> (instead of standard output)]
    [-numThreads <number of threads> (defaults to system capacity)]
-
+```
+```
 bionet (resume morph)
    -createHomomorphicNetworks
    -loadBehaviors <behaviors file name>
@@ -147,7 +154,9 @@ bionet (resume morph)
    -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
    [-logMorph <morph log file name> (instead of standard output)]
    [-numThreads <number of threads> (defaults to system capacity)]
+```
 
+```
 bionet (new locomotion behavior morph)
    -createHomomorphicNetworks
    -locomotionMovements <number of sinusoidal (wriggling) movements>
@@ -165,7 +174,9 @@ bionet (new locomotion behavior morph)
    [-randomSeed <random seed>]
    [-logMorph <morph log file name> (instead of standard output)]
    [-numThreads <number of threads> (defaults to system capacity)]
+```
 
+```
 bionet (resume locomotion behavior morph)
    -createHomomorphicNetworks
    -locomotionMovements <number of sinusoidal (wriggling) movements>
@@ -178,17 +189,17 @@ bionet (resume locomotion behavior morph)
    -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
    [-logMorph <morph log file name> (instead of standard output)]
    [-numThreads <number of threads> (defaults to system capacity)]
-
-Merge homomorphic network populations:
-
+```
+**Merge homomorphic network populations:**
+```
 bionet   
    -mergeHomomorphicNetworks
    -loadMorph <morph file name> <morph file name>
    -saveMorph <morph file name>
    [-randomSeed <random seed>]
-
-Create isomorphic networks:
-
+```
+**Create isomorphic networks:**
+```
 bionet (new morph)   
    -createIsomorphicNetworks
    -loadBehaviors <behaviors file name>
@@ -206,7 +217,8 @@ bionet (new morph)
    [-randomSeed <random seed>]
    [-logMorph <morph log file name> (instead of standard output)]
    [-numThreads <number of threads> (defaults to system capacity)]
-
+```
+```
 bionet (resume morph)
    -createIsomorphicNetworks
    -loadBehaviors <behaviors file name>
@@ -215,3 +227,4 @@ bionet (resume morph)
    -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
    [-logMorph <morph log file name> (instead of standard output)]
    [-numThreads <number of threads> (defaults to system capacity)]
+```
