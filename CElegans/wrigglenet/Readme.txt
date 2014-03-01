@@ -1,6 +1,6 @@
 Wrigglenet:
  
-Evolve C. elegans networks that "wriggling" behavior in response to touch stimuli.
+Evolve C. elegans networks that exhibit "wriggling" behavior in response to touch stimuli.
 Wriggling is a sinusoidal muscular activity controlled by the C. elegans connectome.
 The sinusoidal parameters are: period, amplitude, phase, speed, and delay.
 A particular parameter vector generates a bionet behavior that will serve as a fitness
