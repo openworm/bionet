@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="wrigglenet.cpp">
+      <Filter>wrigglenet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fileio.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gettime.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mutableParm.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\random.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\behavior.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\network.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\networkHomomorph.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\networkMorph.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\neuron.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
+    <ClCompile Include="wriggle.cpp">
+      <Filter>wrigglenet</Filter>
+    </ClCompile>
+    <ClCompile Include="evolveWrigglenet.cpp">
+      <Filter>wrigglenet</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\fileio.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gettime.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mutableParm.hpp">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\random.hpp">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\behavior.hpp">
+      <Filter>bionet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\network.hpp">
+      <Filter>bionet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\networkHomomorph.hpp">
+      <Filter>bionet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\networkMorph.hpp">
+      <Filter>bionet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\neuron.hpp">
+      <Filter>bionet</Filter>
+    </ClInclude>
+    <ClInclude Include="wriggle.hpp">
+      <Filter>wrigglenet</Filter>
+    </ClInclude>
+    <ClInclude Include="evolveWrigglenet.hpp">
+      <Filter>wrigglenet</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="util">
+      <UniqueIdentifier>{99cf4f2c-7bc2-4f13-86f4-ba920c616498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bionet">
+      <UniqueIdentifier>{10902fff-0616-4212-8f36-03263a93051c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrigglenet">
+      <UniqueIdentifier>{1ce6b9f8-499b-4f08-a29d-a6d909b322e3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Readme.txt">
+      <Filter>wrigglenet</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

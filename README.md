@@ -15,16 +15,19 @@ without knowing its interneuron configuration. A homomorphic network
 additionally mirrors the interneuron configuration of the other network.
 
 Bionet was inspired by OpenWorm (openworm.org), a project to model the
-C Elegans nematode worm in a high fidelity artificial creature. Although
+C. elegans nematode worm in a high fidelity artificial creature. Although
 the connectome (neural network) of the worm is known, it is not known
 how it produces sensory-motor behaviors. Bionet is an attempt to do this.
-A network containing the C Elegans connectome is supplied with
+A network containing the C. elegans connectome is supplied with
 the distribution: CElegans_network.txt. This network has random weights
 and can be used to produce sensory-motor behavior sequences. The goal
 is to evolve other networks that perform the same behaviors, not
-knowing the original network weights. Since C Elegans has close to
+knowing the original network weights. Since C. elegans has close to
 4000 synapses, this is a daunting task. However, accomplishing it would
-be a huge step toward programming an artificial C Elegans.
+be a huge step toward programming an artificial C. elegans.
+
+In addition to bionet, see the CElegans/Readme.txt for related projects
+that are specific to C. elegans.
 
 ##Required packages:
 
