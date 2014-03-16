@@ -1336,7 +1336,8 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
       fprintf(morphfp, "Generation=%d\n", generation);
       offspring.resize(numOffspring);
       mate();
-      optimize();
+      mutate();
+      harmonize();
       prune();
       fprintf(morphfp, "Population:\n");
       fprintf(morphfp, "Member\tgeneration\tfitness\n");
@@ -1427,7 +1428,8 @@ void *NetworkHomomorphoGenesis::morphThread(void *arg)
    while (true)
    {
       morphoGenesis->mate(threadNum);
-      morphoGenesis->optimize(threadNum);
+      morphoGenesis->mutate(threadNum);
+      morphoGenesis->harmonize(threadNum);
    }
    return(NULL);
 }
@@ -1506,7 +1508,7 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
       }
 #endif
 
-      // Crossover parents?
+      // Mate parents?
       if (randomizer->RAND_CHANCE(crossoverRate))
       {
          while ((p2 = randomizer->RAND_CHOICE(populationSize)) == p1)
@@ -1651,16 +1653,16 @@ void NetworkHomomorphoGenesis::crossover(Network *child, Network *parent,
 }
 
 
-// Optimize offspring.
-void NetworkHomomorphoGenesis::optimize()
+// Mutate offspring.
+void NetworkHomomorphoGenesis::mutate()
 {
-   fprintf(morphfp, "Optimize:\n");
+   fprintf(morphfp, "Mutate:\n");
    fprintf(morphfp, "Member\tgeneration\tfitness\n");
-   optimize(0);
+   mutate(0);
 }
 
 
-void NetworkHomomorphoGenesis::optimize(int threadNum)
+void NetworkHomomorphoGenesis::mutate(int threadNum)
 {
    int                        i;
    NetworkHomomorph           *networkMorph;
@@ -1689,10 +1691,9 @@ void NetworkHomomorphoGenesis::optimize(int threadNum)
          {
             locomotionNetworkMorph->mutate();
             locomotionNetworkMorph->evaluate();
+            fprintf(morphfp, "%d\t%d\t\t%f\n",
+                    i, locomotionNetworkMorph->tag, locomotionNetworkMorph->fitness);
          }
-         locomotionNetworkMorph->harmonize(synapseOptimizedPathLength);
-         fprintf(morphfp, "%d\t%d\t\t%f\n",
-                 i, locomotionNetworkMorph->tag, locomotionNetworkMorph->fitness);
       }
       else
       {
@@ -1701,7 +1702,62 @@ void NetworkHomomorphoGenesis::optimize(int threadNum)
          {
             networkMorph->mutate();
             offspring[i]->evaluate(behaviors, fitnessMotorList, behaviorStep);
+            fprintf(morphfp, "%d\t%d\t\t%f\n", i, offspring[i]->tag, offspring[i]->error);
          }
+      }
+   }
+
+#ifdef THREADS
+   // Re-group threads.
+   if (numThreads > 1)
+   {
+      pthread_barrier_wait(&morphBarrier);
+   }
+#endif
+}
+
+
+// Harmonize offspring.
+void NetworkHomomorphoGenesis::harmonize()
+{
+   fprintf(morphfp, "Harmonize:\n");
+   fprintf(morphfp, "Member\tgeneration\tfitness\n");
+   harmonize(0);
+}
+
+
+void NetworkHomomorphoGenesis::harmonize(int threadNum)
+{
+   int                        i;
+   NetworkHomomorph           *networkMorph;
+   LocomotionNetworkHomomorph *locomotionNetworkMorph;
+
+#ifdef THREADS
+   // Re-group threads.
+   if (numThreads > 1)
+   {
+      pthread_barrier_wait(&morphBarrier);
+   }
+#endif
+
+   for (i = 0; i < numOffspring; i++)
+   {
+#ifdef THREADS
+      if ((i % numThreads) != threadNum)
+      {
+         continue;
+      }
+#endif
+      if (locomotionBehavior)
+      {
+         locomotionNetworkMorph = (LocomotionNetworkHomomorph *)offspring[i];
+         locomotionNetworkMorph->harmonize(synapseOptimizedPathLength);
+         fprintf(morphfp, "%d\t%d\t\t%f\n",
+                 i, locomotionNetworkMorph->tag, locomotionNetworkMorph->fitness);
+      }
+      else
+      {
+         networkMorph = (NetworkHomomorph *)offspring[i];
          networkMorph->harmonize(behaviors, fitnessMotorList,
                                  synapseOptimizedPathLength, behaviorStep);
          fprintf(morphfp, "%d\t%d\t\t%f\n", i, offspring[i]->tag, offspring[i]->error);

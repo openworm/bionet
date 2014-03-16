@@ -230,7 +230,7 @@ bool          Step;
 // Body sinusoid.
 int   BodyJoints     = 12;
 float BodyAmplitude  = 0.05f;
-float BodyPeriod     = 1.0f;
+float BodyPeriod     = 5.0f;
 float BodyPhase      = 0.0f;
 float BodyPhaseDelta = 0.01f;
 float BodyRadius     = 0.02f;
@@ -682,7 +682,7 @@ void display()
       {
          if (isTouched && (MotorDelayCount == MotorOutputDelay))
          {
-            point.x = sin(BodyPeriod * (angle - BodyPhase));
+            point.x = sin((M_PI_X2 / BodyPeriod) * (angle - BodyPhase));
             if (point.x > 0.0f)
             {
                dorsalMagnitudes.push_back(point.x);
@@ -861,10 +861,6 @@ void display()
 
       // Advance phase.
       BodyPhase += (M_PI_X2 * BodyPhaseDelta);
-      if (BodyPhase >= M_PI_X2)
-      {
-         BodyPhase = 0.0f;
-      }
       if (MotorDelayCount < MotorOutputDelay)
       {
          BodyPhase = InitialPhase;

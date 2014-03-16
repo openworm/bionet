@@ -108,7 +108,7 @@
     <ClCompile Include="..\..\..\src\networkMorph.cpp" />
     <ClCompile Include="..\..\..\src\neuron.cpp" />
     <ClCompile Include="..\..\..\src\random.cpp" />
-    <ClCompile Include="evolveWrigglenet.cpp" />
+    <ClCompile Include="evolveWriggle.cpp" />
     <ClCompile Include="wriggle.cpp" />
     <ClCompile Include="wrigglenet.cpp" />
   </ItemGroup>
@@ -122,7 +122,7 @@
     <ClInclude Include="..\..\..\src\networkMorph.hpp" />
     <ClInclude Include="..\..\..\src\neuron.hpp" />
     <ClInclude Include="..\..\..\src\random.hpp" />
-    <ClInclude Include="evolveWrigglenet.hpp" />
+    <ClInclude Include="evolveWriggle.hpp" />
     <ClInclude Include="wriggle.hpp" />
   </ItemGroup>
   <ItemGroup>

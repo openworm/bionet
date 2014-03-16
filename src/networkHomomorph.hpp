@@ -186,8 +186,11 @@ public:
    // Mate members.
    void mate();
 
-   // Optimize offspring.
-   void optimize();
+   // Mutate offspring.
+   void mutate();
+
+   // Harmonize offspring.
+   void harmonize();
 
    // Prune members.
    void prune();
@@ -221,7 +224,8 @@ private:
              RANDOM randomSeed);
 
    void mate(int threadNum);
-   void optimize(int threadNum);
+   void mutate(int threadNum);
+   void harmonize(int threadNum);
 
 #ifdef THREADS
    // Threading.

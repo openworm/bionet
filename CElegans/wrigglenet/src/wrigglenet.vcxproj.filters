@@ -34,7 +34,7 @@
     <ClCompile Include="wriggle.cpp">
       <Filter>wrigglenet</Filter>
     </ClCompile>
-    <ClCompile Include="evolveWrigglenet.cpp">
+    <ClCompile Include="evolveWriggle.cpp">
       <Filter>wrigglenet</Filter>
     </ClCompile>
   </ItemGroup>
@@ -69,7 +69,7 @@
     <ClInclude Include="wriggle.hpp">
       <Filter>wrigglenet</Filter>
     </ClInclude>
-    <ClInclude Include="evolveWrigglenet.hpp">
+    <ClInclude Include="evolveWriggle.hpp">
       <Filter>wrigglenet</Filter>
     </ClInclude>
   </ItemGroup>
