@@ -31,5 +31,5 @@ wrigglenet (resume run)
    [-crossoverRate <probability> (defaults to loaded value)]
    [-mutationRate <probability> (defaults to loaded value)]
    -saveRun <run file name> and/or -saveNetworks
-   [-log <log file name>]
+   [-logRun <log file name>]
    [-numThreads <number of threads> (defaults to system capacity)]

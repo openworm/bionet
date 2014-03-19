@@ -1,0 +1,1 @@
+./wrigglenet.exe -loadNetwork CElegans_network.txt -populationSize 16 -numOffspring 8 -numGenerations 50 -crossoverRate 0.9 -mutationRate 0.05 -movements 20 -periodParm 2.5 10.0 .1 -amplitudeParm .5 1.0 .05 -phaseParm 0.0 6.28 .39 -speedParm .09 0.39 .09 -saveRun run0.txt -randomSeed 77 -logRun run0.log -numThreads 1
