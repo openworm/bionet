@@ -25,7 +25,7 @@ EvolveWriggle::EvolveWriggle(Network *homomorph,
    randomizer           = new Random(randomSeed);
    assert(randomizer != NULL);
    generation = 0;
-   logfp      = NULL;
+   logfp      = stdout;
    for (int i = 0; i < populationSize; i++)
    {
       wriggle = new Wriggle(homomorph,
@@ -43,8 +43,9 @@ EvolveWriggle::EvolveWriggle(Network *homomorph,
 
 EvolveWriggle::EvolveWriggle(char *filename)
 {
+   homomorph  = NULL;
    randomizer = NULL;
-   logfp      = NULL;
+   logfp      = stdout;
    if (!load(filename))
    {
       fprintf(stderr, "Cannot load run from file %s\n", filename);

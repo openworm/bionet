@@ -7,7 +7,7 @@
 const int Wriggle::  POPULATION_SIZE                 = 500;
 const int Wriggle::  NUM_OFFSPRING                   = 250;
 const int Wriggle::  NUM_GENERATIONS                 = 250;
-const float Wriggle::CROSSOVER_RATE                  = 0.5f;
+const float Wriggle::CROSSOVER_RATE                  = 0.9f;
 const float Wriggle::MUTATION_RATE                   = 0.05f;
 MutableParm Wriggle::SYNAPSE_WEIGHTS_PARM            = MutableParm(0.0f, 0.25f, 0.1f, 0.0f);
 const float Wriggle::SYNAPSE_CROSSOVER_BOND_STRENGTH = 0.5f;
@@ -35,6 +35,8 @@ Wriggle::Wriggle(Network *homomorph,
    this->speedParm.initValue(randomizer);
    this->randomizer = randomizer;
    this->tag        = tag;
+   network          = NULL;
+   error            = 0.0f;
 #ifdef THREADS
    numEvalThreads = 1;
 #endif
@@ -44,8 +46,10 @@ Wriggle::Wriggle(Network *homomorph,
 Wriggle::Wriggle()
 {
    homomorph  = NULL;
-   randomizer = NULL;
+   network    = NULL;
    tag        = -1;
+   error      = 0.0f;
+   randomizer = NULL;
 #ifdef THREADS
    numEvalThreads = 1;
 #endif
@@ -111,6 +115,8 @@ void Wriggle::createMovements()
    float xdelta    = M_PI_X2 / (float)(BODY_JOINTS - 1);
    for (i = 0; i < movements; i++, phase += speed)
    {
+      dorsalMagnitudes.clear();
+      ventralMagnitudes.clear();
       for (j = 0, angle = 0.0f; j < BODY_JOINTS; j++, angle += xdelta)
       {
          float x = sin((M_PI_X2 / period) * (angle - phase)) * amplitude;
@@ -355,7 +361,7 @@ void Wriggle::mutate()
 // Optimize.
 void Wriggle::optimize()
 {
-   int   i, j, n;
+   int   n;
    float value, e;
 
    vector<vector<float> > valueRanges;
@@ -466,26 +472,21 @@ void Wriggle::optimize()
 
    permutation.resize(4);
    permuteValues(valueRanges, permutations, permutation, 0, 3);
-   n = 0;
+   n = randomizer->RAND_CHOICE((int)permutations.size() - 1) + 1;
    e = error;
-   for (i = 1, j = (int)permutations.size(); i < j; i++)
-   {
-      periodParm.value    = permutations[i][0];
-      amplitudeParm.value = permutations[i][1];
-      phaseParm.value     = permutations[i][2];
-      speedParm.value     = permutations[i][3];
-      evaluate();
-      if (error < e)
-      {
-         n = i;
-         e = error;
-      }
-   }
    periodParm.value    = permutations[n][0];
    amplitudeParm.value = permutations[n][1];
    phaseParm.value     = permutations[n][2];
    speedParm.value     = permutations[n][3];
-   error = e;
+   evaluate();
+   if (error > e)
+   {
+      error               = e;
+      periodParm.value    = permutations[0][0];
+      amplitudeParm.value = permutations[0][1];
+      phaseParm.value     = permutations[0][2];
+      speedParm.value     = permutations[0][3];
+   }
 }
 
 
@@ -517,8 +518,8 @@ Wriggle *Wriggle::clone()
 
    wriggle = new Wriggle();
    assert(wriggle != NULL);
-   wriggle->tag           = tag;
-   wriggle->error         = error;
+   wriggle->homomorph     = homomorph;
+   wriggle->movements     = movements;
    wriggle->periodParm    = periodParm;
    wriggle->amplitudeParm = amplitudeParm;
    wriggle->phaseParm     = phaseParm;
@@ -527,6 +528,9 @@ Wriggle *Wriggle::clone()
    {
       wriggle->network = network->clone();
    }
+   wriggle->tag        = tag;
+   wriggle->error      = error;
+   wriggle->randomizer = randomizer;
    return(wriggle);
 }
 

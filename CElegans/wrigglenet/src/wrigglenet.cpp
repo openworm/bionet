@@ -24,7 +24,7 @@ char *Usage[] =
    (char *)"   -speedParm <minimum> <maximum> <max delta>",
    (char *)"   -saveRun <run file name> and/or -saveNetworks",
    (char *)"   [-randomSeed <random seed>]",
-   (char *)"   [-log <log file name>]",
+   (char *)"   [-logRun <log file name>]",
 #ifdef THREADS
    (char *)"   [-numThreads <number of threads>(defaults to system capacity)]",
 #endif
@@ -35,7 +35,7 @@ char *Usage[] =
    (char *)"   [-crossoverRate <probability> (defaults to loaded value)]",
    (char *)"   [-mutationRate <probability> (defaults to loaded value)]",
    (char *)"   -saveRun <run file name> and/or -saveNetworks",
-   (char *)"   [-log <log file name>]",
+   (char *)"   [-logRun <log file name>]",
 #ifdef THREADS
    (char *)"   [-numThreads <number of threads>(defaults to system capacity)]",
 #endif
@@ -395,7 +395,7 @@ int main(int argc, char *argv[])
          randomSeed    = atoi(argv[i]);
          continue;
       }
-      if (strcmp(argv[i], "-log") == 0)
+      if (strcmp(argv[i], "-logRun") == 0)
       {
          i++;
          if ((i >= argc) || (argv[i][0] == '-'))

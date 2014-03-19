@@ -22,7 +22,7 @@ wrigglenet (new run)
    -speedParm <minimum> <maximum> <max delta>
    -saveRun <run file name> and/or -saveNetworks
    [-randomSeed <random seed>]
-   [-log <log file name>]
+   [-logRun <log file name>]
    [-numThreads <number of threads> (defaults to system capacity)]
 
 wrigglenet (resume run)
