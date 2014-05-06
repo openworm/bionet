@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -l ncpus=256
+#ncpus must be a multiple of 16
+#PBS -l walltime=10:00:00
+#PBS -j oe
+#PBS -q batch
+set echo
+#move to my $SCRATCH directory
+cd $SCRATCH
+#copy executable to $SCRATCH
+cp $HOME/bionet/CElegans/wrigglenet/bin/wrigglenet .
+cp $HOME/bionet/CElegans/wrigglenet/bin/CElegans_network.txt .
+#run my executable
+OMP_NUM_THREADS=256
+export OMP_NUM_THREADS
+omplace -nt $OMP_NUM_THREADS ./wrigglenet -loadNetwork CElegans_network.txt -populationSize 16 -numOffspring 8 -numGenerations 10 -crossoverRate 0.9 -mutationRate 0.05 -movements 25 -periodParm 2.5 10.0 .1 -amplitudeParm .5 1.0 .05 -phaseParm 0.0 6.28 .39 -speedParm .09 0.39 .09 -saveRun run0.txt -randomSeed 77 -logRun run0.log -numThreads 256
