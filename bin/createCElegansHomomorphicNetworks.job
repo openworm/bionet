@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -l ncpus=256
+#ncpus must be a multiple of 16
+#PBS -l walltime=10:00:00
+#PBS -j oe
+#PBS -q batch
+set echo
+#move to my $SCRATCH directory
+cd $SCRATCH
+#copy executable to $SCRATCH
+cp $HOME/bionet/bin/bionet .
+cp $HOME/bionet/bin/CElegans_network.txt .
+#run my executable
+OMP_NUM_THREADS=256
+export OMP_NUM_THREADS
+omplace -nt $OMP_NUM_THREADS ./bionet -createHomomorphicNetworks -undulationMovements 25 -loadNetwork CElegans_network.txt -synapseWeights 0.0 .25 .1 -populationSize 500 -numOffspring 250 -numGenerations 250 -crossoverRate .9 -mutationRate .05 -synapseCrossoverBondStrength .5 -synapseOptimizedPathLength 4 -saveMorph morph0.txt -randomSeed 77 -numThreads 256 -logMorph morph0.log
