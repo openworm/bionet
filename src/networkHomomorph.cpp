@@ -1,6 +1,7 @@
 // Network homomorph implementation.
 
 #include "networkHomomorph.hpp"
+#include <numeric>
 
 // Constructors.
 NetworkHomomorph::NetworkHomomorph(Network *homomorph,
@@ -372,12 +373,12 @@ void NetworkHomomorph::print(bool printNetwork)
 
 
 // Constructors.
-LocomotionNetworkHomomorph::LocomotionNetworkHomomorph(int locomotionMovements, Network *homomorph,
+UndulationNetworkHomomorph::UndulationNetworkHomomorph(int undulationMovements, Network *homomorph,
                                                        MutableParm& synapseWeightsParm,
                                                        vector<vector<pair<int, int> > > *motorConnections,
                                                        Random *randomizer, int tag)
 {
-   this->locomotionMovements = locomotionMovements;
+   this->undulationMovements = undulationMovements;
    this->synapseWeightsParm  = synapseWeightsParm;
    this->synapseWeightsParm.initValue(randomizer);
    this->motorConnections = motorConnections;
@@ -386,23 +387,51 @@ LocomotionNetworkHomomorph::LocomotionNetworkHomomorph(int locomotionMovements, 
    network   = homomorph->clone();
    motorErrors.resize(network->numMotors, false);
    fitness = 0.0f;
+
+   activations      = (double *)fftw_malloc(sizeof(double) * (undulationMovements * NUM_BODY_JOINTS));
+   bodyActivations  = (double *)fftw_malloc(sizeof(double) * NUM_BODY_JOINTS);
+   bodyDFT          = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * (NUM_BODY_JOINTS / 2 + 1));
+   bodyPlan         = fftw_plan_dft_r2c_1d(NUM_BODY_JOINTS, bodyActivations, bodyDFT, FFTW_MEASURE);
+   jointActivations = (double *)fftw_malloc(sizeof(double) * undulationMovements);
+   jointDFT         = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * (undulationMovements / 2 + 1));
+   jointPlan        = fftw_plan_dft_r2c_1d(undulationMovements, jointActivations, jointDFT, FFTW_MEASURE);
 }
 
 
-LocomotionNetworkHomomorph::LocomotionNetworkHomomorph(FILE *fp, int locomotionMovements,
+UndulationNetworkHomomorph::UndulationNetworkHomomorph(FILE *fp, int undulationMovements,
                                                        vector<vector<pair<int, int> > > *motorConnections,
                                                        Random *randomizer)
 {
-   this->locomotionMovements = locomotionMovements;
+   this->undulationMovements = undulationMovements;
    this->randomizer          = randomizer;
    network = NULL;
    load(fp);
    this->motorConnections = motorConnections;
+
+   activations      = (double *)fftw_malloc(sizeof(double) * (undulationMovements * NUM_BODY_JOINTS));
+   bodyActivations  = (double *)fftw_malloc(sizeof(double) * NUM_BODY_JOINTS);
+   bodyDFT          = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * (NUM_BODY_JOINTS / 2 + 1));
+   bodyPlan         = fftw_plan_dft_r2c_1d(NUM_BODY_JOINTS, bodyActivations, bodyDFT, FFTW_MEASURE);
+   jointActivations = (double *)fftw_malloc(sizeof(double) * undulationMovements);
+   jointDFT         = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * (undulationMovements / 2 + 1));
+   jointPlan        = fftw_plan_dft_r2c_1d(undulationMovements, jointActivations, jointDFT, FFTW_MEASURE);
+}
+
+
+UndulationNetworkHomomorph::~UndulationNetworkHomomorph()
+{
+   fftw_destroy_plan(bodyPlan);
+   fftw_free(bodyActivations);
+   fftw_free(bodyDFT);
+   fftw_destroy_plan(jointPlan);
+   fftw_free(jointActivations);
+   fftw_free(jointDFT);
+   fftw_free(activations);
 }
 
 
 // Harmonize synapses.
-void LocomotionNetworkHomomorph::harmonize(int synapseOptimizedPathLength)
+void UndulationNetworkHomomorph::harmonize(int synapseOptimizedPathLength)
 {
    int   i, j, k, n, s;
    bool  forward;
@@ -520,14 +549,14 @@ void LocomotionNetworkHomomorph::harmonize(int synapseOptimizedPathLength)
 
 
 // Sensor connectome indices.
-const struct LocomotionNetworkHomomorph::CellIndex LocomotionNetworkHomomorph::sensorIndices[] =
+const struct UndulationNetworkHomomorph::CellIndex UndulationNetworkHomomorph::sensorIndices[] =
 {
    { (char *)"ALML", 8 },
    { (char *)"ALMR", 9 }
 };
 
 // Muscle connectome indices.
-const struct LocomotionNetworkHomomorph::CellIndex LocomotionNetworkHomomorph::muscleIndices[] =
+const struct UndulationNetworkHomomorph::CellIndex UndulationNetworkHomomorph::muscleIndices[] =
 {
    { (char *)"MDL01", 48 },
    { (char *)"MDL02", 49 },
@@ -628,7 +657,7 @@ const struct LocomotionNetworkHomomorph::CellIndex LocomotionNetworkHomomorph::m
 };
 
 // Body joints.
-const struct LocomotionNetworkHomomorph::BodyJoint LocomotionNetworkHomomorph::bodyJoints[] =
+const struct UndulationNetworkHomomorph::BodyJoint UndulationNetworkHomomorph::bodyJoints[] =
 {
    {
       {  0,  1, 24, 25 },
@@ -680,10 +709,11 @@ const struct LocomotionNetworkHomomorph::BodyJoint LocomotionNetworkHomomorph::b
    }
 };
 
-// Evaluate locomotion behavior fitness.
+#ifdef OPPOSING_MUSCLE_FORCES
+// Evaluate undulation behavior fitness.
 // Fitness is a function of the number and magnitude of opposing muscle forces
 // when the light touch sensors are active.
-void LocomotionNetworkHomomorph::evaluate()
+void UndulationNetworkHomomorph::evaluate()
 {
    int i, j, k, m, n;
 
@@ -693,9 +723,9 @@ void LocomotionNetworkHomomorph::evaluate()
    float forces[NUM_BODY_JOINTS];
 
    // Stimulate the touch sensors.
-   sensorSequence.resize(locomotionMovements);
+   sensorSequence.resize(undulationMovements);
    n = network->numSensors;
-   for (i = 0; i < locomotionMovements; i++)
+   for (i = 0; i < undulationMovements; i++)
    {
       sensorSequence[i].resize(n, 0.0f);
       sensorSequence[i][sensorIndices[0].index] = 1.0f;
@@ -712,7 +742,7 @@ void LocomotionNetworkHomomorph::evaluate()
    {
       highForces[i] = 0.0f;
    }
-   for (i = 0; i < locomotionMovements; i++)
+   for (i = 0; i < undulationMovements; i++)
    {
       // Accumulate joint forces.
       for (j = 0; j < NUM_BODY_JOINTS; j++)
@@ -798,7 +828,7 @@ void LocomotionNetworkHomomorph::evaluate()
    delete behavior;
 
    // Remove touch stimulation.
-   for (i = 0; i < locomotionMovements; i++)
+   for (i = 0; i < undulationMovements; i++)
    {
       sensorSequence[i][sensorIndices[0].index] = 0.0f;
       sensorSequence[i][sensorIndices[1].index] = 0.0f;
@@ -809,7 +839,7 @@ void LocomotionNetworkHomomorph::evaluate()
    assert(behavior != NULL);
 
    // Decrement fitness for movement.
-   for (i = 0; i < locomotionMovements; i++)
+   for (i = 0; i < undulationMovements; i++)
    {
       for (j = 0; j < NUM_BODY_JOINTS; j++)
       {
@@ -834,27 +864,258 @@ void LocomotionNetworkHomomorph::evaluate()
 }
 
 
+#endif
+
+
+/*
+ * Evaluate undulation behavior fitness.
+ *
+ * The body is modeled as a linear span of equally spaced articulated joints, flexed
+ * on a common plane by opposing muscle groups that are activated by dorsal and ventral
+ * motor neurons.
+ *
+ * Undulation is a sinusoidal muscle activation pattern of the joints that changes
+ * over time. This is represented by a two dimensional array: space X time.
+ *
+ * The Fourier Transform of the muscle activation array produces frequency spectrums
+ * of sinusoidal patterns in space and time.
+ *
+ * Fitness is a function of the dispersion of these frequency spectrums when the light
+ * touch sensor neurons are stimulated. A less dispersed spectrum represents a more distinct
+ * undulation which is a fitter undulation behavior.
+ */
+void UndulationNetworkHomomorph::evaluate()
+{
+   int i, j, k, m, n;
+
+   vector<vector<float> > sensorSequence;
+   Behavior               *behavior;
+   vector<double>         values;
+   double                 sum, mean, max, bodyMax, jointMax, bodySum, jointSum;
+   double                 r, im, mag;
+
+   // Stimulate the touch sensors.
+   sensorSequence.resize(undulationMovements);
+   n = network->numSensors;
+   for (i = 0; i < undulationMovements; i++)
+   {
+      sensorSequence[i].resize(n, 0.0f);
+      sensorSequence[i][sensorIndices[0].index] = 1.0f;
+      sensorSequence[i][sensorIndices[1].index] = 1.0f;
+   }
+
+   // Get muscle activations.
+   behavior = new Behavior(network, sensorSequence);
+   assert(behavior != NULL);
+   for (i = 0; i < undulationMovements; i++)
+   {
+      for (j = 0; j < NUM_BODY_JOINTS; j++)
+      {
+         activations[j + (NUM_BODY_JOINTS * i)] = 0.0;
+         for (k = 0; k < 4; k++)
+         {
+            m = muscleIndices[bodyJoints[j].dorsalMuscles[k]].index;
+            if (m != -1)
+            {
+               activations[j + (NUM_BODY_JOINTS * i)] += behavior->motorSequence[i][m];
+            }
+            m = muscleIndices[bodyJoints[j].ventralMuscles[k]].index;
+            if (m != -1)
+            {
+               activations[j + (NUM_BODY_JOINTS * i)] -= behavior->motorSequence[i][m];
+            }
+         }
+      }
+   }
+
+   // Get spectrums of body shapes for each movement.
+   fitness = 0.0f;
+   bodyMax = 0.0;
+   for (i = 0, k = NUM_BODY_JOINTS / 2 + 1; i < undulationMovements; i++)
+   {
+      for (j = 0; j < NUM_BODY_JOINTS; j++)
+      {
+         bodyActivations[j] = activations[j + (NUM_BODY_JOINTS * i)];
+      }
+      fftw_execute(bodyPlan);
+      values.clear();
+      max = 0.0;
+      for (j = 0; j < k; j++)
+      {
+         r   = bodyDFT[j][0];
+         im  = bodyDFT[j][1];
+         mag = sqrt((r * r) + (im * im));
+         if (j > 0)
+         {
+            values.push_back(mag);
+            if ((j == 1) || (mag > max))
+            {
+               max = mag;
+            }
+         }
+      }
+      if (values.size() > 0)
+      {
+         sum      = std::accumulate(values.begin(), values.end(), 0.0);
+         mean     = sum / values.size();
+         bodyMax += (max - mean);
+      }
+   }
+   if (undulationMovements > 0)
+   {
+      bodyMax /= (double)undulationMovements;
+   }
+
+   // Get spectrums of joints moving in time.
+   jointMax = 0.0;
+   for (i = 0, k = undulationMovements / 2 + 1; i < NUM_BODY_JOINTS; i++)
+   {
+      for (j = 0; j < undulationMovements; j++)
+      {
+         jointActivations[j] = activations[i + (NUM_BODY_JOINTS * j)];
+      }
+      fftw_execute(jointPlan);
+      values.clear();
+      max = 0.0;
+      for (j = 0; j < k; j++)
+      {
+         r   = jointDFT[j][0];
+         im  = jointDFT[j][1];
+         mag = sqrt((r * r) + (im * im));
+         if (j > 0)
+         {
+            values.push_back(mag);
+            if ((j == 1) || (mag > max))
+            {
+               max = mag;
+            }
+         }
+      }
+      if (values.size() > 0)
+      {
+         sum       = std::accumulate(values.begin(), values.end(), 0.0);
+         mean      = sum / values.size();
+         jointMax += (max - mean);
+      }
+   }
+   delete behavior;
+   if (NUM_BODY_JOINTS > 0)
+   {
+      jointMax /= (double)NUM_BODY_JOINTS;
+   }
+
+   // Fitness is product of body and joint spectrum dispersions.
+   fitness = (float)(bodyMax * jointMax);
+
+   // Remove touch stimulation.
+   for (i = 0; i < undulationMovements; i++)
+   {
+      sensorSequence[i][sensorIndices[0].index] = 0.0f;
+      sensorSequence[i][sensorIndices[1].index] = 0.0f;
+   }
+
+   // Get muscle activations.
+   behavior = new Behavior(network, sensorSequence);
+   assert(behavior != NULL);
+   for (i = 0; i < undulationMovements; i++)
+   {
+      for (j = 0; j < NUM_BODY_JOINTS; j++)
+      {
+         activations[j + (NUM_BODY_JOINTS * i)] = 0.0;
+         for (k = 0; k < 4; k++)
+         {
+            m = muscleIndices[bodyJoints[j].dorsalMuscles[k]].index;
+            if (m != -1)
+            {
+               activations[j + (NUM_BODY_JOINTS * i)] += behavior->motorSequence[i][m];
+            }
+            m = muscleIndices[bodyJoints[j].ventralMuscles[k]].index;
+            if (m != -1)
+            {
+               activations[j + (NUM_BODY_JOINTS * i)] -= behavior->motorSequence[i][m];
+            }
+         }
+      }
+   }
+
+   // Less energy is fitter.
+   bodySum = 0.0;
+   for (i = 0, k = NUM_BODY_JOINTS / 2 + 1; i < undulationMovements; i++)
+   {
+      for (j = 0; j < NUM_BODY_JOINTS; j++)
+      {
+         bodyActivations[j] = activations[j + (NUM_BODY_JOINTS * i)];
+      }
+      fftw_execute(bodyPlan);
+      values.clear();
+      for (j = 0; j < k; j++)
+      {
+         r   = bodyDFT[j][0];
+         im  = bodyDFT[j][1];
+         mag = sqrt((r * r) + (im * im));
+         values.push_back(mag);
+      }
+      if (values.size() > 0)
+      {
+         bodySum += std::accumulate(values.begin(), values.end(), 0.0);
+      }
+   }
+   if (undulationMovements > 0)
+   {
+      bodySum /= (double)undulationMovements;
+   }
+
+   jointSum = 0.0;
+   for (i = 0, k = undulationMovements / 2 + 1; i < NUM_BODY_JOINTS; i++)
+   {
+      for (j = 0; j < undulationMovements; j++)
+      {
+         jointActivations[j] = activations[i + (NUM_BODY_JOINTS * j)];
+      }
+      fftw_execute(jointPlan);
+      values.clear();
+      for (j = 0; j < k; j++)
+      {
+         r   = jointDFT[j][0];
+         im  = jointDFT[j][1];
+         mag = sqrt((r * r) + (im * im));
+         values.push_back(mag);
+      }
+      if (values.size() > 0)
+      {
+         jointSum += std::accumulate(values.begin(), values.end(), 0.0);
+      }
+   }
+   delete behavior;
+   if (NUM_BODY_JOINTS > 0)
+   {
+      jointSum /= (double)NUM_BODY_JOINTS;
+   }
+   fitness -= (float)((bodySum + jointSum) / 2.0);
+}
+
+
 // Clone.
-LocomotionNetworkHomomorph *LocomotionNetworkHomomorph::clone()
+UndulationNetworkHomomorph *UndulationNetworkHomomorph::clone()
 {
    int i, n;
-   LocomotionNetworkHomomorph *locomotionNetworkMorph;
+   UndulationNetworkHomomorph *undulationNetworkMorph;
 
-   locomotionNetworkMorph = new LocomotionNetworkHomomorph(
-      locomotionMovements, network, synapseWeightsParm,
+   undulationNetworkMorph = new UndulationNetworkHomomorph(
+      undulationMovements, network, synapseWeightsParm,
       motorConnections, randomizer, tag);
-   assert(locomotionNetworkMorph != NULL);
-   locomotionNetworkMorph->fitness = fitness;
+   assert(undulationNetworkMorph != NULL);
+   undulationNetworkMorph->fitness = fitness;
    for (i = 0, n = (int)motorErrors.size(); i < n; i++)
    {
-      locomotionNetworkMorph->motorErrors[i] = motorErrors[i];
+      undulationNetworkMorph->motorErrors[i] = motorErrors[i];
    }
-   return(locomotionNetworkMorph);
+   return(undulationNetworkMorph);
 }
 
 
 // Load.
-void LocomotionNetworkHomomorph::load(FILE *fp)
+void UndulationNetworkHomomorph::load(FILE *fp)
 {
    int  i, n;
    bool b;
@@ -880,7 +1141,7 @@ void LocomotionNetworkHomomorph::load(FILE *fp)
 
 
 // Save.
-void LocomotionNetworkHomomorph::save(FILE *fp)
+void UndulationNetworkHomomorph::save(FILE *fp)
 {
    int  i, n;
    bool b;
@@ -900,7 +1161,7 @@ void LocomotionNetworkHomomorph::save(FILE *fp)
 
 
 // Print.
-void LocomotionNetworkHomomorph::print(bool printNetwork)
+void UndulationNetworkHomomorph::print(bool printNetwork)
 {
    int i, n;
 
@@ -946,8 +1207,8 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(vector<Behavior *>& behaviors
 {
    int i, j, k, n;
 
-   locomotionBehavior  = false;
-   locomotionMovements = -1;
+   undulationBehavior  = false;
+   undulationMovements = -1;
    for (i = 0, j = (int)behaviors.size(); i < j; i++)
    {
       this->behaviors.push_back(behaviors[i]);
@@ -991,8 +1252,8 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(vector<Behavior *>& behaviors
 }
 
 
-// Constructor for locomotion homomorphogenesis.
-NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int locomotionMovements, Network *homomorph,
+// Constructor for undulation homomorphogenesis.
+NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int undulationMovements, Network *homomorph,
                                                    int populationSize, int numOffspring, int parentLongevity,
                                                    float crossoverRate, float mutationRate,
                                                    MutableParm& synapseWeightsParm,
@@ -1000,8 +1261,8 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int locomotionMovements, Netw
                                                    int synapseOptimizedPathLength,
                                                    RANDOM randomSeed)
 {
-   locomotionBehavior        = true;
-   this->locomotionMovements = locomotionMovements;
+   undulationBehavior        = true;
+   this->undulationMovements = undulationMovements;
    behaveQuorum = -1;
    behaviorStep = -1;
    behaveQuorumMaxGenerations  = -1;
@@ -1045,10 +1306,10 @@ void NetworkHomomorphoGenesis::init(Network *homomorph,
    generation = 0;
    for (i = 0; i < populationSize; i++)
    {
-      if (locomotionBehavior)
+      if (undulationBehavior)
       {
-         networkMorph = (NetworkMorph *)new LocomotionNetworkHomomorph(
-            locomotionMovements, homomorph, synapseWeightsParm,
+         networkMorph = (NetworkMorph *)new UndulationNetworkHomomorph(
+            undulationMovements, homomorph, synapseWeightsParm,
             &motorConnections, randomizer);
       }
       else
@@ -1082,8 +1343,8 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(
 {
    int i, j;
 
-   locomotionBehavior  = false;
-   locomotionMovements = -1;
+   undulationBehavior  = false;
+   undulationMovements = -1;
    randomizer          = NULL;
    for (i = 0, j = (int)behaviors.size(); i < j; i++)
    {
@@ -1098,11 +1359,11 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(
 }
 
 
-// Load constructor for locomotion homomorphogenesis.
-NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int locomotionMovements, char *filename)
+// Load constructor for undulation homomorphogenesis.
+NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int undulationMovements, char *filename)
 {
-   locomotionBehavior        = true;
-   this->locomotionMovements = locomotionMovements;
+   undulationBehavior        = true;
+   this->undulationMovements = undulationMovements;
    randomizer = NULL;
    if (!load(filename))
    {
@@ -1116,11 +1377,11 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int locomotionMovements, char
 // Destructor.
 NetworkHomomorphoGenesis::~NetworkHomomorphoGenesis()
 {
-   if (locomotionBehavior)
+   if (undulationBehavior)
    {
       for (int i = 0, j = (int)population.size(); i < j; i++)
       {
-         delete (LocomotionNetworkHomomorph *)population[i];
+         delete (UndulationNetworkHomomorph *)population[i];
       }
    }
    else
@@ -1231,16 +1492,16 @@ void NetworkHomomorphoGenesis::getMotorConnectionsSub(
 // Morph networks.
 #ifdef THREADS
 void NetworkHomomorphoGenesis::morph(int numGenerations, int numThreads,
-                                     int behaveCutoff, char *logFile)
+                                     int behaveCutoff, char *logFile, char *saveFile)
 #else
 void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
-                                     char *logFile)
+                                     char *logFile, char *saveFile)
 #endif
 {
    int i, g, n;
    int behaveCount;
    int maxBehaviorStep;
-   LocomotionNetworkHomomorph *locomotionNetworkMorph;
+   UndulationNetworkHomomorph *undulationNetworkMorph;
 
    if (logFile != NULL)
    {
@@ -1297,12 +1558,12 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
    fprintf(morphfp, "Generation=%d\n", generation);
    fprintf(morphfp, "Population:\n");
    fprintf(morphfp, "Member\tgeneration\tfitness\n");
-   if (locomotionBehavior)
+   if (undulationBehavior)
    {
       for (i = 0, n = (int)population.size(); i < n; i++)
       {
-         locomotionNetworkMorph = (LocomotionNetworkHomomorph *)population[i];
-         fprintf(morphfp, "%d\t%d\t\t%f\n", i, locomotionNetworkMorph->tag, locomotionNetworkMorph->fitness);
+         undulationNetworkMorph = (UndulationNetworkHomomorph *)population[i];
+         fprintf(morphfp, "%d\t%d\t\t%f\n", i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness);
       }
    }
    else
@@ -1341,12 +1602,12 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
       prune();
       fprintf(morphfp, "Population:\n");
       fprintf(morphfp, "Member\tgeneration\tfitness\n");
-      if (locomotionBehavior)
+      if (undulationBehavior)
       {
          for (i = 0, n = (int)population.size(); i < n; i++)
          {
-            locomotionNetworkMorph = (LocomotionNetworkHomomorph *)population[i];
-            fprintf(morphfp, "%d\t%d\t\t%f\n", i, locomotionNetworkMorph->tag, locomotionNetworkMorph->fitness);
+            undulationNetworkMorph = (UndulationNetworkHomomorph *)population[i];
+            fprintf(morphfp, "%d\t%d\t\t%f\n", i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness);
          }
       }
       else
@@ -1389,6 +1650,10 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
          }
       }
       fflush(morphfp);
+      if (saveFile != NULL)
+      {
+         save(saveFile);
+      }
    }
 
 #ifdef THREADS
@@ -1450,7 +1715,7 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
 {
    int     i, j, k, n, p1, p2;
    Network *parent1, *parent2, *parent, *child;
-   LocomotionNetworkHomomorph *locomotionNetworkMorph;
+   UndulationNetworkHomomorph *undulationNetworkMorph;
 
 #ifdef THREADS
    // Synchronize threads.
@@ -1492,9 +1757,9 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
          pthread_mutex_lock(&morphMutex);
       }
 #endif
-      if (locomotionBehavior)
+      if (undulationBehavior)
       {
-         offspring[i] = (NetworkMorph *)((LocomotionNetworkHomomorph *)population[p1])->clone();
+         offspring[i] = (NetworkMorph *)((UndulationNetworkHomomorph *)population[p1])->clone();
       }
       else
       {
@@ -1561,12 +1826,12 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
             }
             crossover(child, parent, j, 0);
          }
-         if (locomotionBehavior)
+         if (undulationBehavior)
          {
-            locomotionNetworkMorph = (LocomotionNetworkHomomorph *)offspring[i];
-            locomotionNetworkMorph->evaluate();
+            undulationNetworkMorph = (UndulationNetworkHomomorph *)offspring[i];
+            undulationNetworkMorph->evaluate();
             fprintf(morphfp, "%d\t%d\t\t%f\t%d %d\n",
-                    i, locomotionNetworkMorph->tag, locomotionNetworkMorph->fitness, p1, p2);
+                    i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness, p1, p2);
          }
          else
          {
@@ -1577,11 +1842,11 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
       else   // No crossover.
       {
          offspring[i]->tag++;
-         if (locomotionBehavior)
+         if (undulationBehavior)
          {
-            locomotionNetworkMorph = (LocomotionNetworkHomomorph *)offspring[i];
+            undulationNetworkMorph = (UndulationNetworkHomomorph *)offspring[i];
             fprintf(morphfp, "%d\t%d\t\t%f\t%d\n",
-                    i, locomotionNetworkMorph->tag, locomotionNetworkMorph->fitness, p1);
+                    i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness, p1);
          }
          else
          {
@@ -1666,7 +1931,7 @@ void NetworkHomomorphoGenesis::mutate(int threadNum)
 {
    int                        i;
    NetworkHomomorph           *networkMorph;
-   LocomotionNetworkHomomorph *locomotionNetworkMorph;
+   UndulationNetworkHomomorph *undulationNetworkMorph;
 
 #ifdef THREADS
    // Re-group threads.
@@ -1684,15 +1949,15 @@ void NetworkHomomorphoGenesis::mutate(int threadNum)
          continue;
       }
 #endif
-      if (locomotionBehavior)
+      if (undulationBehavior)
       {
-         locomotionNetworkMorph = (LocomotionNetworkHomomorph *)offspring[i];
+         undulationNetworkMorph = (UndulationNetworkHomomorph *)offspring[i];
          if (randomizer->RAND_CHANCE(mutationRate))
          {
-            locomotionNetworkMorph->mutate();
-            locomotionNetworkMorph->evaluate();
+            undulationNetworkMorph->mutate();
+            undulationNetworkMorph->evaluate();
             fprintf(morphfp, "%d\t%d\t\t%f\n",
-                    i, locomotionNetworkMorph->tag, locomotionNetworkMorph->fitness);
+                    i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness);
          }
       }
       else
@@ -1730,7 +1995,7 @@ void NetworkHomomorphoGenesis::harmonize(int threadNum)
 {
    int                        i;
    NetworkHomomorph           *networkMorph;
-   LocomotionNetworkHomomorph *locomotionNetworkMorph;
+   UndulationNetworkHomomorph *undulationNetworkMorph;
 
 #ifdef THREADS
    // Re-group threads.
@@ -1748,12 +2013,12 @@ void NetworkHomomorphoGenesis::harmonize(int threadNum)
          continue;
       }
 #endif
-      if (locomotionBehavior)
+      if (undulationBehavior)
       {
-         locomotionNetworkMorph = (LocomotionNetworkHomomorph *)offspring[i];
-         locomotionNetworkMorph->harmonize(synapseOptimizedPathLength);
+         undulationNetworkMorph = (UndulationNetworkHomomorph *)offspring[i];
+         undulationNetworkMorph->harmonize(synapseOptimizedPathLength);
          fprintf(morphfp, "%d\t%d\t\t%f\n",
-                 i, locomotionNetworkMorph->tag, locomotionNetworkMorph->fitness);
+                 i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness);
       }
       else
       {
@@ -1779,17 +2044,17 @@ void NetworkHomomorphoGenesis::prune()
 {
    int                        i, j, n;
    NetworkHomomorph           *networkMorph;
-   LocomotionNetworkHomomorph *locomotionNetworkMorph;
+   UndulationNetworkHomomorph *undulationNetworkMorph;
 
    fprintf(morphfp, "Prune:\n");
    fprintf(morphfp, "Member\tgeneration\tfitness\n");
    for (n = (int)population.size(), i = n - numOffspring, j = 0; i < n; i++, j++)
    {
-      if (locomotionBehavior)
+      if (undulationBehavior)
       {
-         locomotionNetworkMorph = (LocomotionNetworkHomomorph *)population[i];
-         fprintf(morphfp, "%d\t%d\t\t%f\n", i, locomotionNetworkMorph->tag, locomotionNetworkMorph->fitness);
-         delete (LocomotionNetworkHomomorph *)locomotionNetworkMorph;
+         undulationNetworkMorph = (UndulationNetworkHomomorph *)population[i];
+         fprintf(morphfp, "%d\t%d\t\t%f\n", i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness);
+         delete (UndulationNetworkHomomorph *)undulationNetworkMorph;
       }
       else
       {
@@ -1807,18 +2072,18 @@ void NetworkHomomorphoGenesis::prune()
       {
          if (population[i]->offspringCount > parentLongevity)
          {
-            if (locomotionBehavior)
+            if (undulationBehavior)
             {
-               locomotionNetworkMorph = (LocomotionNetworkHomomorph *)population[i];
-               fprintf(morphfp, "%d\t%d\t\t%f", i, locomotionNetworkMorph->tag, locomotionNetworkMorph->fitness);
-               population[i] = (NetworkMorph *)new LocomotionNetworkHomomorph(
-                  locomotionMovements, homomorph, networkMorph->synapseWeightsParm,
+               undulationNetworkMorph = (UndulationNetworkHomomorph *)population[i];
+               fprintf(morphfp, "%d\t%d\t\t%f", i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness);
+               population[i] = (NetworkMorph *)new UndulationNetworkHomomorph(
+                  undulationMovements, homomorph, networkMorph->synapseWeightsParm,
                   &motorConnections, randomizer);
                assert(population[i] != NULL);
-               delete locomotionNetworkMorph;
-               locomotionNetworkMorph = (LocomotionNetworkHomomorph *)population[i];
-               locomotionNetworkMorph->evaluate();
-               fprintf(morphfp, "\t%f\n", locomotionNetworkMorph->fitness);
+               delete undulationNetworkMorph;
+               undulationNetworkMorph = (UndulationNetworkHomomorph *)population[i];
+               undulationNetworkMorph->evaluate();
+               fprintf(morphfp, "\t%f\n", undulationNetworkMorph->fitness);
             }
             else
             {
@@ -1843,11 +2108,11 @@ void NetworkHomomorphoGenesis::evaluate()
 {
    int i, n;
 
-   if (locomotionBehavior)
+   if (undulationBehavior)
    {
       for (i = 0, n = (int)population.size(); i < n; i++)
       {
-         ((LocomotionNetworkHomomorph *)population[i])->evaluate();
+         ((UndulationNetworkHomomorph *)population[i])->evaluate();
       }
    }
    else
@@ -1861,20 +2126,20 @@ void NetworkHomomorphoGenesis::evaluate()
 void NetworkHomomorphoGenesis::sort()
 {
    int i, j, n;
-   LocomotionNetworkHomomorph *locomotionNetworkMorph1, *locomotionNetworkMorph2;
+   UndulationNetworkHomomorph *undulationNetworkMorph1, *undulationNetworkMorph2;
    NetworkMorph               *networkMorph;
 
-   if (locomotionBehavior)
+   if (undulationBehavior)
    {
       for (i = 0, n = (int)population.size(); i < n; i++)
       {
-         locomotionNetworkMorph1 = (LocomotionNetworkHomomorph *)population[i];
+         undulationNetworkMorph1 = (UndulationNetworkHomomorph *)population[i];
          for (j = i + 1; j < n; j++)
          {
-            locomotionNetworkMorph2 = (LocomotionNetworkHomomorph *)population[j];
-            if (locomotionNetworkMorph2->fitness > locomotionNetworkMorph1->fitness)
+            undulationNetworkMorph2 = (UndulationNetworkHomomorph *)population[j];
+            if (undulationNetworkMorph2->fitness > undulationNetworkMorph1->fitness)
             {
-               locomotionNetworkMorph1 = locomotionNetworkMorph2;
+               undulationNetworkMorph1 = undulationNetworkMorph2;
                networkMorph            = population[i];
                population[i]           = population[j];
                population[j]           = networkMorph;
@@ -1909,8 +2174,8 @@ bool NetworkHomomorphoGenesis::load(char *filename)
    randomizer->RAND_LOAD(fp);
    homomorph = new Network(fp);
    assert(homomorph != NULL);
-   FREAD_BOOL(&locomotionBehavior, fp);
-   FREAD_INT(&locomotionMovements, fp);
+   FREAD_BOOL(&undulationBehavior, fp);
+   FREAD_INT(&undulationMovements, fp);
    FREAD_FLOAT(&crossoverRate, fp);
    FREAD_FLOAT(&mutationRate, fp);
    FREAD_FLOAT(&synapseCrossoverBondStrength, fp);
@@ -1924,15 +2189,15 @@ bool NetworkHomomorphoGenesis::load(char *filename)
    population.clear();
    offspring.clear();
    FREAD_INT(&n, fp);
-   if (locomotionBehavior)
+   if (undulationBehavior)
    {
       for (i = 0; i < n; i++)
       {
-         LocomotionNetworkHomomorph *locomotionNetworkMorph =
-            new LocomotionNetworkHomomorph(fp,
-                                           locomotionMovements, &motorConnections, randomizer);
-         assert(locomotionNetworkMorph != NULL);
-         population.push_back((NetworkMorph *)locomotionNetworkMorph);
+         UndulationNetworkHomomorph *undulationNetworkMorph =
+            new UndulationNetworkHomomorph(fp,
+                                           undulationMovements, &motorConnections, randomizer);
+         assert(undulationNetworkMorph != NULL);
+         population.push_back((NetworkMorph *)undulationNetworkMorph);
       }
    }
    else
@@ -1980,8 +2245,8 @@ bool NetworkHomomorphoGenesis::save(char *filename)
    }
    randomizer->RAND_SAVE(fp);
    homomorph->save(fp);
-   FWRITE_BOOL(&locomotionBehavior, fp);
-   FWRITE_INT(&locomotionMovements, fp);
+   FWRITE_BOOL(&undulationBehavior, fp);
+   FWRITE_INT(&undulationMovements, fp);
    FWRITE_FLOAT(&crossoverRate, fp);
    FWRITE_FLOAT(&mutationRate, fp);
    FWRITE_FLOAT(&synapseCrossoverBondStrength, fp);
@@ -1990,11 +2255,11 @@ bool NetworkHomomorphoGenesis::save(char *filename)
    FWRITE_INT(&numOffspring, fp);
    n = (int)population.size();
    FWRITE_INT(&n, fp);
-   if (locomotionBehavior)
+   if (undulationBehavior)
    {
       for (i = 0; i < n; i++)
       {
-         ((LocomotionNetworkHomomorph *)population[i])->save(fp);
+         ((UndulationNetworkHomomorph *)population[i])->save(fp);
       }
    }
    else
@@ -2049,9 +2314,9 @@ void NetworkHomomorphoGenesis::print(bool printNetwork)
    printf("populationSize=%d\n", populationSize);
    printf("numOffspring=%d\n", numOffspring);
    printf("parentLongevity=%d\n", parentLongevity);
-   if (locomotionBehavior)
+   if (undulationBehavior)
    {
-      printf("locomotionMovements=%d\n", locomotionMovements);
+      printf("undulationMovements=%d\n", undulationMovements);
    }
    else
    {
@@ -2076,11 +2341,11 @@ void NetworkHomomorphoGenesis::print(bool printNetwork)
    printf("synapseOptimizedPathLength=%d\n", synapseOptimizedPathLength);
    printf("randomSeed=%lu\n", randomSeed);
    printf("Population:\n");
-   if (locomotionBehavior)
+   if (undulationBehavior)
    {
       for (i = 0, n = (int)population.size(); i < n; i++)
       {
-         ((LocomotionNetworkHomomorph *)population[i])->print(printNetwork);
+         ((UndulationNetworkHomomorph *)population[i])->print(printNetwork);
       }
    }
    else

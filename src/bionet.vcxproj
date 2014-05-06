@@ -44,15 +44,15 @@
     <OutDir>Debug\</OutDir>
     <IntDir>Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\include;..\include\win32;$(IncludePath)</IncludePath>
-    <LibraryPath>..\lib;..\lib\win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\include;..\include\win32;..\..\fftw3\win32;$(IncludePath)</IncludePath>
+    <LibraryPath>..\lib;..\lib\win32;..\..\fftw3\win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>Release\</OutDir>
     <IntDir>Release\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\include;..\include\win32;$(IncludePath)</IncludePath>
-    <LibraryPath>..\lib;..\lib\win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\include;..\include\win32;..\..\fftw3\win32;$(IncludePath)</IncludePath>
+    <LibraryPath>..\lib;..\lib\win32;..\..\fftw3\win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -67,8 +67,8 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\bin\bionet.exe</OutputFile>
+      <AdditionalDependencies>pthreadVC2.lib;libfftw3-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\bin\$(TargetName)$(TargetExt)</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)bionet.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -87,8 +87,8 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\bin\bionet.exe</OutputFile>
+      <AdditionalDependencies>pthreadVC2.lib;libfftw3-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\bin\$(TargetName)$(TargetExt)</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>

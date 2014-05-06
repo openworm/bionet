@@ -2,8 +2,8 @@
 
 CC = gcc
 
-CCFLAGS = -DTHREADS -O3 -c 
-LINKLIBS = -lm -lpthread -lstdc++
+CCFLAGS = -I../../fftw3/unix/api -DTHREADS -O3 -c
+LINKLIBS = -L../../fftw3/unix/.libs -lfftw3 -lm -lpthread -lstdc++
 
 all: ../bin/bionet
 

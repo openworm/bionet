@@ -31,9 +31,10 @@ that are specific to C. elegans.
 
 ##Required packages:
 
-The UNIX version requires the gcc compiler, make command, and
-the bash shell. The Windows version requires the Microsoft Visual
-C++ 2012 (or later) IDE.
+1. UNIX: the gcc compiler, make command, and the bash shell.
+2. Windows: Microsoft Visual C++ 2012 (or later) IDE.
+3. Pthreads.
+4. FFTW3 Fourier Transform package: http://www.fftw.org
 
 ###To build:
 
@@ -91,10 +92,10 @@ bionet (create motor outputs from given sensor inputs)
 ```
 
 ```
-bionet (create locomotion behavior movements)
+bionet (create undulation behavior movements)
    -createNetworkBehaviors
    -loadNetwork <network file name>
-   -locomotionMovements <number of sinusoidal (wriggling) movements>
+   -undulationMovements <number of sinusoidal movements>
    [-saveBehaviors <behaviors file name> 
       (behavior 0: with light touch stimulation; behavior 1: without stimulation)]
    [-randomSeed <random seed>]
@@ -160,9 +161,9 @@ bionet (resume morph)
 ```
 
 ```
-bionet (new locomotion behavior morph)
+bionet (new undulation behavior morph)
    -createHomomorphicNetworks
-   -locomotionMovements <number of sinusoidal (wriggling) movements>
+   -undulationMovements <number of sinusoidal movements>
    -loadNetwork <homomorph network file name>
    -populationSize <number population members>
    -numOffspring <number offspring per generation>
@@ -180,9 +181,9 @@ bionet (new locomotion behavior morph)
 ```
 
 ```
-bionet (resume locomotion behavior morph)
+bionet (resume undulation behavior morph)
    -createHomomorphicNetworks
-   -locomotionMovements <number of sinusoidal (wriggling) movements>
+   -undulationMovements <number of sinusoidal movements>
    -loadMorph <morph file name>
    -numGenerations <number of evolution generations>
    [-crossoverRate <probability> (defaults to loaded value)]

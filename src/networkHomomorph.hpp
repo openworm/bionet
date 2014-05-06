@@ -8,6 +8,7 @@
 #ifdef THREADS
 #include <pthread.h>
 #endif
+#include <fftw3.h>
 
 // Network homomorph.
 class NetworkHomomorph : public NetworkMorph
@@ -64,19 +65,22 @@ protected:
                        int level, int depth);
 };
 
-// Locomotion behavior network homomorph.
-class LocomotionNetworkHomomorph : public NetworkHomomorph
+// Undulation behavior network homomorph.
+class UndulationNetworkHomomorph : public NetworkHomomorph
 {
 public:
 
    // Constructors.
-   LocomotionNetworkHomomorph(int locomotionMovements, Network *homomorph,
+   UndulationNetworkHomomorph(int undulationMovements, Network *homomorph,
                               MutableParm& synapseWeightsParm,
                               vector<vector<pair<int, int> > > *motorConnections,
                               Random *randomizer, int tag = 0);
-   LocomotionNetworkHomomorph(FILE *fp, int locomotionMovements,
+   UndulationNetworkHomomorph(FILE *fp, int undulationMovements,
                               vector<vector<pair<int, int> > > *motorConnections,
                               Random *randomizer);
+
+   // Destructor.
+   ~UndulationNetworkHomomorph();
 
    // Harmonize synapses.
    void harmonize(int synapseOptimizedPathLength);
@@ -84,12 +88,12 @@ public:
    // Fitness.
    float fitness;
 
-   // Evaluate locomotion behavior fitness.
-   int locomotionMovements;
+   // Evaluate undulation behavior fitness.
+   int undulationMovements;
    void evaluate();
 
    // Clone.
-   LocomotionNetworkHomomorph *clone();
+   UndulationNetworkHomomorph *clone();
 
    // Load.
    void load(FILE *fp);
@@ -123,6 +127,11 @@ public:
    // Body joints.
    static const int              NUM_BODY_JOINTS = 12;
    static const struct BodyJoint bodyJoints[NUM_BODY_JOINTS];
+
+   // Fourier transform.
+   double       *activations, *bodyActivations, *jointActivations;
+   fftw_complex *bodyDFT, *jointDFT;
+   fftw_plan    bodyPlan, jointPlan;
 };
 
 // Network homomorphogenesis.
@@ -141,8 +150,8 @@ public:
                             int synapseOptimizedPathLength,
                             RANDOM randomSeed);
 
-   // Locomotion behavior constructor.
-   NetworkHomomorphoGenesis(int locomotionMovements, Network *homomorph,
+   // Undulation behavior constructor.
+   NetworkHomomorphoGenesis(int undulationMovements, Network *homomorph,
                             int populationSize, int numOffspring, int parentLongevity,
                             float crossoverRate, float mutationRate,
                             MutableParm& synapseWeightsParm,
@@ -151,7 +160,7 @@ public:
                             RANDOM randomSeed);
 
    NetworkHomomorphoGenesis(vector<Behavior *>& behaviors, char *filename);
-   NetworkHomomorphoGenesis(int locomotionMovements, char *filename);
+   NetworkHomomorphoGenesis(int undulationMovements, char *filename);
 
    // Destructor.
    ~NetworkHomomorphoGenesis();
@@ -159,9 +168,9 @@ public:
    // Homomorphic network.
    Network *homomorph;
 
-   // Locomotion behavior.
-   bool locomotionBehavior;
-   int  locomotionMovements;
+   // Undulation behavior.
+   bool undulationBehavior;
+   int  undulationMovements;
 
    // Crossover and mutation rates.
    float crossoverRate;
@@ -176,11 +185,13 @@ public:
    // Morph networks.
 #ifdef THREADS
    void morph(int numGenerations, int numThreads,
-              int behaveCutoff = -1, char *logFile = NULL);
+              int behaveCutoff = -1, char *logFile = NULL,
+              char *saveFile = NULL);
 
 #else
    void morph(int numGenerations,
-              int behaveCutoff = -1, char *logFile = NULL);
+              int behaveCutoff = -1, char *logFile = NULL,
+              char *saveFile = NULL);
 #endif
 
    // Mate members.

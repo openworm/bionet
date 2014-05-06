@@ -56,10 +56,10 @@ char *Usage[] =
    (char *)"  [-saveBehaviors <behaviors file name>]",
    (char *)"  [-randomSeed <random seed>]",
    (char *)"",
-   (char *)"bionet (create locomotion behavior movements)",
+   (char *)"bionet (create undulation behavior movements)",
    (char *)"  -createNetworkBehaviors",
    (char *)"  -loadNetwork <network file name>",
-   (char *)"  -locomotionMovements <number of sinusoidal (wriggling) movements>",
+   (char *)"  -undulationMovements <number of sinusoidal (wriggling) movements>",
    (char *)"  [-saveBehaviors <behaviors file name>",
    (char *)"      (behavior 0: with light touch stimulation; behavior 1: without stimulation)]",
    (char *)"  [-randomSeed <random seed>]",
@@ -124,9 +124,9 @@ char *Usage[] =
    (char *)"   [-numThreads <number of threads> (defaults to system capacity)]",
 #endif
    (char *)"",
-   (char *)"bionet(new locomotion behavior morph)",
+   (char *)"bionet(new undulation behavior morph)",
    (char *)"   -createHomomorphicNetworks",
-   (char *)"   -locomotionMovements <number of sinusoidal (wriggling) movements>",
+   (char *)"   -undulationMovements <number of sinusoidal (wriggling) movements>",
    (char *)"   -loadNetwork <homomorph network file name>",
    (char *)"   -populationSize <number population members>",
    (char *)"   -numOffspring <number offspring per generation>",
@@ -142,9 +142,9 @@ char *Usage[] =
    (char *)"   [-logMorph <morph log file name>(instead of standard output)]",
    (char *)"   [-numThreads <number of threads>(defaults to system capacity)]",
    (char *)"",
-   (char *)"bionet(resume locomotion behavior morph)",
+   (char *)"bionet(resume undulation behavior morph)",
    (char *)"   -createHomomorphicNetworks",
-   (char *)"   -locomotionMovements <number of sinusoidal (wriggling) movements>",
+   (char *)"   -undulationMovements <number of sinusoidal (wriggling) movements>",
    (char *)"   -loadMorph <morph file name>",
    (char *)"   -numGenerations <number of evolution generations>",
    (char *)"   [-crossoverRate <probability>(defaults to loaded value)]",
@@ -545,7 +545,7 @@ int createNetworkBehaviors(int argc, char *argv[])
 
    vector<int>        behaviorSequenceLengths;
    char               *sensorBehaviorsLoadFile = NULL;
-   int                locomotionMovements      = -1;
+   int                undulationMovements      = -1;
    char               *behaviorsSaveFile       = NULL;
    RANDOM             randomSeed = Network::DEFAULT_RANDOM_SEED;
    vector<Behavior *> sensorBehaviors;
@@ -594,7 +594,7 @@ int createNetworkBehaviors(int argc, char *argv[])
          sensorBehaviorsLoadFile = argv[i];
          continue;
       }
-      if (strcmp(argv[i], "-locomotionMovements") == 0)
+      if (strcmp(argv[i], "-undulationMovements") == 0)
       {
          i++;
          if ((i >= argc) || (argv[i][0] == '-'))
@@ -602,8 +602,8 @@ int createNetworkBehaviors(int argc, char *argv[])
             printUsageError(argv[i - 1]);
             return(1);
          }
-         locomotionMovements = atoi(argv[i]);
-         if (locomotionMovements < 0)
+         undulationMovements = atoi(argv[i]);
+         if (undulationMovements < 0)
          {
             printUsageError(argv[i - 1]);
             return(1);
@@ -643,18 +643,18 @@ int createNetworkBehaviors(int argc, char *argv[])
    }
    if ((sensorBehaviorsLoadFile == NULL) &&
        (behaviorSequenceLengths.size() == 0) &&
-       (locomotionMovements == -1))
+       (undulationMovements == -1))
    {
       printUsageError((char *)"missing required option");
       return(1);
    }
    if ((sensorBehaviorsLoadFile != NULL) && ((behaviorSequenceLengths.size() > 0) ||
-                                             (locomotionMovements != -1)))
+                                             (undulationMovements != -1)))
    {
       printUsageError((char *)"conflicting options");
       return(1);
    }
-   if ((behaviorSequenceLengths.size() > 0) && (locomotionMovements != -1))
+   if ((behaviorSequenceLengths.size() > 0) && (undulationMovements != -1))
    {
       printUsageError((char *)"conflicting options");
       return(1);
@@ -706,22 +706,22 @@ int createNetworkBehaviors(int argc, char *argv[])
    {
       vector<vector<float> > sensorSequence;
       Behavior               *behavior;
-      sensorSequence.resize(locomotionMovements);
-      for (i = 0; i < locomotionMovements; i++)
+      sensorSequence.resize(undulationMovements);
+      for (i = 0; i < undulationMovements; i++)
       {
          sensorSequence[i].resize(network->numSensors, 0.0f);
-         sensorSequence[i][LocomotionNetworkHomomorph::sensorIndices[0].index] = 1.0f;
-         sensorSequence[i][LocomotionNetworkHomomorph::sensorIndices[1].index] = 1.0f;
+         sensorSequence[i][UndulationNetworkHomomorph::sensorIndices[0].index] = 1.0f;
+         sensorSequence[i][UndulationNetworkHomomorph::sensorIndices[1].index] = 1.0f;
       }
       behavior = new Behavior(network, sensorSequence);
       assert(behavior != NULL);
       behaviors.push_back(behavior);
       printf("Behavior 0 (with light touch stimulation):\n");
       behavior->print();
-      for (i = 0; i < locomotionMovements; i++)
+      for (i = 0; i < undulationMovements; i++)
       {
-         sensorSequence[i][LocomotionNetworkHomomorph::sensorIndices[0].index] = 0.0f;
-         sensorSequence[i][LocomotionNetworkHomomorph::sensorIndices[1].index] = 0.0f;
+         sensorSequence[i][UndulationNetworkHomomorph::sensorIndices[0].index] = 0.0f;
+         sensorSequence[i][UndulationNetworkHomomorph::sensorIndices[1].index] = 0.0f;
       }
       behavior = new Behavior(network, sensorSequence);
       assert(behavior != NULL);
@@ -909,7 +909,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
 {
    int  i, j, k, n, result;
    char *behaviorsLoadFile         = NULL;
-   int  locomotionMovements        = -1;
+   int  undulationMovements        = -1;
    char *networkLoadFile           = NULL;
    int  populationSize             = -1;
    int  numOffspring               = -1;
@@ -955,7 +955,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
          behaviorsLoadFile = argv[i];
          continue;
       }
-      if (strcmp(argv[i], "-locomotionMovements") == 0)
+      if (strcmp(argv[i], "-undulationMovements") == 0)
       {
          i++;
          if ((i >= argc) || (argv[i][0] == '-'))
@@ -963,8 +963,8 @@ int createHomomorphicNetworks(int argc, char *argv[])
             printUsageError(argv[i - 1]);
             return(1);
          }
-         locomotionMovements = atoi(argv[i]);
-         if (locomotionMovements < 0)
+         undulationMovements = atoi(argv[i]);
+         if (undulationMovements < 0)
          {
             printUsageError(argv[i - 1]);
             return(1);
@@ -1301,31 +1301,31 @@ int createHomomorphicNetworks(int argc, char *argv[])
       return(1);
    }
 
-   if ((behaviorsLoadFile == NULL) && (locomotionMovements == -1))
+   if ((behaviorsLoadFile == NULL) && (undulationMovements == -1))
    {
-      printUsageError((char *)"missing loadBehaviors or locomotionMovements option");
+      printUsageError((char *)"missing loadBehaviors or undulationMovements option");
       return(1);
    }
-   if ((behaviorsLoadFile != NULL) && (locomotionMovements != -1))
+   if ((behaviorsLoadFile != NULL) && (undulationMovements != -1))
    {
-      printUsageError((char *)"conflicting loadBehaviors and locomotionMovements options");
+      printUsageError((char *)"conflicting loadBehaviors and undulationMovements options");
       return(1);
    }
-   if (locomotionMovements != -1)
+   if (undulationMovements != -1)
    {
       if (behaveCutoff != -1)
       {
-         printUsageError((char *)"conflicting behaveCutoff and locomotionMovements options");
+         printUsageError((char *)"conflicting behaveCutoff and undulationMovements options");
          return(1);
       }
       if (behaveQuorum != -1)
       {
-         printUsageError((char *)"conflicting behaveQuorum and locomotionMovements options");
+         printUsageError((char *)"conflicting behaveQuorum and undulationMovements options");
          return(1);
       }
       if (fitnessMotorList.size() > 0)
       {
-         printUsageError((char *)"conflicting fitnessMotorList and locomotionMovements options");
+         printUsageError((char *)"conflicting fitnessMotorList and undulationMovements options");
          return(1);
       }
    }
@@ -1414,7 +1414,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
       {
          morphoGenesis =
             new NetworkHomomorphoGenesis(
-               locomotionMovements, homomorph,
+               undulationMovements, homomorph,
                populationSize, numOffspring, parentLongevity,
                crossoverRate, mutationRate, synapseWeightsParm,
                synapseCrossoverBondStrength, synapseOptimizedPathLength,
@@ -1441,7 +1441,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
       }
       else
       {
-         morphoGenesis = new NetworkHomomorphoGenesis(locomotionMovements, morphLoadFile);
+         morphoGenesis = new NetworkHomomorphoGenesis(undulationMovements, morphLoadFile);
       }
       assert(morphoGenesis != NULL);
       if (fitnessMotorList.size() > 0)
@@ -1477,9 +1477,9 @@ int createHomomorphicNetworks(int argc, char *argv[])
       }
    }
 #ifdef THREADS
-   morphoGenesis->morph(numGenerations, numThreads, behaveCutoff, logFile);
+   morphoGenesis->morph(numGenerations, numThreads, behaveCutoff, logFile, morphSaveFile);
 #else
-   morphoGenesis->morph(numGenerations, behaveCutoff, logFile);
+   morphoGenesis->morph(numGenerations, behaveCutoff, logFile, morphSaveFile);
 #endif
    if (morphSaveFile != NULL)
    {
