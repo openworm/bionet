@@ -218,7 +218,7 @@ void transformMotorSequence()
          mean      = sum / values.size();
 		 bodyMax += (max - mean);
          sq_sum    = std::inner_product(values.begin(), values.end(), values.begin(), 0.0);
-         stdev     = std::sqrt(sq_sum / values.size() - mean * mean);
+         stdev     = sqrt(sq_sum / values.size() - mean * mean);
          bodyMean += stdev;
       }
    }
@@ -277,7 +277,7 @@ void transformMotorSequence()
          mean       = sum / values.size();
 		 jointMax += (max - mean);
          sq_sum     = std::inner_product(values.begin(), values.end(), values.begin(), 0.0);
-         stdev      = std::sqrt(sq_sum / values.size() - mean * mean);
+         stdev      = sqrt(sq_sum / values.size() - mean * mean);
          jointMean += stdev;
       }
    }
