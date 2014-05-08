@@ -4,12 +4,12 @@
     <LocalDebuggerCommand>..\bin\bionet.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(ProjectDir)\..\..\bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-createHomomorphicNetworks -undulationMovements 25 -loadNetwork CElegans_network.txt -synapseWeights 0.0 1.0 .1 -populationSize 2 -numOffspring 1 -numGenerations 1 -crossoverRate .5 -mutationRate .05 -synapseCrossoverBondStrength .5 -synapseOptimizedPathLength 4 -saveMorph morph.txt -randomSeed 44 -numThreads 1</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-createHomomorphicNetworks -undulationMovements 100 -loadMorph morph_blacklight_100_0.txt -numGenerations 0 -saveNetworks bl100_</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerCommand>..\bin\bionet.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(ProjectDir)\..\..\bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-createHomomorphicNetworks -undulationMovements 25 -loadNetwork CElegans_network.txt -synapseWeights 0.0 1.0 .1 -populationSize 2 -numOffspring 1 -numGenerations 1 -crossoverRate .5 -mutationRate .05 -synapseCrossoverBondStrength .5 -synapseOptimizedPathLength 4 -saveMorph morph.txt -randomSeed 44 -numThreads 1</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-createHomomorphicNetworks -undulationMovements 100 -loadMorph morph_blacklight_100_0.txt -numGenerations 0 -saveNetworks</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>
