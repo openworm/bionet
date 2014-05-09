@@ -38,7 +38,10 @@ that are specific to C. elegans.
 
 ###To build:
 
-UNIX: type 'make'
+UNIX: 
+1. 'make'
+2. For Fourier Transform undulation behavior evaluation: 'make fft_undulation_eval'
+
 Windows: use VC++ solution and project files.
 
 ###Commands:

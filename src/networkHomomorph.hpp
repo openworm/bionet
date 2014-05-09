@@ -8,7 +8,9 @@
 #ifdef THREADS
 #include <pthread.h>
 #endif
+#ifdef FFT_UNDULATION_EVAL
 #include <fftw3.h>
+#endif
 
 // Network homomorph.
 class NetworkHomomorph : public NetworkMorph
@@ -128,10 +130,12 @@ public:
    static const int              NUM_BODY_JOINTS = 12;
    static const struct BodyJoint bodyJoints[NUM_BODY_JOINTS];
 
+#ifdef FFT_UNDULATION_EVAL
    // Fourier transform.
    double       *activations, *bodyActivations, *jointActivations;
    fftw_complex *bodyDFT, *jointDFT;
    fftw_plan    bodyPlan, jointPlan;
+#endif
 };
 
 // Network homomorphogenesis.

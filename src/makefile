@@ -2,10 +2,20 @@
 
 CC = gcc
 
-CCFLAGS = -I../../fftw3/unix/api -DTHREADS -O3 -c
-LINKLIBS = -L../../fftw3/unix/.libs -lfftw3 -lm -lpthread -lstdc++
+CCFLAGS = -DTHREADS -O3 -c
+LINKLIBS = -lm -lpthread -lstdc++
 
 all: ../bin/bionet
+
+# Fourier Transform undulation behavior evaluation.
+CCFLAGS_FFT = -I../../fftw3/unix/api -DFFT_UNDULATION_EVAL -DTHREADS -O3 -c
+LINKLIBS_FFT = -L../../fftw3/unix/.libs -lfftw3 -lm -lpthread -lstdc++
+
+fft_undulation_eval: bionet.o network.o neuron.o behavior.o networkMorph.o \
+networkIsomorph.o mutableParm.o random.o fileio.o gettime.o
+	$(CC) $(CCFLAGS_FFT) networkHomomorph.cpp
+	$(CC) -o ../bin/bionet bionet.o network.o neuron.o behavior.o networkMorph.o \
+        networkHomomorph.o networkIsomorph.o mutableParm.o random.o fileio.o gettime.o $(LINKLIBS_FFT)
 
 ../bin/bionet: bionet.o network.o neuron.o behavior.o networkMorph.o networkHomomorph.o \
 networkIsomorph.o mutableParm.o random.o fileio.o gettime.o

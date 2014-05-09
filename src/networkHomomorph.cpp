@@ -1,7 +1,9 @@
 // Network homomorph implementation.
 
 #include "networkHomomorph.hpp"
+#ifdef FFT_UNDULATION_EVAL
 #include <numeric>
+#endif
 
 // Constructors.
 NetworkHomomorph::NetworkHomomorph(Network *homomorph,
@@ -387,7 +389,7 @@ UndulationNetworkHomomorph::UndulationNetworkHomomorph(int undulationMovements, 
    network   = homomorph->clone();
    motorErrors.resize(network->numMotors, false);
    fitness = 0.0f;
-
+#ifdef FFT_UNDULATION_EVAL
    activations      = (double *)fftw_malloc(sizeof(double) * (undulationMovements * NUM_BODY_JOINTS));
    bodyActivations  = (double *)fftw_malloc(sizeof(double) * NUM_BODY_JOINTS);
    bodyDFT          = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * (NUM_BODY_JOINTS / 2 + 1));
@@ -395,6 +397,7 @@ UndulationNetworkHomomorph::UndulationNetworkHomomorph(int undulationMovements, 
    jointActivations = (double *)fftw_malloc(sizeof(double) * undulationMovements);
    jointDFT         = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * (undulationMovements / 2 + 1));
    jointPlan        = fftw_plan_dft_r2c_1d(undulationMovements, jointActivations, jointDFT, FFTW_MEASURE);
+#endif
 }
 
 
@@ -407,7 +410,7 @@ UndulationNetworkHomomorph::UndulationNetworkHomomorph(FILE *fp, int undulationM
    network = NULL;
    load(fp);
    this->motorConnections = motorConnections;
-
+#ifdef FFT_UNDULATION_EVAL
    activations      = (double *)fftw_malloc(sizeof(double) * (undulationMovements * NUM_BODY_JOINTS));
    bodyActivations  = (double *)fftw_malloc(sizeof(double) * NUM_BODY_JOINTS);
    bodyDFT          = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * (NUM_BODY_JOINTS / 2 + 1));
@@ -415,11 +418,13 @@ UndulationNetworkHomomorph::UndulationNetworkHomomorph(FILE *fp, int undulationM
    jointActivations = (double *)fftw_malloc(sizeof(double) * undulationMovements);
    jointDFT         = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * (undulationMovements / 2 + 1));
    jointPlan        = fftw_plan_dft_r2c_1d(undulationMovements, jointActivations, jointDFT, FFTW_MEASURE);
+#endif
 }
 
 
 UndulationNetworkHomomorph::~UndulationNetworkHomomorph()
 {
+#ifdef FFT_UNDULATION_EVAL
    fftw_destroy_plan(bodyPlan);
    fftw_free(bodyActivations);
    fftw_free(bodyDFT);
@@ -427,6 +432,7 @@ UndulationNetworkHomomorph::~UndulationNetworkHomomorph()
    fftw_free(jointActivations);
    fftw_free(jointDFT);
    fftw_free(activations);
+#endif
 }
 
 
@@ -709,163 +715,7 @@ const struct UndulationNetworkHomomorph::BodyJoint UndulationNetworkHomomorph::b
    }
 };
 
-#ifdef OPPOSING_MUSCLE_FORCES
-// Evaluate undulation behavior fitness.
-// Fitness is a function of the number and magnitude of opposing muscle forces
-// when the light touch sensors are active.
-void UndulationNetworkHomomorph::evaluate()
-{
-   int i, j, k, m, n;
-
-   vector<vector<float> > sensorSequence;
-   Behavior               *behavior;
-   float highForces[NUM_BODY_JOINTS];
-   float forces[NUM_BODY_JOINTS];
-
-   // Stimulate the touch sensors.
-   sensorSequence.resize(undulationMovements);
-   n = network->numSensors;
-   for (i = 0; i < undulationMovements; i++)
-   {
-      sensorSequence[i].resize(n, 0.0f);
-      sensorSequence[i][sensorIndices[0].index] = 1.0f;
-      sensorSequence[i][sensorIndices[1].index] = 1.0f;
-   }
-
-   // Get muscle outputs.
-   behavior = new Behavior(network, sensorSequence);
-   assert(behavior != NULL);
-
-   // Evaluate fitness.
-   fitness = 0.0f;
-   for (i = 0; i < NUM_BODY_JOINTS; i++)
-   {
-      highForces[i] = 0.0f;
-   }
-   for (i = 0; i < undulationMovements; i++)
-   {
-      // Accumulate joint forces.
-      for (j = 0; j < NUM_BODY_JOINTS; j++)
-      {
-         forces[j] = 0.0f;
-         for (k = 0; k < 4; k++)
-         {
-            m = muscleIndices[bodyJoints[j].dorsalMuscles[k]].index;
-            if (m != -1)
-            {
-               forces[j] += behavior->motorSequence[i][m];
-            }
-            m = muscleIndices[bodyJoints[j].ventralMuscles[k]].index;
-            if (m != -1)
-            {
-               forces[j] -= behavior->motorSequence[i][m];
-            }
-         }
-      }
-
-      // Differentiate forces.
-      for (j = 0; j < NUM_BODY_JOINTS; j++)
-      {
-         if (forces[j] > 0.0f)
-         {
-            if ((i == 0) || (highForces[j] < forces[j]))
-            {
-               if ((j == 0) || (forces[j - 1] < forces[j]))
-               {
-                  if ((j == NUM_BODY_JOINTS - 1) || (forces[j + 1] < forces[j]))
-                  {
-                     if (highForces[j] >= 0.0f)
-                     {
-                        fitness += forces[j] - highForces[j];
-                     }
-                     else
-                     {
-                        fitness += forces[j];
-                     }
-                  }
-               }
-            }
-         }
-         else if (forces[j] < 0.0f)
-         {
-            if ((i == 0) || (highForces[j] > forces[j]))
-            {
-               if ((j == 0) || (forces[j - 1] > forces[j]))
-               {
-                  if ((j == NUM_BODY_JOINTS - 1) || (forces[j + 1] > forces[j]))
-                  {
-                     if (highForces[j] <= 0.0f)
-                     {
-                        fitness += highForces[j] - forces[j];
-                     }
-                     else
-                     {
-                        fitness += -forces[j];
-                     }
-                  }
-               }
-            }
-         }
-      }
-      for (j = 0; j < NUM_BODY_JOINTS; j++)
-      {
-         if (forces[j] > 0.0f)
-         {
-            if (forces[j] > highForces[j])
-            {
-               highForces[j] = forces[j];
-            }
-         }
-         else if (forces[j] < 0.0f)
-         {
-            if (forces[j] < highForces[j])
-            {
-               highForces[j] = forces[j];
-            }
-         }
-      }
-   }
-   delete behavior;
-
-   // Remove touch stimulation.
-   for (i = 0; i < undulationMovements; i++)
-   {
-      sensorSequence[i][sensorIndices[0].index] = 0.0f;
-      sensorSequence[i][sensorIndices[1].index] = 0.0f;
-   }
-
-   // Get muscle outputs.
-   behavior = new Behavior(network, sensorSequence);
-   assert(behavior != NULL);
-
-   // Decrement fitness for movement.
-   for (i = 0; i < undulationMovements; i++)
-   {
-      for (j = 0; j < NUM_BODY_JOINTS; j++)
-      {
-         forces[j] = 0.0f;
-         for (k = 0; k < 4; k++)
-         {
-            m = muscleIndices[bodyJoints[j].dorsalMuscles[k]].index;
-            if (m != -1)
-            {
-               forces[j] += behavior->motorSequence[i][m];
-            }
-            m = muscleIndices[bodyJoints[j].ventralMuscles[k]].index;
-            if (m != -1)
-            {
-               forces[j] -= behavior->motorSequence[i][m];
-            }
-         }
-         fitness -= fabs(forces[j]);
-      }
-   }
-   delete behavior;
-}
-
-
-#endif
-
+#ifdef FFT_UNDULATION_EVAL
 
 /*
  * Evaluate undulation behavior fitness.
@@ -1093,6 +943,165 @@ void UndulationNetworkHomomorph::evaluate()
    }
    fitness -= (float)((bodySum + jointSum) / 2.0);
 }
+
+
+#else
+
+// Evaluate undulation behavior fitness.
+// Fitness is a function of the number and magnitude of opposing muscle forces
+// when the light touch sensors are active.
+void UndulationNetworkHomomorph::evaluate()
+{
+   int i, j, k, m, n;
+
+   vector<vector<float> > sensorSequence;
+   Behavior               *behavior;
+   float highForces[NUM_BODY_JOINTS];
+   float forces[NUM_BODY_JOINTS];
+
+   // Stimulate the touch sensors.
+   sensorSequence.resize(undulationMovements);
+   n = network->numSensors;
+   for (i = 0; i < undulationMovements; i++)
+   {
+      sensorSequence[i].resize(n, 0.0f);
+      sensorSequence[i][sensorIndices[0].index] = 1.0f;
+      sensorSequence[i][sensorIndices[1].index] = 1.0f;
+   }
+
+   // Get muscle outputs.
+   behavior = new Behavior(network, sensorSequence);
+   assert(behavior != NULL);
+
+   // Evaluate fitness.
+   fitness = 0.0f;
+   for (i = 0; i < NUM_BODY_JOINTS; i++)
+   {
+      highForces[i] = 0.0f;
+   }
+   for (i = 0; i < undulationMovements; i++)
+   {
+      // Accumulate joint forces.
+      for (j = 0; j < NUM_BODY_JOINTS; j++)
+      {
+         forces[j] = 0.0f;
+         for (k = 0; k < 4; k++)
+         {
+            m = muscleIndices[bodyJoints[j].dorsalMuscles[k]].index;
+            if (m != -1)
+            {
+               forces[j] += behavior->motorSequence[i][m];
+            }
+            m = muscleIndices[bodyJoints[j].ventralMuscles[k]].index;
+            if (m != -1)
+            {
+               forces[j] -= behavior->motorSequence[i][m];
+            }
+         }
+      }
+
+      // Differentiate forces.
+      for (j = 0; j < NUM_BODY_JOINTS; j++)
+      {
+         if (forces[j] > 0.0f)
+         {
+            if ((i == 0) || (highForces[j] < forces[j]))
+            {
+               if ((j == 0) || (forces[j - 1] < forces[j]))
+               {
+                  if ((j == NUM_BODY_JOINTS - 1) || (forces[j + 1] < forces[j]))
+                  {
+                     if (highForces[j] >= 0.0f)
+                     {
+                        fitness += forces[j] - highForces[j];
+                     }
+                     else
+                     {
+                        fitness += forces[j];
+                     }
+                  }
+               }
+            }
+         }
+         else if (forces[j] < 0.0f)
+         {
+            if ((i == 0) || (highForces[j] > forces[j]))
+            {
+               if ((j == 0) || (forces[j - 1] > forces[j]))
+               {
+                  if ((j == NUM_BODY_JOINTS - 1) || (forces[j + 1] > forces[j]))
+                  {
+                     if (highForces[j] <= 0.0f)
+                     {
+                        fitness += highForces[j] - forces[j];
+                     }
+                     else
+                     {
+                        fitness += -forces[j];
+                     }
+                  }
+               }
+            }
+         }
+      }
+      for (j = 0; j < NUM_BODY_JOINTS; j++)
+      {
+         if (forces[j] > 0.0f)
+         {
+            if (forces[j] > highForces[j])
+            {
+               highForces[j] = forces[j];
+            }
+         }
+         else if (forces[j] < 0.0f)
+         {
+            if (forces[j] < highForces[j])
+            {
+               highForces[j] = forces[j];
+            }
+         }
+      }
+   }
+   delete behavior;
+
+   // Remove touch stimulation.
+   for (i = 0; i < undulationMovements; i++)
+   {
+      sensorSequence[i][sensorIndices[0].index] = 0.0f;
+      sensorSequence[i][sensorIndices[1].index] = 0.0f;
+   }
+
+   // Get muscle outputs.
+   behavior = new Behavior(network, sensorSequence);
+   assert(behavior != NULL);
+
+   // Decrement fitness for movement.
+   for (i = 0; i < undulationMovements; i++)
+   {
+      for (j = 0; j < NUM_BODY_JOINTS; j++)
+      {
+         forces[j] = 0.0f;
+         for (k = 0; k < 4; k++)
+         {
+            m = muscleIndices[bodyJoints[j].dorsalMuscles[k]].index;
+            if (m != -1)
+            {
+               forces[j] += behavior->motorSequence[i][m];
+            }
+            m = muscleIndices[bodyJoints[j].ventralMuscles[k]].index;
+            if (m != -1)
+            {
+               forces[j] -= behavior->motorSequence[i][m];
+            }
+         }
+         fitness -= fabs(forces[j]);
+      }
+   }
+   delete behavior;
+}
+
+
+#endif
 
 
 // Clone.
