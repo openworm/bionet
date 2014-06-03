@@ -68,7 +68,7 @@ Network::Network(int numNeurons, int numSensors, int numMotors,
       synapses[i].resize(numNeurons);
       for (j = 0; j < numNeurons; j++)
       {
-         synapses[i][j] = NULL;
+         synapses[i][j].clear();
       }
    }
    sensorConnected.resize(numNeurons, false);
@@ -93,7 +93,7 @@ Network::Network(int numNeurons, int numSensors, int numMotors,
          {
             continue;
          }
-         if (synapses[i][j] == NULL)
+         if (synapses[i][j].size() == 0)
          {
             if (((i < numSensors) || (i >= n)) && (j >= numSensors))
             {
@@ -101,8 +101,8 @@ Network::Network(int numNeurons, int numSensors, int numMotors,
                {
                   weight = (float)randomizer->RAND_INTERVAL(
                      minSynapseWeight, maxSynapseWeight);
-                  synapses[i][j] = new Synapse(weight);
-                  assert(synapses[i][j] != NULL);
+                  synapses[i][j].push_back(new Synapse(weight));
+                  assert(synapses[i][j][0] != NULL);
                }
             }
          }
@@ -120,14 +120,14 @@ Network::Network(int numNeurons, int numSensors, int numMotors,
       {
          continue;
       }
-      if (synapses[i][j] == NULL)
+      if (synapses[i][j].size() == 0)
       {
          if (((i < numSensors) || (i >= n)) && (j >= numSensors))
          {
             weight = (float)randomizer->RAND_INTERVAL(
                minSynapseWeight, maxSynapseWeight);
-            synapses[i][j] = new Synapse(weight);
-            assert(synapses[i][j] != NULL);
+            synapses[i][j].push_back(new Synapse(weight));
+            assert(synapses[i][j][0] != NULL);
          }
       }
    }
@@ -199,7 +199,7 @@ bool Network::isConnected(vector<bool>& connectedNeurons, bool toSensor)
             {
                for (j = 0; j < numNeurons; j++)
                {
-                  if ((i != j) && (synapses[j][i] != NULL))
+                  if ((i != j) && (synapses[j][i].size() != 0))
                   {
                      if (connectedNeurons[j])
                      {
@@ -224,7 +224,7 @@ bool Network::isConnected(vector<bool>& connectedNeurons, bool toSensor)
             {
                for (j = 0; j < numNeurons; j++)
                {
-                  if ((i != j) && (synapses[i][j] != NULL))
+                  if ((i != j) && (synapses[i][j].size() != 0))
                   {
                      if (connectedNeurons[j])
                      {
@@ -258,7 +258,7 @@ void Network::connect(int index, vector<bool>& connectedNeurons, bool toSensor)
    {
       for (i = 0; i < numNeurons; i++)
       {
-         if ((index != i) && (synapses[index][i] != NULL))
+         if ((index != i) && (synapses[index][i].size() != 0))
          {
             if (!connectedNeurons[i])
             {
@@ -271,7 +271,7 @@ void Network::connect(int index, vector<bool>& connectedNeurons, bool toSensor)
    {
       for (i = 0; i < numNeurons; i++)
       {
-         if ((index != i) && (synapses[i][index] != NULL))
+         if ((index != i) && (synapses[i][index].size() != 0))
          {
             if (!connectedNeurons[i])
             {
@@ -286,7 +286,7 @@ void Network::connect(int index, vector<bool>& connectedNeurons, bool toSensor)
 // Destructor.
 Network::~Network()
 {
-   int i, j;
+   int i, j, k;
 
    for (i = 0; i < numNeurons; i++)
    {
@@ -297,10 +297,11 @@ Network::~Network()
    {
       for (j = 0; j < numNeurons; j++)
       {
-         if (synapses[i][j] != NULL)
+         for (k = 0; k < (int)synapses[i][j].size(); k++)
          {
-            delete synapses[i][j];
+            delete synapses[i][j][k];
          }
+         synapses[i][j].clear();
       }
    }
    for (i = 0; i < numNeurons; i++)
@@ -314,7 +315,7 @@ Network::~Network()
 // Clone network.
 Network *Network::clone()
 {
-   int     i, j;
+   int     i, j, k;
    Network *network;
    Synapse *synapse;
 
@@ -326,23 +327,23 @@ Network *Network::clone()
       network->neurons[i]->network = network;
       for (j = 0; j < numNeurons; j++)
       {
-         if (network->synapses[i][j] != NULL)
+         for (k = 0; k < (int)network->synapses[i][j].size(); k++)
          {
-            delete network->synapses[i][j];
-            network->synapses[i][j] = NULL;
+            delete network->synapses[i][j][k];
          }
+         network->synapses[i][j].clear();
       }
    }
    for (i = 0; i < numNeurons; i++)
    {
       for (j = 0; j < numNeurons; j++)
       {
-         if (synapses[i][j] != NULL)
+         for (k = 0; k < (int)synapses[i][j].size(); k++)
          {
             synapse = new Synapse();
             assert(synapse != NULL);
-            network->synapses[i][j] = synapse;
-            *synapse = *(synapses[i][j]);
+            network->synapses[i][j].push_back(synapse);
+            *synapse = *(synapses[i][j][k]);
          }
       }
    }
@@ -353,16 +354,16 @@ Network *Network::clone()
 // Clear network.
 void Network::clear()
 {
-   int i, j;
+   int i, j, k;
 
    for (i = 0; i < numNeurons; i++)
    {
       neurons[i]->activation = 0.0f;
       for (j = 0; j < numNeurons; j++)
       {
-         if (synapses[i][j] != NULL)
+         for (k = 0; k < (int)synapses[i][j].size(); k++)
          {
-            synapses[i][j]->signal = 0.0f;
+            synapses[i][j][k]->signal = 0.0f;
          }
       }
    }
@@ -408,7 +409,7 @@ bool Network::load(char *filename)
 // Load network.
 void Network::load(FILE *fp)
 {
-   int     i, j, n;
+   int     i, j, k, n;
    Neuron  *neuron;
    Synapse *synapse;
 
@@ -432,11 +433,11 @@ void Network::load(FILE *fp)
    {
       for (j = 0; j < n; j++)
       {
-         if (synapses[i][j] != NULL)
+         for (k = 0; k < (int)synapses[i][j].size(); k++)
          {
-            delete synapses[i][j];
-            synapses[i][j] = NULL;
+            delete synapses[i][j][k];
          }
+         synapses[i][j].clear();
       }
    }
    synapses.resize(numNeurons);
@@ -445,13 +446,13 @@ void Network::load(FILE *fp)
       synapses[i].resize(numNeurons);
       for (j = 0; j < numNeurons; j++)
       {
-         synapses[i][j] = NULL;
+         synapses[i][j].clear();
          FREAD_INT(&n, fp);
-         if (n == 1)
+         for (k = 0; k < n; k++)
          {
             synapse = new Synapse();
             assert(synapse != NULL);
-            synapses[i][j] = synapse;
+            synapses[i][j].push_back(synapse);
             synapse->load(fp);
          }
       }
@@ -477,7 +478,7 @@ bool Network::save(char *filename)
 // Save network.
 void Network::save(FILE *fp)
 {
-   int i, j, n;
+   int i, j, k, n;
 
    FWRITE_INT(&numNeurons, fp);
    FWRITE_INT(&numSensors, fp);
@@ -490,16 +491,11 @@ void Network::save(FILE *fp)
    {
       for (j = 0; j < numNeurons; j++)
       {
-         if (synapses[i][j] != NULL)
+         n = (int)synapses[i][j].size();
+         FWRITE_INT(&n, fp);
+         for (k = 0; k < n; k++)
          {
-            n = 1;
-            FWRITE_INT(&n, fp);
-            synapses[i][j]->save(fp);
-         }
-         else
-         {
-            n = 0;
-            FWRITE_INT(&n, fp);
+            synapses[i][j][k]->save(fp);
          }
       }
    }
@@ -571,28 +567,35 @@ void Network::print(bool network, bool connectivity)
          }
          for (j = 0; j < n; j++)
          {
-            if (synapses[j][i] != NULL)
+            if (synapses[j][i].size() > 0)
             {
-               if (neurons[j]->excitatory)
+               for (k = 0; k < (int)synapses[j][i].size(); k++)
                {
-                  if (synapses[j][i]->weight >= 0.0f)
+                  if (neurons[j]->excitatory)
                   {
-                     printf(" ");
+                     if (synapses[j][i][k]->weight >= 0.0f)
+                     {
+                        printf(" ");
+                     }
+                  }
+                  else
+                  {
+                     if (synapses[j][i][k]->weight < 0.0f)
+                     {
+                        printf(" ");
+                     }
+                  }
+                  synapses[j][i][k]->print();
+                  if (k < (int)synapses[j][i].size() - 1)
+                  {
+                     printf("/");
                   }
                }
-               else
-               {
-                  if (synapses[j][i]->weight < 0.0f)
-                  {
-                     printf(" ");
-                  }
-               }
-               synapses[j][i]->print();
                printf(" ");
             }
             else
             {
-               printf("      ");
+               printf(" -    ");
             }
          }
          printf("\n");
@@ -621,11 +624,8 @@ void Network::print(bool network, bool connectivity)
       {
          for (j = k = 0; j < numNeurons; j++)
          {
-            if (synapses[i][j] != NULL)
-            {
-               c++;
-               k++;
-            }
+            c += (int)synapses[i][j].size();
+            k += (int)synapses[i][j].size();
          }
          if (k > 0)
          {
@@ -893,11 +893,8 @@ void Network::getMetrics(struct SynapseMetrics&    synapseMetrics,
    {
       for (j = k = 0; j < numNeurons; j++)
       {
-         if (synapses[i][j] != NULL)
-         {
-            c++;
-            k++;
-         }
+         c += (int)synapses[i][j].size();
+         k += (int)synapses[i][j].size();
       }
       if (k > 0)
       {
@@ -1158,7 +1155,7 @@ void Network::visitEndpoints(queue<pair<Neuron *, int> >& open,
       {
          for (i = 0; i < numNeurons; i++)
          {
-            if (synapses[index][i] != NULL)
+            if (synapses[index][i].size() != 0)
             {
                neuron = neurons[i];
                for (j = 0, k = (int)closed.size(); j < k; j++)
@@ -1205,7 +1202,7 @@ void Network::visitEndpoints(queue<pair<Neuron *, int> >& open,
       {
          for (i = 0; i < numNeurons; i++)
          {
-            if (synapses[i][index] != NULL)
+            if (synapses[i][index].size() != 0)
             {
                neuron = neurons[i];
                for (j = 0, k = (int)closed.size(); j < k; j++)
@@ -1231,7 +1228,7 @@ void Network::visitEndpoints(queue<pair<Neuron *, int> >& open,
 bool Network::dumpGraph(char *title, char *filename)
 {
    FILE       *out;
-   int        i, j, numNeurons;
+   int        i, j, k, numNeurons;
    Neuron     *neuron;
    const char *label;
 
@@ -1328,12 +1325,12 @@ bool Network::dumpGraph(char *title, char *filename)
       neuron = neurons[i];
       for (j = 0; j < numNeurons; j++)
       {
-         if (synapses[i][j] != NULL)
+         for (k = 0; k < (int)synapses[i][j].size(); k++)
          {
-            label = synapses[i][j]->label.c_str();
+            label = synapses[i][j][k]->label.c_str();
             if (strlen(label) == 0)
             {
-               fprintf(out, "\t\"%p\" -> \"%p\" [label=\"%0.2f\"];\n", (void *)neuron, (void *)neurons[j], synapses[i][j]->weight);
+               fprintf(out, "\t\"%p\" -> \"%p\" [label=\"%0.2f\"];\n", (void *)neuron, (void *)neurons[j], synapses[i][j][k]->weight);
             }
             else
             {

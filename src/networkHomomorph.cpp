@@ -50,15 +50,16 @@ NetworkHomomorph::~NetworkHomomorph()
 // Mutate synapses.
 void NetworkHomomorph::mutate()
 {
-   int     i, j, n;
+   int     i, j, k, n;
    Synapse *synapse;
 
    i = randomNeuron(true);
    n = network->numNeurons;
    for (j = 0; j < n; j++)
    {
-      if ((synapse = network->synapses[i][j]) != NULL)
+      for (k = 0; k < (int)network->synapses[i][j].size(); k++)
       {
+         synapse         = network->synapses[i][j][k];
          synapse->weight = (float)randomizer->RAND_INTERVAL(
             synapseWeightsParm.minimum, synapseWeightsParm.maximum);
       }
@@ -71,7 +72,7 @@ void NetworkHomomorph::harmonize(vector<Behavior *>& behaviors,
                                  vector<bool>& fitnessMotorList,
                                  int synapseOptimizedPathLength, int maxStep)
 {
-   int   i, j, k, n, s;
+   int   i, j, k, n, s, r;
    bool  forward;
    float weight, e;
 
@@ -103,21 +104,21 @@ void NetworkHomomorph::harmonize(vector<Behavior *>& behaviors,
       {
          if (forward)
          {
-            if (network->synapses[i][k] != NULL)
+            for (r = 0; r < (int)network->synapses[i][k].size(); r++)
             {
-               synapses.push_back(network->synapses[i][k]);
-               i = k;
-               break;
+               synapses.push_back(network->synapses[i][k][r]);
             }
+            i = k;
+            break;
          }
          else
          {
-            if (network->synapses[k][i] != NULL)
+            for (r = 0; r < (int)network->synapses[k][i].size(); r++)
             {
-               synapses.push_back(network->synapses[k][i]);
-               i = k;
-               break;
+               synapses.push_back(network->synapses[k][i][r]);
             }
+            i = k;
+            break;
          }
          k++;
          k = (k % n);
@@ -439,7 +440,7 @@ UndulationNetworkHomomorph::~UndulationNetworkHomomorph()
 // Harmonize synapses.
 void UndulationNetworkHomomorph::harmonize(int synapseOptimizedPathLength)
 {
-   int   i, j, k, n, s;
+   int   i, j, k, n, s, r;
    bool  forward;
    float weight, e;
 
@@ -471,18 +472,18 @@ void UndulationNetworkHomomorph::harmonize(int synapseOptimizedPathLength)
       {
          if (forward)
          {
-            if (network->synapses[i][k] != NULL)
+            for (r = 0; r < (int)network->synapses[i][k].size(); r++)
             {
-               synapses.push_back(network->synapses[i][k]);
+               synapses.push_back(network->synapses[i][k][r]);
                i = k;
                break;
             }
          }
          else
          {
-            if (network->synapses[k][i] != NULL)
+            for (r = 0; r < (int)network->synapses[k][i].size(); r++)
             {
-               synapses.push_back(network->synapses[k][i]);
+               synapses.push_back(network->synapses[k][i][r]);
                i = k;
                break;
             }
@@ -1294,7 +1295,7 @@ void NetworkHomomorphoGenesis::init(Network *homomorph,
                                     int synapseOptimizedPathLength,
                                     RANDOM randomSeed)
 {
-   int          i, j, k, n;
+   int          i, j, k, n, m;
    NetworkMorph *networkMorph;
    Network      *network;
    Synapse      *synapse;
@@ -1333,9 +1334,9 @@ void NetworkHomomorphoGenesis::init(Network *homomorph,
       {
          for (k = 0; k < n; k++)
          {
-            synapse = network->synapses[j][k];
-            if (synapse != NULL)
+            for (m = 0; m < (int)network->synapses[j][k].size(); m++)
             {
+               synapse         = network->synapses[j][k][m];
                synapse->weight = (float)randomizer->RAND_INTERVAL(
                   synapseWeightsParm.minimum, synapseWeightsParm.maximum);
             }
@@ -1484,7 +1485,7 @@ void NetworkHomomorphoGenesis::getMotorConnectionsSub(
    {
       for (i = 0; i < homomorph->numNeurons; i++)
       {
-         if (homomorph->synapses[i][index] != NULL)
+         if (homomorph->synapses[i][index].size() != 0)
          {
             neuron = homomorph->neurons[i];
             if (!closed[neuron->index])
@@ -1888,10 +1889,10 @@ void NetworkHomomorphoGenesis::crossover(Network *child, Network *parent,
    child->neurons[index]->activation = parent->neurons[index]->activation;
    for (i = 0, n = child->numNeurons; i < n; i++)
    {
-      if (child->synapses[index][i] != NULL)
+      for (j = 0; j < (int)child->synapses[index][i].size(); j++)
       {
-         child->synapses[index][i]->weight = parent->synapses[index][i]->weight;
-         child->synapses[index][i]->signal = parent->synapses[index][i]->signal;
+         child->synapses[index][i][j]->weight = parent->synapses[index][i][j]->weight;
+         child->synapses[index][i][j]->signal = parent->synapses[index][i][j]->signal;
       }
    }
 
@@ -1906,14 +1907,14 @@ void NetworkHomomorphoGenesis::crossover(Network *child, Network *parent,
    {
       if (child->neurons[j]->index == -1)
       {
-         if (child->synapses[index][j] != NULL)
+         if (child->synapses[index][j].size() != 0)
          {
             if (randomizer->RAND_CHANCE(b))
             {
                crossover(child, parent, j, distance + 1);
             }
          }
-         if (child->synapses[j][index] != NULL)
+         if (child->synapses[j][index].size() != 0)
          {
             if (randomizer->RAND_CHANCE(b))
             {

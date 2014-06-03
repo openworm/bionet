@@ -92,8 +92,9 @@ void Neuron::fire()
    activation = bias;
    for (int i = 0, n = (int)network->synapses.size(); i < n; i++)
    {
-      if ((synapse = network->synapses[i][index]) != NULL)
+      for (int j = 0, k = (int)network->synapses[i][index].size(); j < k; j++)
       {
+         synapse     = network->synapses[i][index][j];
          activation += synapse->signal * synapse->weight;
       }
    }
@@ -118,8 +119,9 @@ void Neuron::propagate()
 
    for (int i = 0, n = (int)network->synapses.size(); i < n; i++)
    {
-      if ((synapse = network->synapses[index][i]) != NULL)
+      for (int j = 0, k = (int)network->synapses[index][i].size(); j < k; j++)
       {
+         synapse = network->synapses[index][i][j];
          if (excitatory)
          {
             synapse->signal = activation;

@@ -38,7 +38,7 @@ public:
    vector<Neuron *> neurons;
 
    // Synapse connection matrix.
-   vector<vector<Synapse *> > synapses;
+   vector<vector<vector<Synapse *> > > synapses;
 
    // Clone network.
    Network *clone();

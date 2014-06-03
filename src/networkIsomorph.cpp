@@ -77,10 +77,7 @@ void NetworkIsomorph::mutate()
       }
       for (j = 0; j < n; j++)
       {
-         if (network->synapses[i][j] != NULL)
-         {
-            numSynapses++;
-         }
+         numSynapses += (int)network->synapses[i][j].size();
       }
    }
    synapsePropensity = (float)numSynapses / (float)(network->numNeurons * network->numNeurons);
@@ -239,14 +236,14 @@ void NetworkIsomorph::mutate()
          {
             continue;
          }
-         if (network->synapses[i][j] == NULL)
+         if (network->synapses[i][j].size() == 0)
          {
             if (((i < network->numSensors) || (i >= n)) && (j >= network->numSensors))
             {
                weight = (float)randomizer->RAND_INTERVAL(
                   synapseWeightsParm.minimum, synapseWeightsParm.maximum);
-               network->synapses[i][j] = new Synapse(weight);
-               assert(network->synapses[i][j] != NULL);
+               network->synapses[i][j].push_back(new Synapse(weight));
+               assert(network->synapses[i][j][0] != NULL);
             }
          }
       }
@@ -260,10 +257,7 @@ void NetworkIsomorph::mutate()
       {
          for (j = 0; j < n; j++)
          {
-            if (network->synapses[i][j] != NULL)
-            {
-               numSynapses++;
-            }
+            numSynapses += (int)network->synapses[i][j].size();
          }
       }
       n = network->numNeurons * network->numNeurons;
@@ -287,7 +281,7 @@ void NetworkIsomorph::mutate()
                {
                   continue;
                }
-               if (network->synapses[i][j] == NULL)
+               if (network->synapses[i][j].size() == 0)
                {
                   if (((i < network->numSensors) || (i >= n)) && (j >= network->numSensors))
                   {
@@ -295,8 +289,8 @@ void NetworkIsomorph::mutate()
                      {
                         weight = (float)randomizer->RAND_INTERVAL(
                            synapseWeightsParm.minimum, synapseWeightsParm.maximum);
-                        network->synapses[i][j] = new Synapse(weight);
-                        assert(network->synapses[i][j] != NULL);
+                        network->synapses[i][j].push_back(new Synapse(weight));
+                        assert(network->synapses[i][j][0] != NULL);
                         numSynapses++;
                      }
                   }
@@ -306,25 +300,39 @@ void NetworkIsomorph::mutate()
       }
       else if (newNumSynapses < numSynapses)
       {
-         int   deltaSynapses   = numSynapses - newNumSynapses;
-         float deltaPropensity = (float)deltaSynapses / (float)numSynapses;
+         int               deltaSynapses   = numSynapses - newNumSynapses;
+         float             deltaPropensity = (float)deltaSynapses / (float)numSynapses;
+         vector<Synapse *> synapses;
          for (i = 0, n = network->numNeurons; i < n; i++)
          {
             for (j = 0; j < n; j++)
             {
-               if ((synapse = network->synapses[i][j]) != NULL)
+               for (k = 0; k < (int)network->synapses[i][j].size(); k++)
                {
+                  synapse = network->synapses[i][j][k];
                   if (randomizer->RAND_CHANCE(deltaPropensity))
                   {
-                     network->synapses[i][j] = NULL;
-                     if (network->isConnected())
+                     synapses.clear();
+                     for (k = 0; k < (int)network->synapses[i][j].size(); k++)
+                     {
+                        if (network->synapses[i][j][k] != synapse)
+                        {
+                           synapses.push_back(network->synapses[i][j][k]);
+                        }
+                     }
+                     network->synapses[i][j].clear();
+                     for (k = 0; k < (int)synapses.size(); k++)
+                     {
+                        network->synapses[i][j].push_back(synapses[k]);
+                     }
+                     if ((network->synapses[i][j].size() > 0) || network->isConnected())
                      {
                         delete synapse;
                         numSynapses--;
                      }
                      else
                      {
-                        network->synapses[i][j] = synapse;
+                        network->synapses[i][j].push_back(synapse);
                      }
                   }
                }
@@ -340,8 +348,9 @@ void NetworkIsomorph::mutate()
    {
       for (j = 0; j < n; j++)
       {
-         if ((synapse = network->synapses[i][j]) != NULL)
+         for (k = 0; k < (int)network->synapses[i][j].size(); k++)
          {
+            synapse = network->synapses[i][j][k];
             if (!behaves && randomizer->RAND_CHANCE(synapseWeightsParm.randomProbability))
             {
                synapse->weight = (float)randomizer->RAND_INTERVAL(
@@ -388,11 +397,11 @@ void NetworkIsomorph::deleteIndexedNeuron(int index)
    network->numNeurons--;
    for (i = 0; i < n; i++)
    {
-      if (network->synapses[index][i] != NULL)
+      for (j = 0; j < (int)network->synapses[index][i].size(); j++)
       {
-         delete network->synapses[index][i];
-         network->synapses[index][i] = NULL;
+         delete network->synapses[index][i][j];
       }
+      network->synapses[index][i].clear();
    }
    for (i = index, j = n - 1; i < j; i++)
    {
@@ -401,21 +410,21 @@ void NetworkIsomorph::deleteIndexedNeuron(int index)
       network->neurons[i + 1] = NULL;
       for (k = 0; k < n; k++)
       {
-         network->synapses[i][k]     = network->synapses[i + 1][k];
-         network->synapses[i + 1][k] = NULL;
+         network->synapses[i][k] = network->synapses[i + 1][k];
+         network->synapses[i + 1][k].clear();
       }
    }
    for (i = 0; i < n; i++)
    {
-      if (network->synapses[i][index] != NULL)
+      for (j = 0; j < (int)network->synapses[i][index].size(); j++)
       {
-         delete network->synapses[i][index];
-         network->synapses[i][index] = NULL;
+         delete network->synapses[i][index][j];
       }
+      network->synapses[i][index].clear();
       for (k = index, j = n - 1; k < j; k++)
       {
-         network->synapses[i][k]     = network->synapses[i][k + 1];
-         network->synapses[i][k + 1] = NULL;
+         network->synapses[i][k] = network->synapses[i][k + 1];
+         network->synapses[i][k + 1].clear();
       }
       network->synapses[i].resize(network->numNeurons);
    }
@@ -440,11 +449,11 @@ void NetworkIsomorph::addIndexedNeuron(int index, bool excitatory)
    for (i = 0; i < n; i++)
    {
       network->synapses[i].resize(n);
-      network->synapses[i][j] = NULL;
+      network->synapses[i][j].clear();
    }
    for (i = 0; i < j; i++)
    {
-      network->synapses[j][i] = NULL;
+      network->synapses[j][i].clear();
    }
 
    neuron = new Neuron(network, index, excitatory);
@@ -464,17 +473,14 @@ void NetworkIsomorph::addIndexedNeuron(int index, bool excitatory)
       {
          continue;
       }
-      if (network->synapses[index][i] == NULL)
+      if (((index < network->numSensors) || (index >= n)) && (i >= network->numSensors))
       {
-         if (((index < network->numSensors) || (index >= n)) && (i >= network->numSensors))
+         if (randomizer->RAND_CHANCE(synapsePropensity))
          {
-            if (randomizer->RAND_CHANCE(synapsePropensity))
-            {
-               weight = (float)randomizer->RAND_INTERVAL(
-                  synapseWeightsParm.minimum, synapseWeightsParm.maximum);
-               network->synapses[index][i] = new Synapse(weight);
-               assert(network->synapses[index][i] != NULL);
-            }
+            weight = (float)randomizer->RAND_INTERVAL(
+               synapseWeightsParm.minimum, synapseWeightsParm.maximum);
+            network->synapses[index][i].push_back(new Synapse(weight));
+            assert(network->synapses[index][i][0] != NULL);
          }
       }
    }
@@ -489,7 +495,7 @@ void NetworkIsomorph::addIndexedNeuron(int index, bool excitatory)
       {
          continue;
       }
-      if (network->synapses[i][index] == NULL)
+      if (network->synapses[i][index].size() == 0)
       {
          if (((i < network->numSensors) || (i >= n)) && (index >= network->numSensors))
          {
@@ -497,8 +503,8 @@ void NetworkIsomorph::addIndexedNeuron(int index, bool excitatory)
             {
                weight = (float)randomizer->RAND_INTERVAL(
                   synapseWeightsParm.minimum, synapseWeightsParm.maximum);
-               network->synapses[i][index] = new Synapse(weight);
-               assert(network->synapses[i][index] != NULL);
+               network->synapses[i][index].push_back(new Synapse(weight));
+               assert(network->synapses[i][index][0] != NULL);
             }
          }
       }
