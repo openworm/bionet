@@ -1,0 +1,1 @@
+./bionet -createHomomorphicNetworks  -neuronExec ../../nrn73/bin/neuron.exe -simDir ../sim -simHocFile CElegans.hoc -loadMorph morph0.txt -numGenerations 100 -crossoverRate .9 -mutationRate .05 -synapseCrossoverBondStrength .5 -synapseOptimizedPathLength 2 -saveMorph morph1.txt -logMorph morph1.log -numThreads 2
