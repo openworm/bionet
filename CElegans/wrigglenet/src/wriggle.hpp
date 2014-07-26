@@ -3,7 +3,7 @@
 #ifndef __WRIGGLE_HPP__
 #define __WRIGGLE_HPP__
 
-#include "networkHomomorph.hpp"
+#include "networkHomomorphoGenesis.hpp"
 
 class Wriggle
 {

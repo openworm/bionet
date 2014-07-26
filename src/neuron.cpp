@@ -5,26 +5,44 @@
 #include "fileio.h"
 
 // Synapse constructors.
-Synapse::Synapse(float weight)
+Synapse::Synapse(float weight, TYPE type)
 {
    this->weight = weight;
+   this->type   = type;
    signal       = 0.0f;
 }
 
 
 Synapse::Synapse()
 {
-   this->weight = 0.0f;
-   signal       = 0.0f;
+   weight = 0.0f;
+   type   = CHEMICAL;
+   signal = 0.0f;
 }
 
 
 // Load synapse.
 void Synapse::load(FILE *fp)
 {
+   int  t;
    char buf[BUFSIZ];
 
    FREAD_FLOAT(&weight, fp);
+   FREAD_INT(&t, fp);
+   switch (t)
+   {
+   case 0:
+      type = CHEMICAL;
+      break;
+
+   case 1:
+      type = ELECTRICAL;
+      break;
+
+   case 2:
+      type = UNKNOWN;
+      break;
+   }
    FREAD_FLOAT(&signal, fp);
    FREAD_STRING(buf, BUFSIZ, fp);
    label = buf;
@@ -34,9 +52,25 @@ void Synapse::load(FILE *fp)
 // Save synapse.
 void Synapse::save(FILE *fp)
 {
+   int  t;
    char buf[BUFSIZ];
 
    FWRITE_FLOAT(&weight, fp);
+   switch (type)
+   {
+   case CHEMICAL:
+      t = 0;
+      break;
+
+   case ELECTRICAL:
+      t = 1;
+      break;
+
+   case UNKNOWN:
+      t = 2;
+      break;
+   }
+   FWRITE_INT(&t, fp);
    FWRITE_FLOAT(&signal, fp);
    strncpy(buf, label.c_str(), BUFSIZ);
    FWRITE_STRING(buf, BUFSIZ, fp);
@@ -46,6 +80,8 @@ void Synapse::save(FILE *fp)
 // Print synapse.
 void Synapse::print(bool terse, bool labels)
 {
+   string t;
+
    if (terse)
    {
       if (labels)
@@ -59,13 +95,27 @@ void Synapse::print(bool terse, bool labels)
    }
    else
    {
+      switch (type)
+      {
+      case CHEMICAL:
+         t = "chemical";
+         break;
+
+      case ELECTRICAL:
+         t = "electrical";
+         break;
+
+      case UNKNOWN:
+         t = "unknown";
+         break;
+      }
       if (labels)
       {
-         printf("weight=%0.2f, signal=%0.2f, label=%s", weight, signal, label.c_str());
+         printf("weight=%0.2f, type=%s, signal=%0.2f, label=%s", weight, t.c_str(), signal, label.c_str());
       }
       else
       {
-         printf("%0.2f\t%0.2f", weight, signal);
+         printf("%0.2f\t%s\t%0.2f", weight, t.c_str(), signal);
       }
    }
 }

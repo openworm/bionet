@@ -214,7 +214,10 @@ bool Behavior::loadBehaviors(char *filename, vector<Behavior *>& behaviors)
    {
       return(false);
    }
-   fscanf(fp, "%d", &n);
+   if (fscanf(fp, "%d", &n) != 1)
+   {
+      return(false);
+   }
    behaviors.clear();
    for (i = 0; i < n; i++)
    {

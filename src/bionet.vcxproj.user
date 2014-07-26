@@ -4,12 +4,12 @@
     <LocalDebuggerCommand>..\bin\bionet.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(ProjectDir)\..\..\bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-createHomomorphicNetworks -loadBehaviors CElegans_behaviors.txt -loadNetwork CElegans_network.txt -synapseWeights 0.0 .25 .1 -populationSize 2 -numOffspring 1 -numGenerations 2 -behaveCutoff 50 -crossoverRate .9 -mutationRate .05 -synapseCrossoverBondStrength .5 -synapseOptimizedPathLength 4 -saveMorph morphx.txt -randomSeed 78 -numThreads 1</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-createHomomorphicNetworks  -neuronExec ../../nrn73/bin/neuron.exe -simDir ../sim -simHocFile CElegans.hoc -loadMorph morph0.txt -numGenerations 1 -crossoverRate .9 -mutationRate .05 -synapseCrossoverBondStrength .5 -synapseOptimizedPathLength 2 -saveMorph morph1.txt -logMorph morph1.log -numThreads 1</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerCommand>..\bin\bionet.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(ProjectDir)\..\..\bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-createHomomorphicNetworks -loadBehaviors CElegans_behaviors.txt -loadNetwork CElegans_network.txt -synapseWeights 0.0 .25 .1 -populationSize 2 -numOffspring 1 -numGenerations 2 -behaveCutoff 50 -crossoverRate .9 -mutationRate .05 -synapseCrossoverBondStrength .5 -synapseOptimizedPathLength 4 -saveMorph morphx.txt -randomSeed 78 -numThreads 1</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-createHomomorphicNetworks  -neuronExec ../../nrn73/bin/neuron.exe -simDir ../sim -simHocFile CElegans.hoc -loadMorph morph0.txt -numGenerations 1 -crossoverRate .9 -mutationRate .05 -synapseCrossoverBondStrength .5 -synapseOptimizedPathLength 2 -saveMorph morph1.txt -logMorph morph1.log -numThreads 2</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

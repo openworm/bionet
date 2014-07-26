@@ -34,6 +34,27 @@
     <ClCompile Include="networkMorph.cpp">
       <Filter>network</Filter>
     </ClCompile>
+    <ClCompile Include="neuronHocDoc.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="neuronSim.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="neuronSimNetworkHomomorph.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="undulationNetworkHomomorph.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="networkMorphoGenesis.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="networkIsomorphoGenesis.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="networkHomomorphoGenesis.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="behavior.hpp">
@@ -64,6 +85,27 @@
       <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="networkMorph.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="neuronHocDoc.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="neuronSim.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="neuronSimNetworkHomomorph.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="undulationNetworkHomomorph.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="networkMorphoGenesis.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="networkIsomorphoGenesis.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="networkHomomorphoGenesis.hpp">
       <Filter>network</Filter>
     </ClInclude>
   </ItemGroup>

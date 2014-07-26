@@ -1,0 +1,16 @@
+Input_NSMR:
+SingleElectricalInput: [Input: IClampVariable, cellGroup: NSMR, cellNumber: 0, segmentId: 0, fractionAlong: 0.5]
+Input_I2R:
+SingleElectricalInput: [Input: IClampVariable, cellGroup: I2R, cellNumber: 0, segmentId: 0, fractionAlong: 0.5]
+Input_M2L:
+SingleElectricalInput: [Input: IClampVariable, cellGroup: M2L, cellNumber: 0, segmentId: 0, fractionAlong: 0.5]
+Input_M4:
+SingleElectricalInput: [Input: IClampVariable, cellGroup: M4, cellNumber: 0, segmentId: 0, fractionAlong: 0.5]
+Input_MI:
+SingleElectricalInput: [Input: IClampVariable, cellGroup: MI, cellNumber: 0, segmentId: 0, fractionAlong: 0.5]
+Input_NSML:
+SingleElectricalInput: [Input: IClampVariable, cellGroup: NSML, cellNumber: 0, segmentId: 0, fractionAlong: 0.5]
+Input_M2R:
+SingleElectricalInput: [Input: IClampVariable, cellGroup: M2R, cellNumber: 0, segmentId: 0, fractionAlong: 0.5]
+Input_I2L:
+SingleElectricalInput: [Input: IClampVariable, cellGroup: I2L, cellNumber: 0, segmentId: 0, fractionAlong: 0.5]

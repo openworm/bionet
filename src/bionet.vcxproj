@@ -67,7 +67,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>pthreadVC2.lib;libfftw3-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>pthreadVC2.lib;libfftw3-3.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\bin\$(TargetName)$(TargetExt)</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)bionet.pdb</ProgramDatabaseFile>
@@ -87,7 +87,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>pthreadVC2.lib;libfftw3-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>pthreadVC2.lib;libfftw3-3.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\bin\$(TargetName)$(TargetExt)</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -105,11 +105,18 @@
     <ClCompile Include="mutableParm.cpp" />
     <ClCompile Include="network.cpp" />
     <ClCompile Include="networkHomomorph.cpp" />
+    <ClCompile Include="networkHomomorphoGenesis.cpp" />
     <ClCompile Include="networkIsomorph.cpp" />
+    <ClCompile Include="networkIsomorphoGenesis.cpp" />
     <ClCompile Include="networkMorph.cpp" />
+    <ClCompile Include="networkMorphoGenesis.cpp" />
     <ClCompile Include="neuron.cpp" />
+    <ClCompile Include="neuronHocDoc.cpp" />
+    <ClCompile Include="neuronSim.cpp" />
+    <ClCompile Include="neuronSimNetworkHomomorph.cpp" />
     <ClCompile Include="random.cpp" />
     <ClCompile Include="behavior.cpp" />
+    <ClCompile Include="undulationNetworkHomomorph.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fileio.h" />
@@ -117,11 +124,18 @@
     <ClInclude Include="mutableParm.hpp" />
     <ClInclude Include="network.hpp" />
     <ClInclude Include="networkHomomorph.hpp" />
+    <ClInclude Include="networkHomomorphoGenesis.hpp" />
     <ClInclude Include="networkIsomorph.hpp" />
+    <ClInclude Include="networkIsomorphoGenesis.hpp" />
     <ClInclude Include="networkMorph.hpp" />
+    <ClInclude Include="networkMorphoGenesis.hpp" />
     <ClInclude Include="neuron.hpp" />
+    <ClInclude Include="neuronHocDoc.hpp" />
+    <ClInclude Include="neuronSim.hpp" />
+    <ClInclude Include="neuronSimNetworkHomomorph.hpp" />
     <ClInclude Include="random.hpp" />
     <ClInclude Include="behavior.hpp" />
+    <ClInclude Include="undulationNetworkHomomorph.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE" />

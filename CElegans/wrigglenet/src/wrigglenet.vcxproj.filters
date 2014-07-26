@@ -37,6 +37,24 @@
     <ClCompile Include="evolveWriggle.cpp">
       <Filter>wrigglenet</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\networkHomomorphoGenesis.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\networkMorphoGenesis.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\neuronHocDoc.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\neuronSim.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\neuronSimNetworkHomomorph.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\undulationNetworkHomomorph.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\fileio.h">
@@ -71,6 +89,24 @@
     </ClInclude>
     <ClInclude Include="evolveWriggle.hpp">
       <Filter>wrigglenet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\networkHomomorphoGenesis.hpp">
+      <Filter>bionet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\networkMorphoGenesis.hpp">
+      <Filter>bionet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\neuronHocDoc.hpp">
+      <Filter>bionet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\neuronSim.hpp">
+      <Filter>bionet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\neuronSimNetworkHomomorph.hpp">
+      <Filter>bionet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\undulationNetworkHomomorph.hpp">
+      <Filter>bionet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

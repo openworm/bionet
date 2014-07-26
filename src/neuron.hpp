@@ -17,10 +17,13 @@ class Neuron;
 class Synapse
 {
 public:
-   Synapse(float weight);
+   enum TYPE { CHEMICAL, ELECTRICAL, UNKNOWN };
+
+   Synapse(float weight, TYPE type = UNKNOWN);
    Synapse();
 
    float  weight;
+   TYPE   type;
    float  signal;
    string label;
 

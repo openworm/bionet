@@ -105,9 +105,15 @@
     <ClCompile Include="..\..\..\src\mutableParm.cpp" />
     <ClCompile Include="..\..\..\src\network.cpp" />
     <ClCompile Include="..\..\..\src\networkHomomorph.cpp" />
+    <ClCompile Include="..\..\..\src\networkHomomorphoGenesis.cpp" />
     <ClCompile Include="..\..\..\src\networkMorph.cpp" />
+    <ClCompile Include="..\..\..\src\networkMorphoGenesis.cpp" />
     <ClCompile Include="..\..\..\src\neuron.cpp" />
+    <ClCompile Include="..\..\..\src\neuronHocDoc.cpp" />
+    <ClCompile Include="..\..\..\src\neuronSim.cpp" />
+    <ClCompile Include="..\..\..\src\neuronSimNetworkHomomorph.cpp" />
     <ClCompile Include="..\..\..\src\random.cpp" />
+    <ClCompile Include="..\..\..\src\undulationNetworkHomomorph.cpp" />
     <ClCompile Include="evolveWriggle.cpp" />
     <ClCompile Include="wriggle.cpp" />
     <ClCompile Include="wrigglenet.cpp" />
@@ -119,9 +125,15 @@
     <ClInclude Include="..\..\..\src\mutableParm.hpp" />
     <ClInclude Include="..\..\..\src\network.hpp" />
     <ClInclude Include="..\..\..\src\networkHomomorph.hpp" />
+    <ClInclude Include="..\..\..\src\networkHomomorphoGenesis.hpp" />
     <ClInclude Include="..\..\..\src\networkMorph.hpp" />
+    <ClInclude Include="..\..\..\src\networkMorphoGenesis.hpp" />
     <ClInclude Include="..\..\..\src\neuron.hpp" />
+    <ClInclude Include="..\..\..\src\neuronHocDoc.hpp" />
+    <ClInclude Include="..\..\..\src\neuronSim.hpp" />
+    <ClInclude Include="..\..\..\src\neuronSimNetworkHomomorph.hpp" />
     <ClInclude Include="..\..\..\src\random.hpp" />
+    <ClInclude Include="..\..\..\src\undulationNetworkHomomorph.hpp" />
     <ClInclude Include="evolveWriggle.hpp" />
     <ClInclude Include="wriggle.hpp" />
   </ItemGroup>

@@ -1,7 +1,9 @@
 // bionet: a "biological" (irregular) neural network.
 
-#include "networkHomomorph.hpp"
-#include "networkIsomorph.hpp"
+#include "networkHomomorphoGenesis.hpp"
+#include "networkIsomorphoGenesis.hpp"
+#include <sys/types.h>
+#include <sys/stat.h>
 #ifndef WIN32
 #include <sys/sysinfo.h>
 #endif
@@ -124,7 +126,7 @@ char *Usage[] =
    (char *)"   [-numThreads <number of threads> (defaults to system capacity)]",
 #endif
    (char *)"",
-   (char *)"bionet(new undulation behavior morph)",
+   (char *)"bionet (new undulation behavior morph)",
    (char *)"   -createHomomorphicNetworks",
    (char *)"   -undulationMovements <number of sinusoidal movements>",
    (char *)"   -loadNetwork <homomorph network file name>",
@@ -142,9 +144,44 @@ char *Usage[] =
    (char *)"   [-logMorph <morph log file name>(instead of standard output)]",
    (char *)"   [-numThreads <number of threads>(defaults to system capacity)]",
    (char *)"",
-   (char *)"bionet(resume undulation behavior morph)",
+   (char *)"bionet (resume undulation behavior morph)",
    (char *)"   -createHomomorphicNetworks",
    (char *)"   -undulationMovements <number of sinusoidal movements>",
+   (char *)"   -loadMorph <morph file name>",
+   (char *)"   -numGenerations <number of evolution generations>",
+   (char *)"   [-crossoverRate <probability>(defaults to loaded value)]",
+   (char *)"   [-mutationRate <probability>(defaults to loaded value)]",
+   (char *)"   [-synapseCrossoverBondStrength <probability of connected neurons crossing over together>]",
+   (char *)"   [-synapseOptimizedPathLength <synapse path length optimized as a group>]",
+   (char *)"   -saveMorph <morph file name> and / or -saveNetworks [<files prefix(default = \"network_\")>]",
+   (char *)"   [-logMorph <morph log file name>(instead of standard output)]",
+   (char *)"   [-numThreads <number of threads>(defaults to system capacity)]",
+   (char *)"",
+   (char *)"bionet (new morph with NEURON network simulator evaluation)",
+   (char *)"   -createHomomorphicNetworks",
+   (char *)"   -neuronExec <path to NEURON simulator executable>",
+   (char *)"   -simDir <directory containing model directory and simulation files>",
+   (char *)"   -simHocFile <simulation hoc file name>",
+   (char *)"   -loadNetwork <homomorph network file name>",
+   (char *)"   -populationSize <number population members>",
+   (char *)"   -numOffspring <number offspring per generation>",
+   (char *)"   [-parentLongevity <parent dies after this many offspring>]",
+   (char *)"   -numGenerations <number of evolution generations>",
+   (char *)"   -crossoverRate <probability>",
+   (char *)"   -mutationRate <probability>",
+   (char *)"   -synapseWeights <minimum> <maximum> <max delta>",
+   (char *)"   -synapseCrossoverBondStrength <probability of connected neurons crossing over together>",
+   (char *)"   -synapseOptimizedPathLength <synapse path length optimized as a group>",
+   (char *)"   -saveMorph <morph file name> and / or -saveNetworks [<files prefix(default = \"network_\")>]",
+   (char *)"   [-randomSeed <random seed>]",
+   (char *)"   [-logMorph <morph log file name>(instead of standard output)]",
+   (char *)"   [-numThreads <number of threads>(defaults to system capacity)]",
+   (char *)"",
+   (char *)"bionet (resume morph with NEURON network simulator evaluation)",
+   (char *)"   -createHomomorphicNetworks",
+   (char *)"   -neuronExec <path to NEURON simulator executable>",
+   (char *)"   -simDir <directory containing model directory and simulation files>",
+   (char *)"   -simHocFile <simulation hoc file name>",
    (char *)"   -loadMorph <morph file name>",
    (char *)"   -numGenerations <number of evolution generations>",
    (char *)"   [-crossoverRate <probability>(defaults to loaded value)]",
@@ -910,6 +947,9 @@ int createHomomorphicNetworks(int argc, char *argv[])
    int  i, j, k, n, result;
    char *behaviorsLoadFile         = NULL;
    int  undulationMovements        = -1;
+   char *neuronExecPath            = NULL;
+   char *simDir                    = NULL;
+   char *simHocFile                = NULL;
    char *networkLoadFile           = NULL;
    int  populationSize             = -1;
    int  numOffspring               = -1;
@@ -969,6 +1009,39 @@ int createHomomorphicNetworks(int argc, char *argv[])
             printUsageError(argv[i - 1]);
             return(1);
          }
+         continue;
+      }
+      if (strcmp(argv[i], "-neuronExec") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         neuronExecPath = argv[i];
+         continue;
+      }
+      if (strcmp(argv[i], "-simDir") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         simDir = argv[i];
+         continue;
+      }
+      if (strcmp(argv[i], "-simHocFile") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         simHocFile = argv[i];
          continue;
       }
       if (strcmp(argv[i], "-loadNetwork") == 0)
@@ -1301,10 +1374,53 @@ int createHomomorphicNetworks(int argc, char *argv[])
       return(1);
    }
 
-   if ((behaviorsLoadFile == NULL) && (undulationMovements == -1))
+   if (behaviorsLoadFile == NULL)
    {
-      printUsageError((char *)"missing loadBehaviors or undulationMovements option");
-      return(1);
+      if (undulationMovements == -1)
+      {
+         if (neuronExecPath == NULL)
+         {
+            printUsageError((char *)"missing loadBehaviors or undulationMovements or neuronExec option");
+            return(1);
+         }
+         else
+         {
+            if (simDir == NULL)
+            {
+               printUsageError((char *)"missing simDir option");
+               return(1);
+            }
+            if (simHocFile == NULL)
+            {
+               printUsageError((char *)"missing simHocFile option");
+               return(1);
+            }
+         }
+      }
+      else
+      {
+         if ((neuronExecPath != NULL) || (simDir != NULL) || (simHocFile != NULL))
+         {
+            printUsageError((char *)"conflicting undulationMovements and neuronExec/simDir/simHocFile options");
+            return(1);
+         }
+      }
+   }
+   else
+   {
+      if (undulationMovements != -1)
+      {
+         printUsageError((char *)"conflicting loadBehaviors and undulationMovements options");
+         return(1);
+      }
+      else
+      {
+         if ((neuronExecPath != NULL) || (simDir != NULL) || (simHocFile != NULL))
+         {
+            printUsageError((char *)"conflicting undulationMovements and neuronExec/simDir/simHocFile options");
+            return(1);
+         }
+      }
    }
    if ((behaviorsLoadFile != NULL) && (undulationMovements != -1))
    {
@@ -1329,6 +1445,24 @@ int createHomomorphicNetworks(int argc, char *argv[])
          return(1);
       }
    }
+   if (neuronExecPath != NULL)
+   {
+      if (behaveCutoff != -1)
+      {
+         printUsageError((char *)"conflicting behaveCutoff and neuronExec options");
+         return(1);
+      }
+      if (behaveQuorum != -1)
+      {
+         printUsageError((char *)"conflicting behaveQuorum and neuronExec options");
+         return(1);
+      }
+      if (fitnessMotorList.size() > 0)
+      {
+         printUsageError((char *)"conflicting fitnessMotorList and neuronExec options");
+         return(1);
+      }
+   }
    if (numGenerations < 0)
    {
       printUsageError((char *)"missing numGenerations option");
@@ -1348,6 +1482,185 @@ int createHomomorphicNetworks(int argc, char *argv[])
          fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
          return(1);
       }
+   }
+   if (morphLoadFile != NULL)
+   {
+#ifdef WIN32
+      struct _stat stbuf;
+      if (_stat(morphLoadFile, &stbuf) == 0)
+      {
+         if ((stbuf.st_mode & _S_IFREG) == 0)
+         {
+            fprintf(stderr, "Morph load file %s is not a regular file\n", morphLoadFile);
+            return(1);
+         }
+         if ((stbuf.st_mode & _S_IREAD) == 0)
+         {
+            fprintf(stderr, "Morph load file %s is unreadable\n", morphLoadFile);
+            return(1);
+         }
+      }
+      else
+      {
+         fprintf(stderr, "Morph load file %s not found\n", morphLoadFile);
+         return(1);
+      }
+#else
+      struct stat stbuf;
+      if (stat(morphLoadFile, &stbuf) == 0)
+      {
+         if (!S_ISREG(stbuf.st_mode))
+         {
+            fprintf(stderr, "Morph load file %s is not a regular file\n", morphLoadFile);
+            return(1);
+         }
+         if ((stbuf.st_mode & S_IRUSR) == 0)
+         {
+            fprintf(stderr, "Morph load file %s is unreadable\n", morphLoadFile);
+            return(1);
+         }
+      }
+      else
+      {
+         fprintf(stderr, "Morph load file %s not found\n", morphLoadFile);
+         return(1);
+      }
+#endif
+   }
+   if (neuronExecPath != NULL)
+   {
+#ifdef WIN32
+      struct _stat stbuf;
+      if (_stat(neuronExecPath, &stbuf) == 0)
+      {
+         if ((stbuf.st_mode & _S_IFREG) == 0)
+         {
+            fprintf(stderr, "NEURON simulator %s is not a regular file\n", neuronExecPath);
+            return(1);
+         }
+         if ((stbuf.st_mode & _S_IEXEC) == 0)
+         {
+            fprintf(stderr, "NEURON simulator %s not executable\n", neuronExecPath);
+            return(1);
+         }
+      }
+      else
+      {
+         fprintf(stderr, "NEURON simulator %s not found\n", neuronExecPath);
+         return(1);
+      }
+#else
+      struct stat stbuf;
+      if (stat(neuronExecPath, &stbuf) == 0)
+      {
+         if (!S_ISREG(stbuf.st_mode))
+         {
+            fprintf(stderr, "NEURON simulator %s is not a regular file\n", neuronExecPath);
+            return(1);
+         }
+         if ((stbuf.st_mode & S_IXUSR) == 0)
+         {
+            fprintf(stderr, "NEURON simulator %s not executable\n", neuronExecPath);
+            return(1);
+         }
+      }
+      else
+      {
+         fprintf(stderr, "NEURON simulator %s not found\n", neuronExecPath);
+         return(1);
+      }
+#endif
+   }
+   if (simDir != NULL)
+   {
+#ifdef WIN32
+      struct _stat stbuf;
+      if (_stat(simDir, &stbuf) == 0)
+      {
+         if ((stbuf.st_mode & _S_IFDIR) == 0)
+         {
+            fprintf(stderr, "simDir %s is not a directory\n", simDir);
+            return(1);
+         }
+         if ((stbuf.st_mode & _S_IREAD) == 0)
+         {
+            fprintf(stderr, "simDir %s is unreadable\n", simDir);
+            return(1);
+         }
+      }
+      else
+      {
+         fprintf(stderr, "simDir %s not found\n", simDir);
+         return(1);
+      }
+#else
+      struct stat stbuf;
+      if (stat(simDir, &stbuf) == 0)
+      {
+         if (!S_ISDIR(stbuf.st_mode))
+         {
+            fprintf(stderr, "simDir %s is not a directory\n", simDir);
+            return(1);
+         }
+         if ((stbuf.st_mode & S_IRUSR) == 0)
+         {
+            fprintf(stderr, "simDir %s is unreadable\n", simDir);
+            return(1);
+         }
+      }
+      else
+      {
+         fprintf(stderr, "simDir %s not found\n", simDir);
+         return(1);
+      }
+#endif
+   }
+   if (simHocFile != NULL)
+   {
+      char simHocPath[BUFSIZ];
+#ifdef WIN32
+      sprintf(simHocPath, "%s/model/%s", simDir, simHocFile);
+      struct _stat stbuf;
+      if (_stat(simHocPath, &stbuf) == 0)
+      {
+         if ((stbuf.st_mode & _S_IFREG) == 0)
+         {
+            fprintf(stderr, "simHocFile file %s is not a regular file\n", simHocPath);
+            return(1);
+         }
+         if ((stbuf.st_mode & _S_IREAD) == 0)
+         {
+            fprintf(stderr, "simHocFile %s is unreadable\n", simHocPath);
+            return(1);
+         }
+      }
+      else
+      {
+         fprintf(stderr, "simHocFile %s not found\n", simHocPath);
+         return(1);
+      }
+#else
+      sprintf(simHocPath, "%s/model/%s", simDir, simHocFile);
+      struct stat stbuf;
+      if (stat(simHocPath, &stbuf) == 0)
+      {
+         if (!S_ISREG(stbuf.st_mode))
+         {
+            fprintf(stderr, "simHocFile %s is not a regular file\n", simHocPath);
+            return(1);
+         }
+         if ((stbuf.st_mode & S_IRUSR) == 0)
+         {
+            fprintf(stderr, "simHocFile %s is unreadable\n", simHocPath);
+            return(1);
+         }
+      }
+      else
+      {
+         fprintf(stderr, "simHocFile %s not found\n", simHocPath);
+         return(1);
+      }
+#endif
    }
    Network *homomorph = NULL;
    NetworkHomomorphoGenesis *morphoGenesis = NULL;
@@ -1410,11 +1723,21 @@ int createHomomorphicNetworks(int argc, char *argv[])
                synapseCrossoverBondStrength, synapseOptimizedPathLength,
                randomSeed);
       }
-      else
+      else if (undulationMovements != -1)
       {
          morphoGenesis =
             new NetworkHomomorphoGenesis(
                undulationMovements, homomorph,
+               populationSize, numOffspring, parentLongevity,
+               crossoverRate, mutationRate, synapseWeightsParm,
+               synapseCrossoverBondStrength, synapseOptimizedPathLength,
+               randomSeed);
+      }
+      else
+      {
+         morphoGenesis =
+            new NetworkHomomorphoGenesis(
+               neuronExecPath, simDir, simHocFile, homomorph,
                populationSize, numOffspring, parentLongevity,
                crossoverRate, mutationRate, synapseWeightsParm,
                synapseCrossoverBondStrength, synapseOptimizedPathLength,
@@ -1439,9 +1762,13 @@ int createHomomorphicNetworks(int argc, char *argv[])
       {
          morphoGenesis = new NetworkHomomorphoGenesis(behaviors, morphLoadFile);
       }
-      else
+      else if (undulationMovements != -1)
       {
          morphoGenesis = new NetworkHomomorphoGenesis(undulationMovements, morphLoadFile);
+      }
+      else
+      {
+         morphoGenesis = new NetworkHomomorphoGenesis(neuronExecPath, simDir, simHocFile, morphLoadFile);
       }
       assert(morphoGenesis != NULL);
       if (fitnessMotorList.size() > 0)
@@ -1581,6 +1908,83 @@ int mergeHomomorphicNetworks(int argc, char *argv[])
       printUsageError((char *)"missing save option");
       return(1);
    }
+#ifdef WIN32
+   struct _stat stbuf;
+   if (_stat(morphLoadFile0, &stbuf) == 0)
+   {
+      if ((stbuf.st_mode & _S_IFREG) == 0)
+      {
+         fprintf(stderr, "Morph load file %s is not a regular file\n", morphLoadFile0);
+         return(1);
+      }
+      if ((stbuf.st_mode & _S_IREAD) == 0)
+      {
+         fprintf(stderr, "Morph load file %s is unreadable\n", morphLoadFile0);
+         return(1);
+      }
+   }
+   else
+   {
+      fprintf(stderr, "Morph load file %s not found\n", morphLoadFile0);
+      return(1);
+   }
+   if (_stat(morphLoadFile1, &stbuf) == 0)
+   {
+      if ((stbuf.st_mode & _S_IFREG) == 0)
+      {
+         fprintf(stderr, "Morph load file %s is not a regular file\n", morphLoadFile1);
+         return(1);
+      }
+      if ((stbuf.st_mode & _S_IREAD) == 0)
+      {
+         fprintf(stderr, "Morph load file %s is unreadable\n", morphLoadFile1);
+         return(1);
+      }
+   }
+   else
+   {
+      fprintf(stderr, "Morph load file %s not found\n", morphLoadFile1);
+      return(1);
+   }
+#else
+   struct stat stbuf;
+   if (stat(morphLoadFile0, &stbuf) == 0)
+   {
+      if (!S_ISREG(stbuf.st_mode))
+      {
+         fprintf(stderr, "Morph load file %s is not a regular file\n", morphLoadFile0);
+         return(1);
+      }
+      if ((stbuf.st_mode & S_IRUSR) == 0)
+      {
+         fprintf(stderr, "Morph load file %s is unreadable\n", morphLoadFile0);
+         return(1);
+      }
+   }
+   else
+   {
+      fprintf(stderr, "Morph load file %s not found\n", morphLoadFile0);
+      return(1);
+   }
+   if (stat(morphLoadFile1, &stbuf) == 0)
+   {
+      if (!S_ISREG(stbuf.st_mode))
+      {
+         fprintf(stderr, "Morph load file %s is not a regular file\n", morphLoadFile1);
+         return(1);
+      }
+      if ((stbuf.st_mode & S_IRUSR) == 0)
+      {
+         fprintf(stderr, "Morph load file %s is unreadable\n", morphLoadFile1);
+         return(1);
+      }
+   }
+   else
+   {
+      fprintf(stderr, "Morph load file %s not found\n", morphLoadFile1);
+      return(1);
+   }
+#endif
 
    morphoGenesis0 = new NetworkHomomorphoGenesis(behaviors, morphLoadFile0);
    assert(morphoGenesis0 != NULL);
@@ -1985,7 +2389,6 @@ int createIsomorphicNetworks(int argc, char *argv[])
 
 
 int behaviorSearch(int argc, char *argv[]);
-
 
 int main(int argc, char *argv[])
 {

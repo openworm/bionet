@@ -22,9 +22,9 @@ A network containing the C. elegans connectome is supplied with
 the distribution: CElegans_network.txt. This network has random weights
 and can be used to produce sensory-motor behavior sequences. The goal
 is to evolve other networks that perform the same behaviors, not
-knowing the original network weights. Since C. elegans has close to
-4000 synapses, this is a daunting task. However, accomplishing it would
-be a huge step toward programming an artificial C. elegans.
+knowing the original network weights. Since C. elegans has more than
+3000 synapses, this is a daunting task. However, accomplishing it would
+be a significant step toward programming an artificial C. elegans.
 
 In addition to bionet, see the CElegans/Readme.txt for related projects
 that are specific to C. elegans.
@@ -34,7 +34,16 @@ that are specific to C. elegans.
 1. UNIX: the gcc compiler, make command, and the bash shell.
 2. Windows: Microsoft Visual C++ 2012 (or later) IDE.
 3. Pthreads.
-4. FFTW3 Fourier Transform package: http://www.fftw.org
+
+##Optional packages:
+
+1. Fourier Transform undulation behavior evaluation:
+   FFTW3 Fourier Transform package: http://www.fftw.org
+2. NEURON network simulator evaluation:
+   a. Generate and export C. elegans simulation with NeuroConstruct:
+      https://github.com/openworm/OpenWorm/wiki/Running-the-C.-elegans-model-in-neuroConstruct 
+   b. Evaluate with NEURON simulator: http://www.neuron.yale.edu/neuron/
+
 
 ###To build:
 
@@ -187,6 +196,45 @@ bionet (new undulation behavior morph)
 bionet (resume undulation behavior morph)
    -createHomomorphicNetworks
    -undulationMovements <number of sinusoidal movements>
+   -loadMorph <morph file name>
+   -numGenerations <number of evolution generations>
+   [-crossoverRate <probability> (defaults to loaded value)]
+   [-mutationRate <probability> (defaults to loaded value)]
+   [-synapseCrossoverBondStrength <probability of connected neurons crossing over together>]
+   [-synapseOptimizedPathLength <synapse path length optimized as a group>]
+   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
+   [-logMorph <morph log file name> (instead of standard output)]
+   [-numThreads <number of threads> (defaults to system capacity)]
+```
+
+```
+bionet (new morph with NEURON network simulator evaluation)
+   -createHomomorphicNetworks
+   -neuronExec <path to NEURON simulator executable>
+   -simDir <directory containing model directory and simulation files>
+   -simHocFile <simulation hoc file name>
+   -loadNetwork <homomorph network file name>
+   -populationSize <number population members>
+   -numOffspring <number offspring per generation>
+   [-parentLongevity <parent dies after this many offspring>]
+   -numGenerations <number of evolution generations>
+   -crossoverRate <probability>
+   -mutationRate <probability>
+   -synapseWeights <minimum> <maximum> <max delta>
+   -synapseCrossoverBondStrength <probability of connected neurons crossing over together>
+   -synapseOptimizedPathLength <synapse path length optimized as a group>
+   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
+   [-randomSeed <random seed>]
+   [-logMorph <morph log file name> (instead of standard output)]
+   [-numThreads <number of threads> (defaults to system capacity)]
+```
+
+```
+bionet (resume morph with NEURON network simulator evaluation)
+   -createHomomorphicNetworks
+   -neuronExec <path to NEURON simulator executable>
+   -simDir <directory containing model directory and simulation files>
+   -simHocFile <simulation hoc file name>
    -loadMorph <morph file name>
    -numGenerations <number of evolution generations>
    [-crossoverRate <probability> (defaults to loaded value)]
