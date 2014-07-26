@@ -73,7 +73,6 @@ void NetworkHomomorph::optimize(vector<Behavior *>& behaviors,
 {
    int   i, j, k, n, p, q;
    float e;
-<<<<<<< HEAD
 
    // Initialize optimization.
    vector<vector<Synapse *> > synapses;
@@ -182,113 +181,6 @@ void NetworkHomomorph::initOptimize(vector<vector<Synapse *> >& synapses,
    {
       return;
    }
-=======
-
-   // Initialize optimization.
-   vector<vector<Synapse *> > synapses;
-   vector<vector<float> >     permutations;
-   initOptimize(synapses, permutations, synapseOptimizedPathLength);
-
-   // Hill-climb synapse weight permutations.
-   n = 0;
-   e = error;
-   for (i = 1, j = (int)permutations.size(); i < j; i++)
-   {
-      for (k = 0; k < (int)synapses.size(); k++)
-      {
-         for (p = 0, q = (int)synapses[k].size(); p < q; p++)
-         {
-            synapses[k][p]->weight = permutations[i][k];
-         }
-      }
-      evaluate(behaviors, fitnessMotorList, maxStep);
-      if (error < e)
-      {
-         n = i;
-         e = error;
-      }
-   }
-   for (k = 0; k < (int)synapses.size(); k++)
-   {
-      for (p = 0, q = (int)synapses[k].size(); p < q; p++)
-      {
-         synapses[k][p]->weight = permutations[n][k];
-      }
-   }
-   error = e;
-}
-
-
-// Initialize synapse optimization.
-void NetworkHomomorph::initOptimize(vector<vector<Synapse *> >& synapses,
-                                    vector<vector<float> >&     permutations,
-                                    int                         synapseOptimizedPathLength)
-{
-   int   i, j, k, n, s;
-   bool  forward;
-   float weight;
-
-   vector<vector<float> > weightRanges;
-   vector<float>          weightRange;
-   vector<float>          permutation;
-
-   synapses.clear();
-   permutations.clear();
-
-   // Randomly select starting neuron with synapse.
-   i = randomNeuron();
-   n = network->numNeurons;
-   for (s = 0; s < n; s++)
-   {
-      if (i < network->numSensors)
-      {
-         forward = true;
-      }
-      else if ((i >= network->numSensors) &&
-               (i < (network->numSensors + network->numMotors)))
-      {
-         forward = false;
-      }
-      else
-      {
-         forward = randomizer->RAND_BOOL();
-      }
-      if (forward)
-      {
-         for (j = 0; j < n; j++)
-         {
-            if (network->synapses[i][j].size() > 0)
-            {
-               break;
-            }
-         }
-         if (j < n)
-         {
-            break;
-         }
-      }
-      else
-      {
-         for (j = 0; j < n; j++)
-         {
-            if (network->synapses[j][i].size() > 0)
-            {
-               break;
-            }
-         }
-         if (j < n)
-         {
-            break;
-         }
-      }
-      i++;
-      i = (i % n);
-   }
-   if (s == n)
-   {
-      return;
-   }
->>>>>>> f9f95897345835d82b6d61f6689f09d0d2167f27
 
    // Select synapse path.
    for (j = 0; j < synapseOptimizedPathLength; j++)
@@ -300,7 +192,6 @@ void NetworkHomomorph::initOptimize(vector<vector<Synapse *> >& synapses,
          {
             if (network->synapses[i][k].size() > 0)
             {
-<<<<<<< HEAD
                for (p = 0, q = (int)visited.size(); p < q; p++)
                {
                   if ((visited[p].first == i) && (visited[p].second == k))
@@ -339,18 +230,12 @@ void NetworkHomomorph::initOptimize(vector<vector<Synapse *> >& synapses,
                      break;
                   }
                }
-=======
-               synapses.push_back(network->synapses[i][k]);
-               i = k;
-               break;
->>>>>>> f9f95897345835d82b6d61f6689f09d0d2167f27
             }
          }
          else
          {
             if (network->synapses[k][i].size() > 0)
             {
-<<<<<<< HEAD
                for (p = 0, q = (int)visited.size(); p < q; p++)
                {
                   if ((visited[p].first == k) && (visited[p].second == i))
@@ -389,11 +274,6 @@ void NetworkHomomorph::initOptimize(vector<vector<Synapse *> >& synapses,
                      break;
                   }
                }
-=======
-               synapses.push_back(network->synapses[k][i]);
-               i = k;
-               break;
->>>>>>> f9f95897345835d82b6d61f6689f09d0d2167f27
             }
          }
          k++;

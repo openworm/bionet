@@ -155,9 +155,6 @@
   <ItemGroup>
     <Xml Include="..\resource\GUILayout.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\Readme.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
