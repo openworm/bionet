@@ -726,7 +726,11 @@ void NetworkHomomorphoGenesis::initEvaluationSims(int numSims)
 
       // Copy fresh model files.
       mkdir(evalDir, 0755);
+<<<<<<< HEAD
       sprintf(buf, "/bin/cp -r %s/* %s", modelDir, evalDir);
+=======
+      sprintf(buf, "cp -r %s/* %s", modelDir, evalDir);
+>>>>>>> f9f95897345835d82b6d61f6689f09d0d2167f27
       result = system(buf);
 #endif
       // Add simulation.

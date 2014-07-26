@@ -93,15 +93,25 @@ void NeuronSim::exportSynapses(Network *network)
          connection = connections[k];
          if (connection->type == NeuronHocDoc::Synapse::CHEMICAL)
          {
+<<<<<<< HEAD
             weight  = hocDoc->text[connection->values[1].first][connection->values[1].second];
             synapse = new Synapse((float)atof(weight.c_str()), Synapse::CHEMICAL);
+=======
+            weight = hocDoc->text[connection->values[1].first][connection->values[1].second];
+>>>>>>> f9f95897345835d82b6d61f6689f09d0d2167f27
          }
          else
          {
             // Electrical (gap junction) synapse.
+<<<<<<< HEAD
             weight  = hocDoc->text[connection->values[0].first][connection->values[0].second];
             synapse = new Synapse((float)atof(weight.c_str()), Synapse::ELECTRICAL);
          }
+=======
+            weight = hocDoc->text[connection->values[0].first][connection->values[0].second];
+         }
+         synapse = new Synapse((float)atof(weight.c_str()));
+>>>>>>> f9f95897345835d82b6d61f6689f09d0d2167f27
          assert(synapse != NULL);
          network->synapses[i][j].push_back(synapse);
       }
