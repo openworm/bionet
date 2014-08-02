@@ -15,7 +15,7 @@ public:
    NeuronSimNetworkHomomorph(Network *homomorph,
                              MutableParm& synapseWeightsParm,
                              vector<vector<pair<int, int> > > *motorConnections,
-                             Random *randomizer, int tag = 0);
+                             Random *randomizer, int tag = (-1));
    NeuronSimNetworkHomomorph(FILE *fp,
                              vector<vector<pair<int, int> > > *motorConnections,
                              Random *randomizer);
@@ -31,7 +31,7 @@ public:
    void evaluate(NeuronSim *modelSim, NeuronSim *evalSim);
 
    // Clone.
-   NeuronSimNetworkHomomorph *clone();
+   NeuronSimNetworkHomomorph *clone(int tag = (-1));
 
    // Load.
    void load(FILE *fp);

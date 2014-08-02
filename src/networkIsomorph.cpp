@@ -353,8 +353,8 @@ void NetworkIsomorph::mutate()
             synapse = network->synapses[i][j][k];
             if (!behaves && randomizer->RAND_CHANCE(synapseWeightsParm.randomProbability))
             {
-               synapse->weight = (float)randomizer->RAND_INTERVAL(
-                  synapseWeightsParm.minimum, synapseWeightsParm.maximum);
+               synapse->setWeight((float)randomizer->RAND_INTERVAL(
+                                     synapseWeightsParm.minimum, synapseWeightsParm.maximum));
             }
             else
             {
@@ -362,20 +362,20 @@ void NetworkIsomorph::mutate()
                {
                   if (randomizer->RAND_BOOL())
                   {
-                     synapse->weight += (float)randomizer->RAND_INTERVAL(
-                        0.0, synapseWeightsParm.maxDelta);
+                     synapse->setWeight(synapse->weight + (float)randomizer->RAND_INTERVAL(
+                                           0.0, synapseWeightsParm.maxDelta));
                      if (synapse->weight > synapseWeightsParm.maximum)
                      {
-                        synapse->weight = synapseWeightsParm.maximum;
+                        synapse->setWeight(synapseWeightsParm.maximum);
                      }
                   }
                   else
                   {
-                     synapse->weight -= (float)randomizer->RAND_INTERVAL(
-                        0.0, synapseWeightsParm.maxDelta);
+                     synapse->setWeight(synapse->weight - (float)randomizer->RAND_INTERVAL(
+                                           0.0, synapseWeightsParm.maxDelta));
                      if (synapse->weight < synapseWeightsParm.minimum)
                      {
-                        synapse->weight = synapseWeightsParm.minimum;
+                        synapse->setWeight(synapseWeightsParm.minimum);
                      }
                   }
                }
@@ -513,7 +513,7 @@ void NetworkIsomorph::addIndexedNeuron(int index, bool excitatory)
 
 
 // Clone.
-NetworkIsomorph *NetworkIsomorph::clone()
+NetworkIsomorph *NetworkIsomorph::clone(int tag)
 {
    int             i, n;
    NetworkIsomorph *networkMorph;

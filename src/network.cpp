@@ -394,14 +394,14 @@ void Network::step()
 // Load network.
 bool Network::load(char *filename)
 {
-   FILE *fp = fopen(filename, "r");
+   FILE *fp = FOPEN_READ(filename);
 
    if (fp == NULL)
    {
       return(false);
    }
    load(fp);
-   fclose(fp);
+   FCLOSE(fp);
    return(true);
 }
 
@@ -463,14 +463,14 @@ void Network::load(FILE *fp)
 // Save network.
 bool Network::save(char *filename)
 {
-   FILE *fp = fopen(filename, "w");
+   FILE *fp = FOPEN_WRITE(filename);
 
    if (fp == NULL)
    {
       return(false);
    }
    save(fp);
-   fclose(fp);
+   FCLOSE(fp);
    return(true);
 }
 

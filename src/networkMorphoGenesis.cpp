@@ -2,6 +2,9 @@
 
 #include "networkMorphoGenesis.hpp"
 
+// Tag generator.
+int NetworkMorphoGenesis::tagGenerator = 0;
+
 // Constructor.
 NetworkMorphoGenesis::NetworkMorphoGenesis()
 {

@@ -2,12 +2,14 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerCommand>..\bin\bionet.exe</LocalDebuggerCommand>
-    <LocalDebuggerWorkingDirectory>$(ProjectDir)\..</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)\..\..\bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>-createHomomorphicNetworks  -neuronExec ../../nrn73/bin/neuron.exe -simDir ../sim -simHocFile CElegans.hoc -loadMorph morph0.txt -numGenerations 2 -crossoverRate .8 -mutationRate .05 -synapseCrossoverBondStrength .5 -synapseOptimizedPathLength 2 -saveMorph morph1.txt -logMorph morph1.log -numThreads 1</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerCommand>..\bin\bionet.exe</LocalDebuggerCommand>
-    <LocalDebuggerWorkingDirectory>$(ProjectDir)\..</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)\..\..\bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>-createHomomorphicNetworks  -neuronExec ../../nrn73/bin/neuron.exe -simDir ../sim -simHocFile CElegans.hoc -loadNetwork CElegans_network.txt -populationSize 4 -numOffspring 2 -numGenerations 2 -crossoverRate .8 -mutationRate .05 -synapseWeights 0.0 1.0 1.0 -synapseCrossoverBondStrength .5 -synapseOptimizedPathLength 2 -saveMorph morph0.txt -logMorph morph0.log -randomSeed 4518 -numThreads 1</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

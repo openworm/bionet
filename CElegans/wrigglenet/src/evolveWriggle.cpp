@@ -297,7 +297,7 @@ bool EvolveWriggle::load(char *filename)
    FILE    *fp;
    Wriggle *wriggle;
 
-   if ((fp = fopen(filename, "r")) == NULL)
+   if ((fp = FOPEN_READ(filename)) == NULL)
    {
       fprintf(stderr, "Cannot load from file %s\n", filename);
       return(false);
@@ -334,6 +334,7 @@ bool EvolveWriggle::load(char *filename)
    }
    FREAD_LONG(&randomSeed, fp);
    FREAD_INT(&generation, fp);
+   FCLOSE(fp);
    return(true);
 }
 
@@ -344,7 +345,7 @@ bool EvolveWriggle::save(char *filename)
    int  i, n;
    FILE *fp;
 
-   if ((fp = fopen(filename, "w")) == NULL)
+   if ((fp = FOPEN_WRITE(filename)) == NULL)
    {
       fprintf(stderr, "Cannot save to file %s\n", filename);
       return(false);
@@ -363,6 +364,7 @@ bool EvolveWriggle::save(char *filename)
    }
    FWRITE_LONG(&randomSeed, fp);
    FWRITE_INT(&generation, fp);
+   FCLOSE(fp);
    return(true);
 }
 

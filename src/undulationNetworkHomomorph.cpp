@@ -87,7 +87,7 @@ void UndulationNetworkHomomorph::optimize(int synapseOptimizedPathLength)
       {
          for (p = 0, q = (int)synapses[k].size(); p < q; p++)
          {
-            synapses[k][p]->weight = permutations[i][k];
+            synapses[k][p]->setWeight(permutations[i][k]);
          }
       }
       evaluate();
@@ -101,7 +101,7 @@ void UndulationNetworkHomomorph::optimize(int synapseOptimizedPathLength)
    {
       for (p = 0, q = (int)synapses[k].size(); p < q; p++)
       {
-         synapses[k][p]->weight = permutations[n][k];
+         synapses[k][p]->setWeight(permutations[n][k]);
       }
    }
    error = e;
@@ -659,7 +659,7 @@ void UndulationNetworkHomomorph::evaluate()
 
 
 // Clone.
-UndulationNetworkHomomorph *UndulationNetworkHomomorph::clone()
+UndulationNetworkHomomorph *UndulationNetworkHomomorph::clone(int tag)
 {
    int i, n;
    UndulationNetworkHomomorph *undulationNetworkMorph;

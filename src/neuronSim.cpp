@@ -29,7 +29,7 @@ NeuronSim::NeuronSim(string neuronExecPath, string workDir, string hocFilename)
    assert(hocDoc != NULL);
    hocDoc->text[hocDoc->simReference.first][hocDoc->simReference.second] = ".";
    hocDoc->text[hocDoc->simsDir.first][hocDoc->simsDir.second]           = "./";
-   hocDoc->writeFile((char *)hocFilename.c_str());
+   hocDoc->writeFile(buf);
 }
 
 

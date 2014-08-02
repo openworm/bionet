@@ -153,7 +153,7 @@ void NetworkIsomorphoGenesis::morph(int numGenerations, char *logFile)
    sort();
    fprintf(morphfp, "Generation=%d\n", generation);
    fprintf(morphfp, "Population:\n");
-   fprintf(morphfp, "Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Member\tid\t\tfitness\n");
    for (i = 0, n = (int)population.size(); i < n; i++)
    {
       fprintf(morphfp, "%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
@@ -170,7 +170,7 @@ void NetworkIsomorphoGenesis::morph(int numGenerations, char *logFile)
       mutate();
       prune();
       fprintf(morphfp, "Population:\n");
-      fprintf(morphfp, "Member\tgeneration\tfitness\n");
+      fprintf(morphfp, "Member\tid\t\tfitness\n");
       for (i = behaveCount = 0, n = (int)population.size(); i < n; i++)
       {
          fprintf(morphfp, "%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
@@ -252,7 +252,7 @@ void *NetworkIsomorphoGenesis::morphThread(void *arg)
 void NetworkIsomorphoGenesis::mutate()
 {
    fprintf(morphfp, "Mutate:\n");
-   fprintf(morphfp, "Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Member\tid\t\tfitness\n");
    mutate(0);
 }
 
@@ -300,14 +300,14 @@ void NetworkIsomorphoGenesis::mutate(int threadNum)
          pthread_mutex_lock(&morphMutex);
       }
 #endif
-      offspring[i] = (NetworkMorph *)((NetworkIsomorph *)population[j])->clone();
+      offspring[i] = (NetworkMorph *)((NetworkIsomorph *)population[j])->clone(
+         NetworkMorphoGenesis::tagGenerator++);
 #ifdef THREADS
       if (numThreads > 1)
       {
          pthread_mutex_unlock(&morphMutex);
       }
 #endif
-      offspring[i]->tag++;
       ((NetworkIsomorph *)offspring[i])->mutate();
       offspring[i]->evaluate(behaviors, behaviorStep);
       fprintf(morphfp, "%d\t%d\t\t%f\n", i, offspring[i]->tag, offspring[i]->error);
@@ -329,7 +329,7 @@ void NetworkIsomorphoGenesis::prune()
    int i, j, n;
 
    fprintf(morphfp, "Prune:\n");
-   fprintf(morphfp, "Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Member\tid\t\tfitness\n");
    for (n = (int)population.size(), i = n - numOffspring, j = 0; i < n; i++, j++)
    {
       fprintf(morphfp, "%d\t%d\t\t%f\n", i, population[i]->tag, population[i]->error);
@@ -347,7 +347,7 @@ bool NetworkIsomorphoGenesis::load(char *filename)
    int  i, n;
    FILE *fp;
 
-   if ((fp = fopen(filename, "r")) == NULL)
+   if ((fp = FOPEN_READ(filename)) == NULL)
    {
       fprintf(stderr, "Cannot load from file %s\n", filename);
       return(false);
@@ -373,6 +373,10 @@ bool NetworkIsomorphoGenesis::load(char *filename)
       NetworkIsomorph *networkMorph = new NetworkIsomorph(fp, randomizer);
       assert(networkMorph != NULL);
       population.push_back((NetworkMorph *)networkMorph);
+      if (networkMorph->tag >= NetworkMorphoGenesis::tagGenerator)
+      {
+         NetworkMorphoGenesis::tagGenerator = networkMorph->tag + 1;
+      }
    }
    FREAD_INT(&behaveQuorum, fp);
    FREAD_INT(&behaveQuorumMaxGenerations, fp);
@@ -380,6 +384,7 @@ bool NetworkIsomorphoGenesis::load(char *filename)
    FREAD_INT(&behaveQuorumGenerationCount, fp);
    FREAD_LONG(&randomSeed, fp);
    FREAD_INT(&generation, fp);
+   FCLOSE(fp);
    return(true);
 }
 
@@ -390,7 +395,7 @@ bool NetworkIsomorphoGenesis::save(char *filename)
    int  i, n;
    FILE *fp;
 
-   if ((fp = fopen(filename, "w")) == NULL)
+   if ((fp = FOPEN_WRITE(filename)) == NULL)
    {
       fprintf(stderr, "Cannot save to file %s\n", filename);
       return(false);
@@ -410,6 +415,7 @@ bool NetworkIsomorphoGenesis::save(char *filename)
    FWRITE_INT(&behaveQuorumGenerationCount, fp);
    FWRITE_LONG(&randomSeed, fp);
    FWRITE_INT(&generation, fp);
+   FCLOSE(fp);
    return(true);
 }
 

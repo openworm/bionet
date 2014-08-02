@@ -30,6 +30,11 @@ public:
    void load(FILE *fp);
    void save(FILE *fp);
    void print(bool terse = true, bool labels = false);
+
+   // Weight quantization: .1 for one decimal digit, .01 for two digits, etc.
+   // Noop: -1.0
+   static float WEIGHT_DECIMAL_QUANTIZER;
+   void setWeight(float weight);
 };
 
 class Neuron

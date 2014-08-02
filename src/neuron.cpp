@@ -7,9 +7,9 @@
 // Synapse constructors.
 Synapse::Synapse(float weight, TYPE type)
 {
-   this->weight = weight;
-   this->type   = type;
-   signal       = 0.0f;
+   setWeight(weight);
+   this->type = type;
+   signal     = 0.0f;
 }
 
 
@@ -18,6 +18,27 @@ Synapse::Synapse()
    weight = 0.0f;
    type   = CHEMICAL;
    signal = 0.0f;
+}
+
+
+float Synapse::WEIGHT_DECIMAL_QUANTIZER = 0.1f;
+
+// Set weight.
+void Synapse::setWeight(float weight)
+{
+   // Quantize decimals?
+   if (WEIGHT_DECIMAL_QUANTIZER > 0.0f)
+   {
+      this->weight = (float)((int)(weight / WEIGHT_DECIMAL_QUANTIZER)) * WEIGHT_DECIMAL_QUANTIZER;
+   }
+   else if (WEIGHT_DECIMAL_QUANTIZER == 0.0f)
+   {
+      this->weight = (float)((int)weight);
+   }
+   else
+   {
+      this->weight = weight;
+   }
 }
 
 

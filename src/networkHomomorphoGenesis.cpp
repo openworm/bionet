@@ -131,6 +131,7 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(
    modelSim = new NeuronSim(this->neuronExecPath, workDir, this->simHocFile);
    assert(modelSim != NULL);
    modelSim->exportSynapses(homomorph);
+   modelSim->importSynapseWeights(homomorph);
 
    // Common initialization.
    init(homomorph,
@@ -180,18 +181,19 @@ void NetworkHomomorphoGenesis::init(Network *homomorph,
       {
          networkMorph = (NetworkMorph *)new UndulationNetworkHomomorph(
             undulationMovements, homomorph, synapseWeightsParm,
-            &motorConnections, randomizer);
+            &motorConnections, randomizer, NetworkMorphoGenesis::tagGenerator++);
       }
       else if (neuronSim)
       {
          networkMorph = (NetworkMorph *)new NeuronSimNetworkHomomorph(
             homomorph, synapseWeightsParm,
-            &motorConnections, randomizer);
+            &motorConnections, randomizer, NetworkMorphoGenesis::tagGenerator++);
       }
       else
       {
          networkMorph = (NetworkMorph *)new NetworkHomomorph(
-            homomorph, synapseWeightsParm, &motorConnections, randomizer);
+            homomorph, synapseWeightsParm,
+            &motorConnections, randomizer, NetworkMorphoGenesis::tagGenerator++);
       }
       assert(networkMorph != NULL);
       network = networkMorph->network;
@@ -205,8 +207,8 @@ void NetworkHomomorphoGenesis::init(Network *homomorph,
                synapseWeightsParm.minimum, synapseWeightsParm.maximum);
             for (p = 0, q = (int)network->synapses[j][k].size(); p < q; p++)
             {
-               synapse         = network->synapses[j][k][p];
-               synapse->weight = r;
+               synapse = network->synapses[j][k][p];
+               synapse->setWeight(r);
             }
          }
       }
@@ -282,6 +284,7 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(char *neuronExecPath, char *s
    workDir.append("/model");
    modelSim = new NeuronSim(this->neuronExecPath, workDir, this->simHocFile);
    assert(modelSim != NULL);
+   modelSim->importSynapseWeights(homomorph);
    modelSim->run();
 }
 
@@ -495,7 +498,7 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
    sort();
    fprintf(morphfp, "Generation=%d\n", generation);
    fprintf(morphfp, "Population:\n");
-   fprintf(morphfp, "Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Member\tid\t\tfitness\n");
    if (undulationBehavior)
    {
       for (i = 0, n = (int)population.size(); i < n; i++)
@@ -547,7 +550,7 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
       optimize();
       prune();
       fprintf(morphfp, "Population:\n");
-      fprintf(morphfp, "Member\tgeneration\tfitness\n");
+      fprintf(morphfp, "Member\tid\t\tfitness\n");
       if (undulationBehavior)
       {
          for (i = 0, n = (int)population.size(); i < n; i++)
@@ -741,7 +744,7 @@ void NetworkHomomorphoGenesis::initEvaluationSims(int numSims)
 void NetworkHomomorphoGenesis::mate()
 {
    fprintf(morphfp, "Mate:\n");
-   fprintf(morphfp, "Member\tgeneration\tfitness\t\tparents\n");
+   fprintf(morphfp, "Member\tid\t\tfitness\t\tparents\n");
    mate(0);
 }
 
@@ -795,15 +798,18 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
 #endif
       if (undulationBehavior)
       {
-         offspring[i] = (NetworkMorph *)((UndulationNetworkHomomorph *)population[p1])->clone();
+         offspring[i] = (NetworkMorph *)((UndulationNetworkHomomorph *)population[p1])->clone(
+            NetworkMorphoGenesis::tagGenerator++);
       }
       else if (neuronSim)
       {
-         offspring[i] = (NetworkMorph *)((NeuronSimNetworkHomomorph *)population[p1])->clone();
+         offspring[i] = (NetworkMorph *)((NeuronSimNetworkHomomorph *)population[p1])->clone(
+            NetworkMorphoGenesis::tagGenerator++);
       }
       else
       {
-         offspring[i] = (NetworkMorph *)((NetworkHomomorph *)population[p1])->clone();
+         offspring[i] = (NetworkMorph *)((NetworkHomomorph *)population[p1])->clone(
+            NetworkMorphoGenesis::tagGenerator++);
       }
       population[p1]->offspringCount++;
 #ifdef THREADS
@@ -821,16 +827,8 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
          }
          population[p2]->offspringCount++;
          parent2 = population[p2]->network;
-         if (population[p1]->tag > population[p2]->tag)
-         {
-            offspring[i]->tag = population[p1]->tag + 1;
-         }
-         else
-         {
-            offspring[i]->tag = population[p2]->tag + 1;
-         }
-         child = offspring[i]->network;
-         n     = child->numNeurons;
+         child   = offspring[i]->network;
+         n       = child->numNeurons;
          for (k = 0; k < n; k++)
          {
             child->neurons[k]->index = -1;
@@ -871,39 +869,41 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
             undulationNetworkMorph = (UndulationNetworkHomomorph *)offspring[i];
             undulationNetworkMorph->evaluate();
             fprintf(morphfp, "%d\t%d\t\t%f\t%d %d\n",
-                    i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness, p1, p2);
+                    i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness,
+                    population[p1]->tag, population[p2]->tag);
          }
          else if (neuronSim)
          {
             neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)offspring[i];
             neuronSimNetworkMorph->evaluate(modelSim, evaluationSims[threadNum]);
             fprintf(morphfp, "%d\t%d\t\t%f\t%d %d\n",
-                    i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error, p1, p2);
+                    i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error,
+                    population[p1]->tag, population[p2]->tag);
          }
          else
          {
             offspring[i]->evaluate(behaviors, fitnessMotorList, behaviorStep);
-            fprintf(morphfp, "%d\t%d\t\t%f\t%d %d\n", i, offspring[i]->tag, offspring[i]->error, p1, p2);
+            fprintf(morphfp, "%d\t%d\t\t%f\t%d %d\n", i, offspring[i]->tag, offspring[i]->error,
+                    population[p1]->tag, population[p2]->tag);
          }
       }
       else   // No crossover.
       {
-         offspring[i]->tag++;
          if (undulationBehavior)
          {
             undulationNetworkMorph = (UndulationNetworkHomomorph *)offspring[i];
             fprintf(morphfp, "%d\t%d\t\t%f\t%d\n",
-                    i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness, p1);
+                    i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness, population[p1]->tag);
          }
          else if (neuronSim)
          {
             neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)offspring[i];
             fprintf(morphfp, "%d\t%d\t\t%f\t%d\n",
-                    i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error, p1);
+                    i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error, population[p1]->tag);
          }
          else
          {
-            fprintf(morphfp, "%d\t%d\t\t%f\t%d\n", i, offspring[i]->tag, offspring[i]->error, p1);
+            fprintf(morphfp, "%d\t%d\t\t%f\t%d\n", i, offspring[i]->tag, offspring[i]->error, population[p1]->tag);
          }
       }
    }
@@ -975,7 +975,7 @@ void NetworkHomomorphoGenesis::crossover(Network *child, Network *parent,
 void NetworkHomomorphoGenesis::mutate()
 {
    fprintf(morphfp, "Mutate:\n");
-   fprintf(morphfp, "Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Member\tid\t\tfitness\n");
    mutate(0);
 }
 
@@ -1051,7 +1051,7 @@ void NetworkHomomorphoGenesis::mutate(int threadNum)
 void NetworkHomomorphoGenesis::optimize()
 {
    fprintf(morphfp, "Optimize:\n");
-   fprintf(morphfp, "Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Member\tid\t\tfitness\n");
    optimize(0);
 }
 
@@ -1122,7 +1122,7 @@ void NetworkHomomorphoGenesis::prune()
    NeuronSimNetworkHomomorph  *neuronSimNetworkMorph;
 
    fprintf(morphfp, "Prune:\n");
-   fprintf(morphfp, "Member\tgeneration\tfitness\n");
+   fprintf(morphfp, "Member\tid\t\tfitness\n");
    for (n = (int)population.size(), i = n - numOffspring, j = 0; i < n; i++, j++)
    {
       if (undulationBehavior)
@@ -1148,7 +1148,7 @@ void NetworkHomomorphoGenesis::prune()
    if (parentLongevity != -1)
    {
       fprintf(morphfp, "Longevity replace:\n");
-      fprintf(morphfp, "Member\tgeneration\told fitness\tnew fitness\n");
+      fprintf(morphfp, "Member\tid\t\told fitness\tnew fitness\n");
       for (i = 0; i < n; i++)
       {
          if (population[i]->offspringCount > parentLongevity)
@@ -1159,7 +1159,7 @@ void NetworkHomomorphoGenesis::prune()
                fprintf(morphfp, "%d\t%d\t\t%f", i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness);
                population[i] = (NetworkMorph *)new UndulationNetworkHomomorph(
                   undulationMovements, homomorph, networkMorph->synapseWeightsParm,
-                  &motorConnections, randomizer);
+                  &motorConnections, randomizer, NetworkMorphoGenesis::tagGenerator++);
                assert(population[i] != NULL);
                delete undulationNetworkMorph;
                undulationNetworkMorph = (UndulationNetworkHomomorph *)population[i];
@@ -1171,7 +1171,8 @@ void NetworkHomomorphoGenesis::prune()
                neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)population[i];
                fprintf(morphfp, "%d\t%d\t\t%f", i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error);
                population[i] = (NetworkMorph *)new NeuronSimNetworkHomomorph(
-                  homomorph, networkMorph->synapseWeightsParm, &motorConnections, randomizer);
+                  homomorph, networkMorph->synapseWeightsParm, &motorConnections,
+                  randomizer, NetworkMorphoGenesis::tagGenerator++);
                assert(population[i] != NULL);
                delete neuronSimNetworkMorph;
                neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)population[i];
@@ -1183,7 +1184,8 @@ void NetworkHomomorphoGenesis::prune()
                fprintf(morphfp, "%d\t%d\t\t%f", i, population[i]->tag, population[i]->error);
                networkMorph  = (NetworkHomomorph *)population[i];
                population[i] = (NetworkMorph *)new NetworkHomomorph(
-                  homomorph, networkMorph->synapseWeightsParm, &motorConnections, randomizer);
+                  homomorph, networkMorph->synapseWeightsParm, &motorConnections,
+                  randomizer, NetworkMorphoGenesis::tagGenerator++);
                assert(population[i] != NULL);
                delete networkMorph;
                population[i]->evaluate(behaviors, fitnessMotorList, behaviorStep);
@@ -1257,10 +1259,13 @@ void NetworkHomomorphoGenesis::sort()
 // Load morph.
 bool NetworkHomomorphoGenesis::load(char *filename)
 {
-   int  i, j, n;
-   FILE *fp;
+   int                        i, j, n;
+   FILE                       *fp;
+   NetworkHomomorph           *networkMorph;
+   UndulationNetworkHomomorph *undulationNetworkMorph;
+   NeuronSimNetworkHomomorph  *neuronSimNetworkMorph;
 
-   if ((fp = fopen(filename, "r")) == NULL)
+   if ((fp = FOPEN_READ(filename)) == NULL)
    {
       fprintf(stderr, "Cannot load from file %s\n", filename);
       return(false);
@@ -1291,31 +1296,40 @@ bool NetworkHomomorphoGenesis::load(char *filename)
    {
       for (i = 0; i < n; i++)
       {
-         UndulationNetworkHomomorph *undulationNetworkMorph =
-            new UndulationNetworkHomomorph(fp,
-                                           undulationMovements, &motorConnections, randomizer);
+         undulationNetworkMorph =
+            new UndulationNetworkHomomorph(fp, undulationMovements, &motorConnections, randomizer);
          assert(undulationNetworkMorph != NULL);
          population.push_back((NetworkMorph *)undulationNetworkMorph);
+         if (undulationNetworkMorph->tag >= NetworkMorphoGenesis::tagGenerator)
+         {
+            NetworkMorphoGenesis::tagGenerator = undulationNetworkMorph->tag + 1;
+         }
       }
    }
    else if (neuronSim)
    {
       for (i = 0; i < n; i++)
       {
-         NeuronSimNetworkHomomorph *neuronSimNetworkMorph =
-            new NeuronSimNetworkHomomorph(fp, &motorConnections, randomizer);
+         neuronSimNetworkMorph = new NeuronSimNetworkHomomorph(fp, &motorConnections, randomizer);
          assert(neuronSimNetworkMorph != NULL);
          population.push_back((NetworkMorph *)neuronSimNetworkMorph);
+         if (neuronSimNetworkMorph->tag >= NetworkMorphoGenesis::tagGenerator)
+         {
+            NetworkMorphoGenesis::tagGenerator = neuronSimNetworkMorph->tag + 1;
+         }
       }
    }
    else
    {
       for (i = 0; i < n; i++)
       {
-         NetworkHomomorph *networkMorph =
-            new NetworkHomomorph(fp, &motorConnections, randomizer);
+         networkMorph = new NetworkHomomorph(fp, &motorConnections, randomizer);
          assert(networkMorph != NULL);
          population.push_back((NetworkMorph *)networkMorph);
+         if (networkMorph->tag >= NetworkMorphoGenesis::tagGenerator)
+         {
+            NetworkMorphoGenesis::tagGenerator = networkMorph->tag + 1;
+         }
       }
    }
    FREAD_INT(&parentLongevity, fp);
@@ -1336,6 +1350,7 @@ bool NetworkHomomorphoGenesis::load(char *filename)
    FREAD_INT(&behaveQuorumGenerationCount, fp);
    FREAD_LONG(&randomSeed, fp);
    FREAD_INT(&generation, fp);
+   FCLOSE(fp);
    return(true);
 }
 
@@ -1346,7 +1361,7 @@ bool NetworkHomomorphoGenesis::save(char *filename)
    int  i, j, n;
    FILE *fp;
 
-   if ((fp = fopen(filename, "w")) == NULL)
+   if ((fp = FOPEN_WRITE(filename)) == NULL)
    {
       fprintf(stderr, "Cannot save to file %s\n", filename);
       return(false);
@@ -1405,6 +1420,7 @@ bool NetworkHomomorphoGenesis::save(char *filename)
    FWRITE_INT(&behaveQuorumGenerationCount, fp);
    FWRITE_LONG(&randomSeed, fp);
    FWRITE_INT(&generation, fp);
+   FCLOSE(fp);
    return(true);
 }
 

@@ -208,7 +208,7 @@ bool Behavior::loadBehaviors(char *filename, vector<Behavior *>& behaviors)
 {
    int i, n;
 
-   FILE *fp = fopen(filename, "r");
+   FILE *fp = FOPEN_READ(filename);
 
    if (fp == NULL)
    {
@@ -225,7 +225,7 @@ bool Behavior::loadBehaviors(char *filename, vector<Behavior *>& behaviors)
       assert(behavior != NULL);
       behaviors.push_back(behavior);
    }
-   fclose(fp);
+   FCLOSE(fp);
    return(true);
 }
 
@@ -235,7 +235,7 @@ bool Behavior::saveBehaviors(char *filename, vector<Behavior *>& behaviors)
 {
    int i, n;
 
-   FILE *fp = fopen(filename, "w");
+   FILE *fp = FOPEN_WRITE(filename);
 
    if (fp == NULL)
    {
@@ -247,6 +247,6 @@ bool Behavior::saveBehaviors(char *filename, vector<Behavior *>& behaviors)
    {
       behaviors[i]->save(fp);
    }
-   fclose(fp);
+   FCLOSE(fp);
    return(true);
 }

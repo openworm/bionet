@@ -65,4 +65,7 @@
       <Filter>resource</Filter>
     </Xml>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Readme.txt" />
+  </ItemGroup>
 </Project>

@@ -54,6 +54,9 @@ public:
    bool startMorphLog(char *logFile);
    void stopMorphLog();
 
+   // Tag generator.
+   static int tagGenerator;
+
 protected:
 
    Random *randomizer;

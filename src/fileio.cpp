@@ -180,6 +180,24 @@ char *getPath(char *dir, char *file)
 }
 
 
+FILE *myfopenRead(char *filename)
+{
+   return(fopen(filename, "rb"));
+}
+
+
+FILE *myfopenWrite(char *filename)
+{
+   return(fopen(filename, "wb"));
+}
+
+
+int myfclose(FILE *fp)
+{
+   return(fclose(fp));
+}
+
+
 int myfreadInt(int *i, FILE *fp)
 {
 #ifdef BINARY_FILE_FORMAT

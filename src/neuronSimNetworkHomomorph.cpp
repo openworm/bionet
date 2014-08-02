@@ -56,7 +56,7 @@ void NeuronSimNetworkHomomorph::optimize(int synapseOptimizedPathLength,
       {
          for (p = 0, q = (int)synapses[k].size(); p < q; p++)
          {
-            synapses[k][p]->weight = permutations[i][k];
+            synapses[k][p]->setWeight(permutations[i][k]);
          }
       }
       evaluate(modelSim, evalSim);
@@ -70,7 +70,7 @@ void NeuronSimNetworkHomomorph::optimize(int synapseOptimizedPathLength,
    {
       for (p = 0, q = (int)synapses[k].size(); p < q; p++)
       {
-         synapses[k][p]->weight = permutations[n][k];
+         synapses[k][p]->setWeight(permutations[n][k]);
       }
    }
    error = e;
@@ -87,7 +87,7 @@ void NeuronSimNetworkHomomorph::evaluate(NeuronSim *modelSim, NeuronSim *evalSim
 
 
 // Clone.
-NeuronSimNetworkHomomorph *NeuronSimNetworkHomomorph::clone()
+NeuronSimNetworkHomomorph *NeuronSimNetworkHomomorph::clone(int tag)
 {
    int i, n;
    NeuronSimNetworkHomomorph *simNetworkMorph;

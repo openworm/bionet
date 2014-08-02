@@ -15,7 +15,7 @@ public:
    NetworkHomomorph(Network *homomorph,
                     MutableParm& synapseWeightsParm,
                     vector<vector<pair<int, int> > > *motorConnections,
-                    Random *randomizer, int tag = 0);
+                    Random *randomizer, int tag = (-1));
    NetworkHomomorph();
    NetworkHomomorph(FILE *fp,
                     vector<vector<pair<int, int> > > *motorConnections,
@@ -35,7 +35,7 @@ public:
                  int synapseOptimizedPathLength, int maxStep);
 
    // Clone.
-   NetworkHomomorph *clone();
+   NetworkHomomorph *clone(int tag = (-1));
 
    // Load.
    void load(FILE *fp);

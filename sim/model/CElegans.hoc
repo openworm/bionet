@@ -1378,7 +1378,7 @@ objref fih0
 objectvar syn_NCXLS_NSML_M3R_Serotonin_Glutamate[1]
 
 {a_M3R[0].Neurite4 syn_NCXLS_NSML_M3R_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.8091508)}
-{a_NSML[0].Neurite2 a_M3R[0].synlist.append(new NetCon(&v(0.39708623), syn_NCXLS_NSML_M3R_Serotonin_Glutamate[0], 0.0, 0.0, 0.334728))}
+{a_NSML[0].Neurite2 a_M3R[0].synlist.append(new NetCon(&v(0.39708623), syn_NCXLS_NSML_M3R_Serotonin_Glutamate[0], 0.0, 0.0, 0.300000))}
 
 
 // Adding NetConn: NCXLS_NSMR_I6 from: NSMR to: I6 with 2 connections
@@ -1392,7 +1392,7 @@ objectvar syn_NCXLS_NSML_M3R_Serotonin_Glutamate[1]
 objectvar syn_NCXLS_NSMR_I6_Serotonin_Glutamate[2]
 
 {a_I6[0].Axon syn_NCXLS_NSMR_I6_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.8349539)}
-{a_NSMR[0].Neurite3 a_I6[0].synlist.append(new NetCon(&v(0.77756244), syn_NCXLS_NSMR_I6_Serotonin_Glutamate[0], 0.0, 0.0, 0.801555))}
+{a_NSMR[0].Neurite3 a_I6[0].synlist.append(new NetCon(&v(0.77756244), syn_NCXLS_NSMR_I6_Serotonin_Glutamate[0], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Axon on tgt cell 0
@@ -1401,7 +1401,7 @@ objectvar syn_NCXLS_NSMR_I6_Serotonin_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I6[0].Axon syn_NCXLS_NSMR_I6_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.3259083)}
-{a_NSMR[0].Neurite2 a_I6[0].synlist.append(new NetCon(&v(0.5575799), syn_NCXLS_NSMR_I6_Serotonin_Glutamate[1], 0.0, 0.0, 0.801555))}
+{a_NSMR[0].Neurite2 a_I6[0].synlist.append(new NetCon(&v(0.5575799), syn_NCXLS_NSMR_I6_Serotonin_Glutamate[1], 0.0, 0.0, 0.800000))}
 
 
 // Adding NetConn: NCXLS_NSMR_I5 from: NSMR to: I5 with 2 connections
@@ -1415,7 +1415,7 @@ objectvar syn_NCXLS_NSMR_I6_Serotonin_Glutamate[2]
 objectvar syn_NCXLS_NSMR_I5_Serotonin_Glutamate[2]
 
 {a_I5[0].Neurite7 syn_NCXLS_NSMR_I5_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.098305404)}
-{a_NSMR[0].Neurite2 a_I5[0].synlist.append(new NetCon(&v(0.2538494), syn_NCXLS_NSMR_I5_Serotonin_Glutamate[0], 0.0, 0.0, 0.554108))}
+{a_NSMR[0].Neurite2 a_I5[0].synlist.append(new NetCon(&v(0.2538494), syn_NCXLS_NSMR_I5_Serotonin_Glutamate[0], 0.0, 0.0, 0.500000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Axon on tgt cell 0
@@ -1424,7 +1424,7 @@ objectvar syn_NCXLS_NSMR_I5_Serotonin_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Axon syn_NCXLS_NSMR_I5_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.050790567)}
-{a_NSMR[0].Neurite3 a_I5[0].synlist.append(new NetCon(&v(0.88573676), syn_NCXLS_NSMR_I5_Serotonin_Glutamate[1], 0.0, 0.0, 0.554108))}
+{a_NSMR[0].Neurite3 a_I5[0].synlist.append(new NetCon(&v(0.88573676), syn_NCXLS_NSMR_I5_Serotonin_Glutamate[1], 0.0, 0.0, 0.500000))}
 
 
 // Adding NetConn: NCXLS_M2L_M2R_GJ from: M2L to: M2R with 1 connections
@@ -1440,11 +1440,11 @@ objectvar elecsyn_NCXLS_M2L_M2R_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M2L_M2R_GJ_Generic_GJ_B[1]
 
 a_M2R[0].Axon { elecsyn_NCXLS_M2L_M2R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.7380634) }
-elecsyn_NCXLS_M2L_M2R_GJ_Generic_GJ_A[0].weight = 0.209735
+elecsyn_NCXLS_M2L_M2R_GJ_Generic_GJ_A[0].weight = 0.200000
 setpointer elecsyn_NCXLS_M2L_M2R_GJ_Generic_GJ_A[0].vgap, a_M2L[0].Axon.v(0.83942163)
 
 a_M2L[0].Axon { elecsyn_NCXLS_M2L_M2R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.83942163) }
-elecsyn_NCXLS_M2L_M2R_GJ_Generic_GJ_B[0].weight = 0.209735
+elecsyn_NCXLS_M2L_M2R_GJ_Generic_GJ_B[0].weight = 0.200000
 setpointer elecsyn_NCXLS_M2L_M2R_GJ_Generic_GJ_B[0].vgap, a_M2R[0].Axon.v(0.7380634)
 
 
@@ -1461,11 +1461,11 @@ objectvar elecsyn_NCXLS_I1L_I1R_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I1L_I1R_GJ_Generic_GJ_B[1]
 
 a_I1R[0].Axon { elecsyn_NCXLS_I1L_I1R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.034426924) }
-elecsyn_NCXLS_I1L_I1R_GJ_Generic_GJ_A[0].weight = 0.197422
+elecsyn_NCXLS_I1L_I1R_GJ_Generic_GJ_A[0].weight = 0.100000
 setpointer elecsyn_NCXLS_I1L_I1R_GJ_Generic_GJ_A[0].vgap, a_I1L[0].Dendrite2.v(0.990148)
 
 a_I1L[0].Dendrite2 { elecsyn_NCXLS_I1L_I1R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.990148) }
-elecsyn_NCXLS_I1L_I1R_GJ_Generic_GJ_B[0].weight = 0.197422
+elecsyn_NCXLS_I1L_I1R_GJ_Generic_GJ_B[0].weight = 0.100000
 setpointer elecsyn_NCXLS_I1L_I1R_GJ_Generic_GJ_B[0].vgap, a_I1R[0].Axon.v(0.034426924)
 
 
@@ -1480,7 +1480,7 @@ setpointer elecsyn_NCXLS_I1L_I1R_GJ_Generic_GJ_B[0].vgap, a_I1R[0].Axon.v(0.0344
 objectvar syn_NCXLS_NSMR_I4_Serotonin_Glutamate[3]
 
 {a_I4[0].Axon syn_NCXLS_NSMR_I4_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.8444346)}
-{a_NSMR[0].Neurite3 a_I4[0].synlist.append(new NetCon(&v(0.03484083), syn_NCXLS_NSMR_I4_Serotonin_Glutamate[0], 0.0, 0.0, 0.992348))}
+{a_NSMR[0].Neurite3 a_I4[0].synlist.append(new NetCon(&v(0.03484083), syn_NCXLS_NSMR_I4_Serotonin_Glutamate[0], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Axon on tgt cell 0
@@ -1489,7 +1489,7 @@ objectvar syn_NCXLS_NSMR_I4_Serotonin_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I4[0].Axon syn_NCXLS_NSMR_I4_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.25979435)}
-{a_NSMR[0].Neurite2 a_I4[0].synlist.append(new NetCon(&v(0.15918465), syn_NCXLS_NSMR_I4_Serotonin_Glutamate[1], 0.0, 0.0, 0.992348))}
+{a_NSMR[0].Neurite2 a_I4[0].synlist.append(new NetCon(&v(0.15918465), syn_NCXLS_NSMR_I4_Serotonin_Glutamate[1], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Dendrite2 on tgt cell 0
@@ -1498,7 +1498,7 @@ objectvar syn_NCXLS_NSMR_I4_Serotonin_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I4[0].Dendrite2 syn_NCXLS_NSMR_I4_Serotonin_Glutamate[2] = new Serotonin_Glutamate(0.9855163)}
-{a_NSMR[0].Neurite3 a_I4[0].synlist.append(new NetCon(&v(0.016696062), syn_NCXLS_NSMR_I4_Serotonin_Glutamate[2], 0.0, 0.0, 0.992348))}
+{a_NSMR[0].Neurite3 a_I4[0].synlist.append(new NetCon(&v(0.016696062), syn_NCXLS_NSMR_I4_Serotonin_Glutamate[2], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_NSMR_I3 from: NSMR to: I3 with 2 connections
@@ -1512,7 +1512,7 @@ objectvar syn_NCXLS_NSMR_I4_Serotonin_Glutamate[3]
 objectvar syn_NCXLS_NSMR_I3_Serotonin_Glutamate[2]
 
 {a_I3[0].Axon syn_NCXLS_NSMR_I3_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.38009116)}
-{a_NSMR[0].Neurite3 a_I3[0].synlist.append(new NetCon(&v(0.3170301), syn_NCXLS_NSMR_I3_Serotonin_Glutamate[0], 0.0, 0.0, 0.996160))}
+{a_NSMR[0].Neurite3 a_I3[0].synlist.append(new NetCon(&v(0.3170301), syn_NCXLS_NSMR_I3_Serotonin_Glutamate[0], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Dendrite2 on tgt cell 0
@@ -1521,7 +1521,7 @@ objectvar syn_NCXLS_NSMR_I3_Serotonin_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I3[0].Dendrite2 syn_NCXLS_NSMR_I3_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.22456397)}
-{a_NSMR[0].Neurite2 a_I3[0].synlist.append(new NetCon(&v(0.6641159), syn_NCXLS_NSMR_I3_Serotonin_Glutamate[1], 0.0, 0.0, 0.996160))}
+{a_NSMR[0].Neurite2 a_I3[0].synlist.append(new NetCon(&v(0.6641159), syn_NCXLS_NSMR_I3_Serotonin_Glutamate[1], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_NSML_M3L from: NSML to: M3L with 1 connections
@@ -1535,7 +1535,7 @@ objectvar syn_NCXLS_NSMR_I3_Serotonin_Glutamate[2]
 objectvar syn_NCXLS_NSML_M3L_Serotonin_Glutamate[1]
 
 {a_M3L[0].Neurite5 syn_NCXLS_NSML_M3L_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.86933655)}
-{a_NSML[0].Neurite2 a_M3L[0].synlist.append(new NetCon(&v(0.70304996), syn_NCXLS_NSML_M3L_Serotonin_Glutamate[0], 0.0, 0.0, 0.941849))}
+{a_NSML[0].Neurite2 a_M3L[0].synlist.append(new NetCon(&v(0.70304996), syn_NCXLS_NSML_M3L_Serotonin_Glutamate[0], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_M2L_I1R from: M2L to: I1R with 3 connections
@@ -1549,7 +1549,7 @@ objectvar syn_NCXLS_NSML_M3L_Serotonin_Glutamate[1]
 objectvar syn_NCXLS_M2L_I1R_Acetylcholine[3]
 
 {a_I1R[0].Axon syn_NCXLS_M2L_I1R_Acetylcholine[0] = new Acetylcholine(0.94928783)}
-{a_M2L[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.41929764), syn_NCXLS_M2L_I1R_Acetylcholine[0], 0.0, 0.0, 0.204571))}
+{a_M2L[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.41929764), syn_NCXLS_M2L_I1R_Acetylcholine[0], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Axon on tgt cell 0
@@ -1558,7 +1558,7 @@ objectvar syn_NCXLS_M2L_I1R_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Axon syn_NCXLS_M2L_I1R_Acetylcholine[1] = new Acetylcholine(0.60681146)}
-{a_M2L[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.7658866), syn_NCXLS_M2L_I1R_Acetylcholine[1], 0.0, 0.0, 0.204571))}
+{a_M2L[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.7658866), syn_NCXLS_M2L_I1R_Acetylcholine[1], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Axon on tgt cell 0
@@ -1567,7 +1567,7 @@ objectvar syn_NCXLS_M2L_I1R_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Axon syn_NCXLS_M2L_I1R_Acetylcholine[2] = new Acetylcholine(0.6049243)}
-{a_M2L[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.8048338), syn_NCXLS_M2L_I1R_Acetylcholine[2], 0.0, 0.0, 0.204571))}
+{a_M2L[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.8048338), syn_NCXLS_M2L_I1R_Acetylcholine[2], 0.0, 0.0, 0.200000))}
 
 
 // Adding NetConn: NCXLS_M3R_I1R from: M3R to: I1R with 4 connections
@@ -1581,7 +1581,7 @@ objectvar syn_NCXLS_M2L_I1R_Acetylcholine[3]
 objectvar syn_NCXLS_M3R_I1R_Glutamate[4]
 
 {a_I1R[0].Dendrite2 syn_NCXLS_M3R_I1R_Glutamate[0] = new Glutamate(0.73238564)}
-{a_M3R[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.4361456), syn_NCXLS_M3R_I1R_Glutamate[0], 0.0, 0.0, 0.352415))}
+{a_M3R[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.4361456), syn_NCXLS_M3R_I1R_Glutamate[0], 0.0, 0.0, 0.300000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Axon on tgt cell 0
@@ -1590,7 +1590,7 @@ objectvar syn_NCXLS_M3R_I1R_Glutamate[4]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Axon syn_NCXLS_M3R_I1R_Glutamate[1] = new Glutamate(0.62986535)}
-{a_M3R[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.6638845), syn_NCXLS_M3R_I1R_Glutamate[1], 0.0, 0.0, 0.352415))}
+{a_M3R[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.6638845), syn_NCXLS_M3R_I1R_Glutamate[1], 0.0, 0.0, 0.300000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Dendrite2 on tgt cell 0
@@ -1599,7 +1599,7 @@ objectvar syn_NCXLS_M3R_I1R_Glutamate[4]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Dendrite2 syn_NCXLS_M3R_I1R_Glutamate[2] = new Glutamate(0.0043928325)}
-{a_M3R[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.91065043), syn_NCXLS_M3R_I1R_Glutamate[2], 0.0, 0.0, 0.352415))}
+{a_M3R[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.91065043), syn_NCXLS_M3R_I1R_Glutamate[2], 0.0, 0.0, 0.300000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Dendrite2 on tgt cell 0
@@ -1608,7 +1608,7 @@ objectvar syn_NCXLS_M3R_I1R_Glutamate[4]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Dendrite2 syn_NCXLS_M3R_I1R_Glutamate[3] = new Glutamate(0.7592469)}
-{a_M3R[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.8611247), syn_NCXLS_M3R_I1R_Glutamate[3], 0.0, 0.0, 0.352415))}
+{a_M3R[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.8611247), syn_NCXLS_M3R_I1R_Glutamate[3], 0.0, 0.0, 0.300000))}
 
 
 // Adding NetConn: NCXLS_M2L_I1L from: M2L to: I1L with 3 connections
@@ -1622,7 +1622,7 @@ objectvar syn_NCXLS_M3R_I1R_Glutamate[4]
 objectvar syn_NCXLS_M2L_I1L_Acetylcholine[3]
 
 {a_I1L[0].Dendrite2 syn_NCXLS_M2L_I1L_Acetylcholine[0] = new Acetylcholine(0.877022)}
-{a_M2L[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.72870684), syn_NCXLS_M2L_I1L_Acetylcholine[0], 0.0, 0.0, 0.471356))}
+{a_M2L[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.72870684), syn_NCXLS_M2L_I1L_Acetylcholine[0], 0.0, 0.0, 0.400000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Dendrite2 on tgt cell 0
@@ -1631,7 +1631,7 @@ objectvar syn_NCXLS_M2L_I1L_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Dendrite2 syn_NCXLS_M2L_I1L_Acetylcholine[1] = new Acetylcholine(0.06438646)}
-{a_M2L[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.42139488), syn_NCXLS_M2L_I1L_Acetylcholine[1], 0.0, 0.0, 0.471356))}
+{a_M2L[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.42139488), syn_NCXLS_M2L_I1L_Acetylcholine[1], 0.0, 0.0, 0.400000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Dendrite2 on tgt cell 0
@@ -1640,7 +1640,7 @@ objectvar syn_NCXLS_M2L_I1L_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Dendrite2 syn_NCXLS_M2L_I1L_Acetylcholine[2] = new Acetylcholine(0.019089585)}
-{a_M2L[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.44298542), syn_NCXLS_M2L_I1L_Acetylcholine[2], 0.0, 0.0, 0.471356))}
+{a_M2L[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.44298542), syn_NCXLS_M2L_I1L_Acetylcholine[2], 0.0, 0.0, 0.400000))}
 
 
 // Adding NetConn: NCXLS_I1L_I3 from: I1L to: I3 with 1 connections
@@ -1654,7 +1654,7 @@ objectvar syn_NCXLS_M2L_I1L_Acetylcholine[3]
 objectvar syn_NCXLS_I1L_I3_Acetylcholine[1]
 
 {a_I3[0].Axon syn_NCXLS_I1L_I3_Acetylcholine[0] = new Acetylcholine(0.31495526)}
-{a_I1L[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.60746), syn_NCXLS_I1L_I3_Acetylcholine[0], 0.0, 0.0, 0.315681))}
+{a_I1L[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.60746), syn_NCXLS_I1L_I3_Acetylcholine[0], 0.0, 0.0, 0.300000))}
 
 
 // Adding NetConn: NCXLS_M3R_MCR_GJ from: M3R to: MCR with 1 connections
@@ -1670,11 +1670,11 @@ objectvar elecsyn_NCXLS_M3R_MCR_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M3R_MCR_GJ_Generic_GJ_B[1]
 
 a_MCR[0].Neurite4 { elecsyn_NCXLS_M3R_MCR_GJ_Generic_GJ_A[0] = new Generic_GJ(0.07245779) }
-elecsyn_NCXLS_M3R_MCR_GJ_Generic_GJ_A[0].weight = 0.590256
+elecsyn_NCXLS_M3R_MCR_GJ_Generic_GJ_A[0].weight = 0.500000
 setpointer elecsyn_NCXLS_M3R_MCR_GJ_Generic_GJ_A[0].vgap, a_M3R[0].Neurite5.v(0.59024024)
 
 a_M3R[0].Neurite5 { elecsyn_NCXLS_M3R_MCR_GJ_Generic_GJ_B[0] = new Generic_GJ(0.59024024) }
-elecsyn_NCXLS_M3R_MCR_GJ_Generic_GJ_B[0].weight = 0.590256
+elecsyn_NCXLS_M3R_MCR_GJ_Generic_GJ_B[0].weight = 0.500000
 setpointer elecsyn_NCXLS_M3R_MCR_GJ_Generic_GJ_B[0].vgap, a_MCR[0].Neurite4.v(0.07245779)
 
 
@@ -1691,11 +1691,11 @@ objectvar elecsyn_NCXLS_M1_I3_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M1_I3_GJ_Generic_GJ_B[1]
 
 a_I3[0].Dendrite2 { elecsyn_NCXLS_M1_I3_GJ_Generic_GJ_A[0] = new Generic_GJ(0.4555965) }
-elecsyn_NCXLS_M1_I3_GJ_Generic_GJ_A[0].weight = 0.448710
+elecsyn_NCXLS_M1_I3_GJ_Generic_GJ_A[0].weight = 0.400000
 setpointer elecsyn_NCXLS_M1_I3_GJ_Generic_GJ_A[0].vgap, a_M1[0].Axon.v(0.651927)
 
 a_M1[0].Axon { elecsyn_NCXLS_M1_I3_GJ_Generic_GJ_B[0] = new Generic_GJ(0.651927) }
-elecsyn_NCXLS_M1_I3_GJ_Generic_GJ_B[0].weight = 0.448710
+elecsyn_NCXLS_M1_I3_GJ_Generic_GJ_B[0].weight = 0.400000
 setpointer elecsyn_NCXLS_M1_I3_GJ_Generic_GJ_B[0].vgap, a_I3[0].Dendrite2.v(0.4555965)
 
 
@@ -1710,7 +1710,7 @@ setpointer elecsyn_NCXLS_M1_I3_GJ_Generic_GJ_B[0].vgap, a_I3[0].Dendrite2.v(0.45
 objectvar syn_NCXLS_M3R_I1L_Glutamate[4]
 
 {a_I1L[0].Dendrite2 syn_NCXLS_M3R_I1L_Glutamate[0] = new Glutamate(0.87975246)}
-{a_M3R[0].Neurite4 a_I1L[0].synlist.append(new NetCon(&v(0.14634323), syn_NCXLS_M3R_I1L_Glutamate[0], 0.0, 0.0, 0.945223))}
+{a_M3R[0].Neurite4 a_I1L[0].synlist.append(new NetCon(&v(0.14634323), syn_NCXLS_M3R_I1L_Glutamate[0], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite5 on src cell 0 to Axon on tgt cell 0
@@ -1719,7 +1719,7 @@ objectvar syn_NCXLS_M3R_I1L_Glutamate[4]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Axon syn_NCXLS_M3R_I1L_Glutamate[1] = new Glutamate(0.29684675)}
-{a_M3R[0].Neurite5 a_I1L[0].synlist.append(new NetCon(&v(0.11919928), syn_NCXLS_M3R_I1L_Glutamate[1], 0.0, 0.0, 0.945223))}
+{a_M3R[0].Neurite5 a_I1L[0].synlist.append(new NetCon(&v(0.11919928), syn_NCXLS_M3R_I1L_Glutamate[1], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite5 on src cell 0 to Axon on tgt cell 0
@@ -1728,7 +1728,7 @@ objectvar syn_NCXLS_M3R_I1L_Glutamate[4]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Axon syn_NCXLS_M3R_I1L_Glutamate[2] = new Glutamate(0.5719103)}
-{a_M3R[0].Neurite5 a_I1L[0].synlist.append(new NetCon(&v(0.56070405), syn_NCXLS_M3R_I1L_Glutamate[2], 0.0, 0.0, 0.945223))}
+{a_M3R[0].Neurite5 a_I1L[0].synlist.append(new NetCon(&v(0.56070405), syn_NCXLS_M3R_I1L_Glutamate[2], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Axon on tgt cell 0
@@ -1737,7 +1737,7 @@ objectvar syn_NCXLS_M3R_I1L_Glutamate[4]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Axon syn_NCXLS_M3R_I1L_Glutamate[3] = new Glutamate(0.4362446)}
-{a_M3R[0].Neurite4 a_I1L[0].synlist.append(new NetCon(&v(0.3349044), syn_NCXLS_M3R_I1L_Glutamate[3], 0.0, 0.0, 0.945223))}
+{a_M3R[0].Neurite4 a_I1L[0].synlist.append(new NetCon(&v(0.3349044), syn_NCXLS_M3R_I1L_Glutamate[3], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_M1_I4_GJ from: M1 to: I4 with 1 connections
@@ -1753,11 +1753,11 @@ objectvar elecsyn_NCXLS_M1_I4_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M1_I4_GJ_Generic_GJ_B[1]
 
 a_I4[0].Dendrite2 { elecsyn_NCXLS_M1_I4_GJ_Generic_GJ_A[0] = new Generic_GJ(0.49413562) }
-elecsyn_NCXLS_M1_I4_GJ_Generic_GJ_A[0].weight = 0.115568
+elecsyn_NCXLS_M1_I4_GJ_Generic_GJ_A[0].weight = 0.100000
 setpointer elecsyn_NCXLS_M1_I4_GJ_Generic_GJ_A[0].vgap, a_M1[0].Axon.v(0.042364307)
 
 a_M1[0].Axon { elecsyn_NCXLS_M1_I4_GJ_Generic_GJ_B[0] = new Generic_GJ(0.042364307) }
-elecsyn_NCXLS_M1_I4_GJ_Generic_GJ_B[0].weight = 0.115568
+elecsyn_NCXLS_M1_I4_GJ_Generic_GJ_B[0].weight = 0.100000
 setpointer elecsyn_NCXLS_M1_I4_GJ_Generic_GJ_B[0].vgap, a_I4[0].Dendrite2.v(0.49413562)
 
 
@@ -1772,7 +1772,7 @@ setpointer elecsyn_NCXLS_M1_I4_GJ_Generic_GJ_B[0].vgap, a_I4[0].Dendrite2.v(0.49
 objectvar syn_NCXLS_M5_M1_Acetylcholine[1]
 
 {a_M1[0].Axon syn_NCXLS_M5_M1_Acetylcholine[0] = new Acetylcholine(0.1347662)}
-{a_M5[0].Dendrite2 a_M1[0].synlist.append(new NetCon(&v(0.57147753), syn_NCXLS_M5_M1_Acetylcholine[0], 0.0, 0.0, 0.240140))}
+{a_M5[0].Dendrite2 a_M1[0].synlist.append(new NetCon(&v(0.57147753), syn_NCXLS_M5_M1_Acetylcholine[0], 0.0, 0.0, 0.200000))}
 
 
 // Adding NetConn: NCXLS_I2R_I1L_GJ from: I2R to: I1L with 1 connections
@@ -1788,11 +1788,11 @@ objectvar elecsyn_NCXLS_I2R_I1L_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I2R_I1L_GJ_Generic_GJ_B[1]
 
 a_I1L[0].Axon { elecsyn_NCXLS_I2R_I1L_GJ_Generic_GJ_A[0] = new Generic_GJ(0.14180808) }
-elecsyn_NCXLS_I2R_I1L_GJ_Generic_GJ_A[0].weight = 0.641051
+elecsyn_NCXLS_I2R_I1L_GJ_Generic_GJ_A[0].weight = 0.600000
 setpointer elecsyn_NCXLS_I2R_I1L_GJ_Generic_GJ_A[0].vgap, a_I2R[0].Axon.v(0.084608994)
 
 a_I2R[0].Axon { elecsyn_NCXLS_I2R_I1L_GJ_Generic_GJ_B[0] = new Generic_GJ(0.084608994) }
-elecsyn_NCXLS_I2R_I1L_GJ_Generic_GJ_B[0].weight = 0.641051
+elecsyn_NCXLS_I2R_I1L_GJ_Generic_GJ_B[0].weight = 0.600000
 setpointer elecsyn_NCXLS_I2R_I1L_GJ_Generic_GJ_B[0].vgap, a_I1L[0].Axon.v(0.14180808)
 
 
@@ -1809,11 +1809,11 @@ objectvar elecsyn_NCXLS_M3L_MCL_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M3L_MCL_GJ_Generic_GJ_B[1]
 
 a_MCL[0].Dendrite2 { elecsyn_NCXLS_M3L_MCL_GJ_Generic_GJ_A[0] = new Generic_GJ(0.843637) }
-elecsyn_NCXLS_M3L_MCL_GJ_Generic_GJ_A[0].weight = 0.519368
+elecsyn_NCXLS_M3L_MCL_GJ_Generic_GJ_A[0].weight = 0.500000
 setpointer elecsyn_NCXLS_M3L_MCL_GJ_Generic_GJ_A[0].vgap, a_M3L[0].Neurite5.v(0.3428045)
 
 a_M3L[0].Neurite5 { elecsyn_NCXLS_M3L_MCL_GJ_Generic_GJ_B[0] = new Generic_GJ(0.3428045) }
-elecsyn_NCXLS_M3L_MCL_GJ_Generic_GJ_B[0].weight = 0.519368
+elecsyn_NCXLS_M3L_MCL_GJ_Generic_GJ_B[0].weight = 0.500000
 setpointer elecsyn_NCXLS_M3L_MCL_GJ_Generic_GJ_B[0].vgap, a_MCL[0].Dendrite2.v(0.843637)
 
 
@@ -1830,11 +1830,11 @@ objectvar elecsyn_NCXLS_M2R_M5_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M2R_M5_GJ_Generic_GJ_B[1]
 
 a_M5[0].Axon { elecsyn_NCXLS_M2R_M5_GJ_Generic_GJ_A[0] = new Generic_GJ(0.104392126) }
-elecsyn_NCXLS_M2R_M5_GJ_Generic_GJ_A[0].weight = 0.311894
+elecsyn_NCXLS_M2R_M5_GJ_Generic_GJ_A[0].weight = 0.300000
 setpointer elecsyn_NCXLS_M2R_M5_GJ_Generic_GJ_A[0].vgap, a_M2R[0].Axon.v(0.17584366)
 
 a_M2R[0].Axon { elecsyn_NCXLS_M2R_M5_GJ_Generic_GJ_B[0] = new Generic_GJ(0.17584366) }
-elecsyn_NCXLS_M2R_M5_GJ_Generic_GJ_B[0].weight = 0.311894
+elecsyn_NCXLS_M2R_M5_GJ_Generic_GJ_B[0].weight = 0.300000
 setpointer elecsyn_NCXLS_M2R_M5_GJ_Generic_GJ_B[0].vgap, a_M5[0].Axon.v(0.104392126)
 
 
@@ -1849,7 +1849,7 @@ setpointer elecsyn_NCXLS_M2R_M5_GJ_Generic_GJ_B[0].vgap, a_M5[0].Axon.v(0.104392
 objectvar syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[6]
 
 {a_I2R[0].Axon syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.83796906)}
-{a_NSMR[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.54739976), syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[0], 0.0, 0.0, 0.110237))}
+{a_NSMR[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.54739976), syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[0], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Dendrite2 on tgt cell 0
@@ -1858,7 +1858,7 @@ objectvar syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Dendrite2 syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.13974386)}
-{a_NSMR[0].Neurite3 a_I2R[0].synlist.append(new NetCon(&v(0.6524709), syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[1], 0.0, 0.0, 0.110237))}
+{a_NSMR[0].Neurite3 a_I2R[0].synlist.append(new NetCon(&v(0.6524709), syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[1], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Dendrite2 on tgt cell 0
@@ -1867,7 +1867,7 @@ objectvar syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Dendrite2 syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[2] = new Serotonin_Glutamate(0.53071326)}
-{a_NSMR[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.39220837), syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[2], 0.0, 0.0, 0.110237))}
+{a_NSMR[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.39220837), syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[2], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Axon on tgt cell 0
@@ -1876,7 +1876,7 @@ objectvar syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Axon syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[3] = new Serotonin_Glutamate(0.43456092)}
-{a_NSMR[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.90819484), syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[3], 0.0, 0.0, 0.110237))}
+{a_NSMR[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.90819484), syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[3], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Axon on tgt cell 0
@@ -1885,7 +1885,7 @@ objectvar syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Axon syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[4] = new Serotonin_Glutamate(0.7911845)}
-{a_NSMR[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.35090965), syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[4], 0.0, 0.0, 0.110237))}
+{a_NSMR[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.35090965), syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[4], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Dendrite2 on tgt cell 0
@@ -1894,7 +1894,7 @@ objectvar syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Dendrite2 syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[5] = new Serotonin_Glutamate(0.20205808)}
-{a_NSMR[0].Neurite3 a_I2R[0].synlist.append(new NetCon(&v(0.49529544), syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[5], 0.0, 0.0, 0.110237))}
+{a_NSMR[0].Neurite3 a_I2R[0].synlist.append(new NetCon(&v(0.49529544), syn_NCXLS_NSMR_I2R_Serotonin_Glutamate[5], 0.0, 0.0, 0.100000))}
 
 
 // Adding NetConn: NCXLS_M5_M2L_GJ from: M5 to: M2L with 2 connections
@@ -1910,11 +1910,11 @@ objectvar elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_A[2]
 objectvar elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_B[2]
 
 a_M2L[0].Axon { elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_A[0] = new Generic_GJ(0.21505661) }
-elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_A[0].weight = 0.097827
+elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_A[0].weight = 0.000000
 setpointer elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_A[0].vgap, a_M5[0].Dendrite2.v(0.20085944)
 
 a_M5[0].Dendrite2 { elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_B[0] = new Generic_GJ(0.20085944) }
-elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_B[0].weight = 0.097827
+elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_B[0].weight = 0.000000
 setpointer elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_B[0].vgap, a_M2L[0].Axon.v(0.21505661)
 
 
@@ -1924,11 +1924,11 @@ setpointer elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_B[0].vgap, a_M2L[0].Axon.v(0.21505
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M2L[0].Axon { elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_A[1] = new Generic_GJ(0.77373356) }
-elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_A[1].weight = 0.097827
+elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_A[1].weight = 0.000000
 setpointer elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_A[1].vgap, a_M5[0].Axon.v(0.80533373)
 
 a_M5[0].Axon { elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_B[1] = new Generic_GJ(0.80533373) }
-elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_B[1].weight = 0.097827
+elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_B[1].weight = 0.000000
 setpointer elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_B[1].vgap, a_M2L[0].Axon.v(0.77373356)
 
 
@@ -1943,7 +1943,7 @@ setpointer elecsyn_NCXLS_M5_M2L_GJ_Generic_GJ_B[1].vgap, a_M2L[0].Axon.v(0.77373
 objectvar syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[6]
 
 {a_I2L[0].Dendrite2 syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.42104444)}
-{a_NSMR[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.61424464), syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[0], 0.0, 0.0, 0.821969))}
+{a_NSMR[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.61424464), syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[0], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Axon on tgt cell 0
@@ -1952,7 +1952,7 @@ objectvar syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Axon syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.40910134)}
-{a_NSMR[0].Neurite3 a_I2L[0].synlist.append(new NetCon(&v(0.3573674), syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[1], 0.0, 0.0, 0.821969))}
+{a_NSMR[0].Neurite3 a_I2L[0].synlist.append(new NetCon(&v(0.3573674), syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[1], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Dendrite2 on tgt cell 0
@@ -1961,7 +1961,7 @@ objectvar syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Dendrite2 syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[2] = new Serotonin_Glutamate(0.5995904)}
-{a_NSMR[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.35733935), syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[2], 0.0, 0.0, 0.821969))}
+{a_NSMR[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.35733935), syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[2], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Axon on tgt cell 0
@@ -1970,7 +1970,7 @@ objectvar syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Axon syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[3] = new Serotonin_Glutamate(0.5701808)}
-{a_NSMR[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.56651735), syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[3], 0.0, 0.0, 0.821969))}
+{a_NSMR[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.56651735), syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[3], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Axon on tgt cell 0
@@ -1979,7 +1979,7 @@ objectvar syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Axon syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[4] = new Serotonin_Glutamate(0.71854305)}
-{a_NSMR[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.5180653), syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[4], 0.0, 0.0, 0.821969))}
+{a_NSMR[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.5180653), syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[4], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Axon on tgt cell 0
@@ -1988,7 +1988,7 @@ objectvar syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Axon syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[5] = new Serotonin_Glutamate(0.80750775)}
-{a_NSMR[0].Neurite3 a_I2L[0].synlist.append(new NetCon(&v(0.30063763), syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[5], 0.0, 0.0, 0.821969))}
+{a_NSMR[0].Neurite3 a_I2L[0].synlist.append(new NetCon(&v(0.30063763), syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[5], 0.0, 0.0, 0.800000))}
 
 
 // Adding NetConn: NCXLS_M3L_I1R from: M3L to: I1R with 4 connections
@@ -2002,7 +2002,7 @@ objectvar syn_NCXLS_NSMR_I2L_Serotonin_Glutamate[6]
 objectvar syn_NCXLS_M3L_I1R_Glutamate[4]
 
 {a_I1R[0].Dendrite2 syn_NCXLS_M3L_I1R_Glutamate[0] = new Glutamate(0.051713284)}
-{a_M3L[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.7245071), syn_NCXLS_M3L_I1R_Glutamate[0], 0.0, 0.0, 0.096471))}
+{a_M3L[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.7245071), syn_NCXLS_M3L_I1R_Glutamate[0], 0.0, 0.0, 0.000000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite5 on src cell 0 to Dendrite2 on tgt cell 0
@@ -2011,7 +2011,7 @@ objectvar syn_NCXLS_M3L_I1R_Glutamate[4]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Dendrite2 syn_NCXLS_M3L_I1R_Glutamate[1] = new Glutamate(0.29354376)}
-{a_M3L[0].Neurite5 a_I1R[0].synlist.append(new NetCon(&v(0.16396478), syn_NCXLS_M3L_I1R_Glutamate[1], 0.0, 0.0, 0.096471))}
+{a_M3L[0].Neurite5 a_I1R[0].synlist.append(new NetCon(&v(0.16396478), syn_NCXLS_M3L_I1R_Glutamate[1], 0.0, 0.0, 0.000000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Axon on tgt cell 0
@@ -2020,7 +2020,7 @@ objectvar syn_NCXLS_M3L_I1R_Glutamate[4]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Axon syn_NCXLS_M3L_I1R_Glutamate[2] = new Glutamate(0.29665652)}
-{a_M3L[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.819083), syn_NCXLS_M3L_I1R_Glutamate[2], 0.0, 0.0, 0.096471))}
+{a_M3L[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.819083), syn_NCXLS_M3L_I1R_Glutamate[2], 0.0, 0.0, 0.000000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Dendrite2 on tgt cell 0
@@ -2029,7 +2029,7 @@ objectvar syn_NCXLS_M3L_I1R_Glutamate[4]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Dendrite2 syn_NCXLS_M3L_I1R_Glutamate[3] = new Glutamate(0.1856687)}
-{a_M3L[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.7421432), syn_NCXLS_M3L_I1R_Glutamate[3], 0.0, 0.0, 0.096471))}
+{a_M3L[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.7421432), syn_NCXLS_M3L_I1R_Glutamate[3], 0.0, 0.0, 0.000000))}
 
 
 // Adding NetConn: NCXLS_I2R_M1_GJ from: I2R to: M1 with 1 connections
@@ -2045,11 +2045,11 @@ objectvar elecsyn_NCXLS_I2R_M1_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I2R_M1_GJ_Generic_GJ_B[1]
 
 a_M1[0].Axon { elecsyn_NCXLS_I2R_M1_GJ_Generic_GJ_A[0] = new Generic_GJ(0.4041027) }
-elecsyn_NCXLS_I2R_M1_GJ_Generic_GJ_A[0].weight = 0.353775
+elecsyn_NCXLS_I2R_M1_GJ_Generic_GJ_A[0].weight = 0.300000
 setpointer elecsyn_NCXLS_I2R_M1_GJ_Generic_GJ_A[0].vgap, a_I2R[0].Dendrite2.v(0.23501197)
 
 a_I2R[0].Dendrite2 { elecsyn_NCXLS_I2R_M1_GJ_Generic_GJ_B[0] = new Generic_GJ(0.23501197) }
-elecsyn_NCXLS_I2R_M1_GJ_Generic_GJ_B[0].weight = 0.353775
+elecsyn_NCXLS_I2R_M1_GJ_Generic_GJ_B[0].weight = 0.300000
 setpointer elecsyn_NCXLS_I2R_M1_GJ_Generic_GJ_B[0].vgap, a_M1[0].Axon.v(0.4041027)
 
 
@@ -2066,11 +2066,11 @@ objectvar elecsyn_NCXLS_I2L_M1_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I2L_M1_GJ_Generic_GJ_B[1]
 
 a_M1[0].Axon { elecsyn_NCXLS_I2L_M1_GJ_Generic_GJ_A[0] = new Generic_GJ(0.70208657) }
-elecsyn_NCXLS_I2L_M1_GJ_Generic_GJ_A[0].weight = 0.337406
+elecsyn_NCXLS_I2L_M1_GJ_Generic_GJ_A[0].weight = 0.300000
 setpointer elecsyn_NCXLS_I2L_M1_GJ_Generic_GJ_A[0].vgap, a_I2L[0].Axon.v(0.91457725)
 
 a_I2L[0].Axon { elecsyn_NCXLS_I2L_M1_GJ_Generic_GJ_B[0] = new Generic_GJ(0.91457725) }
-elecsyn_NCXLS_I2L_M1_GJ_Generic_GJ_B[0].weight = 0.337406
+elecsyn_NCXLS_I2L_M1_GJ_Generic_GJ_B[0].weight = 0.300000
 setpointer elecsyn_NCXLS_I2L_M1_GJ_Generic_GJ_B[0].vgap, a_M1[0].Axon.v(0.70208657)
 
 
@@ -2085,7 +2085,7 @@ setpointer elecsyn_NCXLS_I2L_M1_GJ_Generic_GJ_B[0].vgap, a_M1[0].Axon.v(0.702086
 objectvar syn_NCXLS_M3L_I1L_Glutamate[4]
 
 {a_I1L[0].Axon syn_NCXLS_M3L_I1L_Glutamate[0] = new Glutamate(0.19717383)}
-{a_M3L[0].Neurite4 a_I1L[0].synlist.append(new NetCon(&v(0.06552148), syn_NCXLS_M3L_I1L_Glutamate[0], 0.0, 0.0, 0.291819))}
+{a_M3L[0].Neurite4 a_I1L[0].synlist.append(new NetCon(&v(0.06552148), syn_NCXLS_M3L_I1L_Glutamate[0], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite5 on src cell 0 to Dendrite2 on tgt cell 0
@@ -2094,7 +2094,7 @@ objectvar syn_NCXLS_M3L_I1L_Glutamate[4]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Dendrite2 syn_NCXLS_M3L_I1L_Glutamate[1] = new Glutamate(0.61783594)}
-{a_M3L[0].Neurite5 a_I1L[0].synlist.append(new NetCon(&v(0.6299162), syn_NCXLS_M3L_I1L_Glutamate[1], 0.0, 0.0, 0.291819))}
+{a_M3L[0].Neurite5 a_I1L[0].synlist.append(new NetCon(&v(0.6299162), syn_NCXLS_M3L_I1L_Glutamate[1], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite5 on src cell 0 to Axon on tgt cell 0
@@ -2103,7 +2103,7 @@ objectvar syn_NCXLS_M3L_I1L_Glutamate[4]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Axon syn_NCXLS_M3L_I1L_Glutamate[2] = new Glutamate(0.65143335)}
-{a_M3L[0].Neurite5 a_I1L[0].synlist.append(new NetCon(&v(0.5460932), syn_NCXLS_M3L_I1L_Glutamate[2], 0.0, 0.0, 0.291819))}
+{a_M3L[0].Neurite5 a_I1L[0].synlist.append(new NetCon(&v(0.5460932), syn_NCXLS_M3L_I1L_Glutamate[2], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Axon on tgt cell 0
@@ -2112,7 +2112,7 @@ objectvar syn_NCXLS_M3L_I1L_Glutamate[4]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Axon syn_NCXLS_M3L_I1L_Glutamate[3] = new Glutamate(0.69630253)}
-{a_M3L[0].Neurite4 a_I1L[0].synlist.append(new NetCon(&v(0.3729113), syn_NCXLS_M3L_I1L_Glutamate[3], 0.0, 0.0, 0.291819))}
+{a_M3L[0].Neurite4 a_I1L[0].synlist.append(new NetCon(&v(0.3729113), syn_NCXLS_M3L_I1L_Glutamate[3], 0.0, 0.0, 0.200000))}
 
 
 // Adding NetConn: NCXLS_I2L_I1L_GJ from: I2L to: I1L with 1 connections
@@ -2128,11 +2128,11 @@ objectvar elecsyn_NCXLS_I2L_I1L_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I2L_I1L_GJ_Generic_GJ_B[1]
 
 a_I1L[0].Dendrite2 { elecsyn_NCXLS_I2L_I1L_GJ_Generic_GJ_A[0] = new Generic_GJ(0.11887417) }
-elecsyn_NCXLS_I2L_I1L_GJ_Generic_GJ_A[0].weight = 0.598116
+elecsyn_NCXLS_I2L_I1L_GJ_Generic_GJ_A[0].weight = 0.500000
 setpointer elecsyn_NCXLS_I2L_I1L_GJ_Generic_GJ_A[0].vgap, a_I2L[0].Axon.v(0.83967674)
 
 a_I2L[0].Axon { elecsyn_NCXLS_I2L_I1L_GJ_Generic_GJ_B[0] = new Generic_GJ(0.83967674) }
-elecsyn_NCXLS_I2L_I1L_GJ_Generic_GJ_B[0].weight = 0.598116
+elecsyn_NCXLS_I2L_I1L_GJ_Generic_GJ_B[0].weight = 0.500000
 setpointer elecsyn_NCXLS_I2L_I1L_GJ_Generic_GJ_B[0].vgap, a_I1L[0].Dendrite2.v(0.11887417)
 
 
@@ -2147,7 +2147,7 @@ setpointer elecsyn_NCXLS_I2L_I1L_GJ_Generic_GJ_B[0].vgap, a_I1L[0].Dendrite2.v(0
 objectvar syn_NCXLS_I1R_I3_Acetylcholine[1]
 
 {a_I3[0].Dendrite2 syn_NCXLS_I1R_I3_Acetylcholine[0] = new Acetylcholine(0.283006)}
-{a_I1R[0].Dendrite2 a_I3[0].synlist.append(new NetCon(&v(0.6433387), syn_NCXLS_I1R_I3_Acetylcholine[0], 0.0, 0.0, 0.825797))}
+{a_I1R[0].Dendrite2 a_I3[0].synlist.append(new NetCon(&v(0.6433387), syn_NCXLS_I1R_I3_Acetylcholine[0], 0.0, 0.0, 0.800000))}
 
 
 // Adding NetConn: NCXLS_I5_I1R from: I5 to: I1R with 2 connections
@@ -2161,7 +2161,7 @@ objectvar syn_NCXLS_I1R_I3_Acetylcholine[1]
 objectvar syn_NCXLS_I5_I1R_Serotonin_Glutamate[2]
 
 {a_I1R[0].Axon syn_NCXLS_I5_I1R_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.27467945)}
-{a_I5[0].Neurite10 a_I1R[0].synlist.append(new NetCon(&v(0.28994823), syn_NCXLS_I5_I1R_Serotonin_Glutamate[0], 0.0, 0.0, 0.004535))}
+{a_I5[0].Neurite10 a_I1R[0].synlist.append(new NetCon(&v(0.28994823), syn_NCXLS_I5_I1R_Serotonin_Glutamate[0], 0.0, 0.0, 0.000000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Axon on tgt cell 0
@@ -2170,7 +2170,7 @@ objectvar syn_NCXLS_I5_I1R_Serotonin_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Axon syn_NCXLS_I5_I1R_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.21919027)}
-{a_I5[0].Neurite3 a_I1R[0].synlist.append(new NetCon(&v(0.0636128), syn_NCXLS_I5_I1R_Serotonin_Glutamate[1], 0.0, 0.0, 0.004535))}
+{a_I5[0].Neurite3 a_I1R[0].synlist.append(new NetCon(&v(0.0636128), syn_NCXLS_I5_I1R_Serotonin_Glutamate[1], 0.0, 0.0, 0.000000))}
 
 
 // Adding NetConn: NCXLS_I2L_M1 from: I2L to: M1 with 2 connections
@@ -2184,7 +2184,7 @@ objectvar syn_NCXLS_I5_I1R_Serotonin_Glutamate[2]
 objectvar syn_NCXLS_I2L_M1_Glutamate[2]
 
 {a_M1[0].Axon syn_NCXLS_I2L_M1_Glutamate[0] = new Glutamate(0.8453694)}
-{a_I2L[0].Axon a_M1[0].synlist.append(new NetCon(&v(0.160202), syn_NCXLS_I2L_M1_Glutamate[0], 0.0, 0.0, 0.337406))}
+{a_I2L[0].Axon a_M1[0].synlist.append(new NetCon(&v(0.160202), syn_NCXLS_I2L_M1_Glutamate[0], 0.0, 0.0, 0.300000))}
 
 
 //  Syn conn (type: Glutamate) from Dendrite2 on src cell 0 to Axon on tgt cell 0
@@ -2193,7 +2193,7 @@ objectvar syn_NCXLS_I2L_M1_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_M1[0].Axon syn_NCXLS_I2L_M1_Glutamate[1] = new Glutamate(0.4853541)}
-{a_I2L[0].Dendrite2 a_M1[0].synlist.append(new NetCon(&v(0.9196907), syn_NCXLS_I2L_M1_Glutamate[1], 0.0, 0.0, 0.337406))}
+{a_I2L[0].Dendrite2 a_M1[0].synlist.append(new NetCon(&v(0.9196907), syn_NCXLS_I2L_M1_Glutamate[1], 0.0, 0.0, 0.300000))}
 
 
 // Adding NetConn: NCXLS_M2L_M5_GJ from: M2L to: M5 with 1 connections
@@ -2209,11 +2209,11 @@ objectvar elecsyn_NCXLS_M2L_M5_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M2L_M5_GJ_Generic_GJ_B[1]
 
 a_M5[0].Axon { elecsyn_NCXLS_M2L_M5_GJ_Generic_GJ_A[0] = new Generic_GJ(0.6706252) }
-elecsyn_NCXLS_M2L_M5_GJ_Generic_GJ_A[0].weight = 0.490753
+elecsyn_NCXLS_M2L_M5_GJ_Generic_GJ_A[0].weight = 0.400000
 setpointer elecsyn_NCXLS_M2L_M5_GJ_Generic_GJ_A[0].vgap, a_M2L[0].Axon.v(0.14679462)
 
 a_M2L[0].Axon { elecsyn_NCXLS_M2L_M5_GJ_Generic_GJ_B[0] = new Generic_GJ(0.14679462) }
-elecsyn_NCXLS_M2L_M5_GJ_Generic_GJ_B[0].weight = 0.490753
+elecsyn_NCXLS_M2L_M5_GJ_Generic_GJ_B[0].weight = 0.400000
 setpointer elecsyn_NCXLS_M2L_M5_GJ_Generic_GJ_B[0].vgap, a_M5[0].Axon.v(0.6706252)
 
 
@@ -2228,7 +2228,7 @@ setpointer elecsyn_NCXLS_M2L_M5_GJ_Generic_GJ_B[0].vgap, a_M5[0].Axon.v(0.670625
 objectvar syn_NCXLS_I4_I2R_Glutamate[5]
 
 {a_I2R[0].Dendrite2 syn_NCXLS_I4_I2R_Glutamate[0] = new Glutamate(0.35956782)}
-{a_I4[0].Axon a_I2R[0].synlist.append(new NetCon(&v(0.8827689), syn_NCXLS_I4_I2R_Glutamate[0], 0.0, 0.0, 0.284197))}
+{a_I4[0].Axon a_I2R[0].synlist.append(new NetCon(&v(0.8827689), syn_NCXLS_I4_I2R_Glutamate[0], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Glutamate) from Axon on src cell 0 to Axon on tgt cell 0
@@ -2237,7 +2237,7 @@ objectvar syn_NCXLS_I4_I2R_Glutamate[5]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Axon syn_NCXLS_I4_I2R_Glutamate[1] = new Glutamate(0.21002786)}
-{a_I4[0].Axon a_I2R[0].synlist.append(new NetCon(&v(0.3083606), syn_NCXLS_I4_I2R_Glutamate[1], 0.0, 0.0, 0.284197))}
+{a_I4[0].Axon a_I2R[0].synlist.append(new NetCon(&v(0.3083606), syn_NCXLS_I4_I2R_Glutamate[1], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Glutamate) from Dendrite2 on src cell 0 to Axon on tgt cell 0
@@ -2246,7 +2246,7 @@ objectvar syn_NCXLS_I4_I2R_Glutamate[5]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Axon syn_NCXLS_I4_I2R_Glutamate[2] = new Glutamate(0.7731748)}
-{a_I4[0].Dendrite2 a_I2R[0].synlist.append(new NetCon(&v(0.4186867), syn_NCXLS_I4_I2R_Glutamate[2], 0.0, 0.0, 0.284197))}
+{a_I4[0].Dendrite2 a_I2R[0].synlist.append(new NetCon(&v(0.4186867), syn_NCXLS_I4_I2R_Glutamate[2], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Glutamate) from Dendrite2 on src cell 0 to Axon on tgt cell 0
@@ -2255,7 +2255,7 @@ objectvar syn_NCXLS_I4_I2R_Glutamate[5]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Axon syn_NCXLS_I4_I2R_Glutamate[3] = new Glutamate(0.3452668)}
-{a_I4[0].Dendrite2 a_I2R[0].synlist.append(new NetCon(&v(0.22193289), syn_NCXLS_I4_I2R_Glutamate[3], 0.0, 0.0, 0.284197))}
+{a_I4[0].Dendrite2 a_I2R[0].synlist.append(new NetCon(&v(0.22193289), syn_NCXLS_I4_I2R_Glutamate[3], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Glutamate) from Dendrite2 on src cell 0 to Axon on tgt cell 0
@@ -2264,7 +2264,7 @@ objectvar syn_NCXLS_I4_I2R_Glutamate[5]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Axon syn_NCXLS_I4_I2R_Glutamate[4] = new Glutamate(0.7537915)}
-{a_I4[0].Dendrite2 a_I2R[0].synlist.append(new NetCon(&v(0.22482729), syn_NCXLS_I4_I2R_Glutamate[4], 0.0, 0.0, 0.284197))}
+{a_I4[0].Dendrite2 a_I2R[0].synlist.append(new NetCon(&v(0.22482729), syn_NCXLS_I4_I2R_Glutamate[4], 0.0, 0.0, 0.200000))}
 
 
 // Adding NetConn: NCXLS_I5_I1L from: I5 to: I1L with 3 connections
@@ -2278,7 +2278,7 @@ objectvar syn_NCXLS_I4_I2R_Glutamate[5]
 objectvar syn_NCXLS_I5_I1L_Serotonin_Glutamate[3]
 
 {a_I1L[0].Axon syn_NCXLS_I5_I1L_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.16617751)}
-{a_I5[0].Neurite7 a_I1L[0].synlist.append(new NetCon(&v(0.97341657), syn_NCXLS_I5_I1L_Serotonin_Glutamate[0], 0.0, 0.0, 0.896595))}
+{a_I5[0].Neurite7 a_I1L[0].synlist.append(new NetCon(&v(0.97341657), syn_NCXLS_I5_I1L_Serotonin_Glutamate[0], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Axon on tgt cell 0
@@ -2287,7 +2287,7 @@ objectvar syn_NCXLS_I5_I1L_Serotonin_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Axon syn_NCXLS_I5_I1L_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.96407)}
-{a_I5[0].Neurite3 a_I1L[0].synlist.append(new NetCon(&v(0.740302), syn_NCXLS_I5_I1L_Serotonin_Glutamate[1], 0.0, 0.0, 0.896595))}
+{a_I5[0].Neurite3 a_I1L[0].synlist.append(new NetCon(&v(0.740302), syn_NCXLS_I5_I1L_Serotonin_Glutamate[1], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Axon on src cell 0 to Axon on tgt cell 0
@@ -2296,7 +2296,7 @@ objectvar syn_NCXLS_I5_I1L_Serotonin_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Axon syn_NCXLS_I5_I1L_Serotonin_Glutamate[2] = new Serotonin_Glutamate(0.36235198)}
-{a_I5[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.0751435), syn_NCXLS_I5_I1L_Serotonin_Glutamate[2], 0.0, 0.0, 0.896595))}
+{a_I5[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.0751435), syn_NCXLS_I5_I1L_Serotonin_Glutamate[2], 0.0, 0.0, 0.800000))}
 
 
 // Adding NetConn: NCXLS_I2R_I1R_GJ from: I2R to: I1R with 1 connections
@@ -2312,11 +2312,11 @@ objectvar elecsyn_NCXLS_I2R_I1R_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I2R_I1R_GJ_Generic_GJ_B[1]
 
 a_I1R[0].Axon { elecsyn_NCXLS_I2R_I1R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.6921931) }
-elecsyn_NCXLS_I2R_I1R_GJ_Generic_GJ_A[0].weight = 0.995683
+elecsyn_NCXLS_I2R_I1R_GJ_Generic_GJ_A[0].weight = 0.900000
 setpointer elecsyn_NCXLS_I2R_I1R_GJ_Generic_GJ_A[0].vgap, a_I2R[0].Axon.v(0.50478107)
 
 a_I2R[0].Axon { elecsyn_NCXLS_I2R_I1R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.50478107) }
-elecsyn_NCXLS_I2R_I1R_GJ_Generic_GJ_B[0].weight = 0.995683
+elecsyn_NCXLS_I2R_I1R_GJ_Generic_GJ_B[0].weight = 0.900000
 setpointer elecsyn_NCXLS_I2R_I1R_GJ_Generic_GJ_B[0].vgap, a_I1R[0].Axon.v(0.6921931)
 
 
@@ -2331,7 +2331,7 @@ setpointer elecsyn_NCXLS_I2R_I1R_GJ_Generic_GJ_B[0].vgap, a_I1R[0].Axon.v(0.6921
 objectvar syn_NCXLS_NSML_I2R_Serotonin_Glutamate[6]
 
 {a_I2R[0].Axon syn_NCXLS_NSML_I2R_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.65325)}
-{a_NSML[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.9598028), syn_NCXLS_NSML_I2R_Serotonin_Glutamate[0], 0.0, 0.0, 0.530432))}
+{a_NSML[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.9598028), syn_NCXLS_NSML_I2R_Serotonin_Glutamate[0], 0.0, 0.0, 0.500000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Axon on tgt cell 0
@@ -2340,7 +2340,7 @@ objectvar syn_NCXLS_NSML_I2R_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Axon syn_NCXLS_NSML_I2R_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.49537447)}
-{a_NSML[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.7658189), syn_NCXLS_NSML_I2R_Serotonin_Glutamate[1], 0.0, 0.0, 0.530432))}
+{a_NSML[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.7658189), syn_NCXLS_NSML_I2R_Serotonin_Glutamate[1], 0.0, 0.0, 0.500000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Axon on tgt cell 0
@@ -2349,7 +2349,7 @@ objectvar syn_NCXLS_NSML_I2R_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Axon syn_NCXLS_NSML_I2R_Serotonin_Glutamate[2] = new Serotonin_Glutamate(0.5028891)}
-{a_NSML[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.8375212), syn_NCXLS_NSML_I2R_Serotonin_Glutamate[2], 0.0, 0.0, 0.530432))}
+{a_NSML[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.8375212), syn_NCXLS_NSML_I2R_Serotonin_Glutamate[2], 0.0, 0.0, 0.500000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Axon on tgt cell 0
@@ -2358,7 +2358,7 @@ objectvar syn_NCXLS_NSML_I2R_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Axon syn_NCXLS_NSML_I2R_Serotonin_Glutamate[3] = new Serotonin_Glutamate(0.22043657)}
-{a_NSML[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.68987054), syn_NCXLS_NSML_I2R_Serotonin_Glutamate[3], 0.0, 0.0, 0.530432))}
+{a_NSML[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.68987054), syn_NCXLS_NSML_I2R_Serotonin_Glutamate[3], 0.0, 0.0, 0.500000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Dendrite2 on tgt cell 0
@@ -2367,7 +2367,7 @@ objectvar syn_NCXLS_NSML_I2R_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Dendrite2 syn_NCXLS_NSML_I2R_Serotonin_Glutamate[4] = new Serotonin_Glutamate(0.13981465)}
-{a_NSML[0].Neurite3 a_I2R[0].synlist.append(new NetCon(&v(0.36150977), syn_NCXLS_NSML_I2R_Serotonin_Glutamate[4], 0.0, 0.0, 0.530432))}
+{a_NSML[0].Neurite3 a_I2R[0].synlist.append(new NetCon(&v(0.36150977), syn_NCXLS_NSML_I2R_Serotonin_Glutamate[4], 0.0, 0.0, 0.500000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Dendrite2 on tgt cell 0
@@ -2376,7 +2376,7 @@ objectvar syn_NCXLS_NSML_I2R_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Dendrite2 syn_NCXLS_NSML_I2R_Serotonin_Glutamate[5] = new Serotonin_Glutamate(0.22206947)}
-{a_NSML[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.06456939), syn_NCXLS_NSML_I2R_Serotonin_Glutamate[5], 0.0, 0.0, 0.530432))}
+{a_NSML[0].Neurite2 a_I2R[0].synlist.append(new NetCon(&v(0.06456939), syn_NCXLS_NSML_I2R_Serotonin_Glutamate[5], 0.0, 0.0, 0.500000))}
 
 
 // Adding NetConn: NCXLS_M3L_MCR_GJ from: M3L to: MCR with 1 connections
@@ -2392,11 +2392,11 @@ objectvar elecsyn_NCXLS_M3L_MCR_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M3L_MCR_GJ_Generic_GJ_B[1]
 
 a_MCR[0].Dendrite2 { elecsyn_NCXLS_M3L_MCR_GJ_Generic_GJ_A[0] = new Generic_GJ(0.58175397) }
-elecsyn_NCXLS_M3L_MCR_GJ_Generic_GJ_A[0].weight = 0.686558
+elecsyn_NCXLS_M3L_MCR_GJ_Generic_GJ_A[0].weight = 0.600000
 setpointer elecsyn_NCXLS_M3L_MCR_GJ_Generic_GJ_A[0].vgap, a_M3L[0].Neurite4.v(0.6792085)
 
 a_M3L[0].Neurite4 { elecsyn_NCXLS_M3L_MCR_GJ_Generic_GJ_B[0] = new Generic_GJ(0.6792085) }
-elecsyn_NCXLS_M3L_MCR_GJ_Generic_GJ_B[0].weight = 0.686558
+elecsyn_NCXLS_M3L_MCR_GJ_Generic_GJ_B[0].weight = 0.600000
 setpointer elecsyn_NCXLS_M3L_MCR_GJ_Generic_GJ_B[0].vgap, a_MCR[0].Dendrite2.v(0.58175397)
 
 
@@ -2411,7 +2411,7 @@ setpointer elecsyn_NCXLS_M3L_MCR_GJ_Generic_GJ_B[0].vgap, a_MCR[0].Dendrite2.v(0
 objectvar syn_NCXLS_I4_I2L_Glutamate[5]
 
 {a_I2L[0].Axon syn_NCXLS_I4_I2L_Glutamate[0] = new Glutamate(0.0073745865)}
-{a_I4[0].Dendrite2 a_I2L[0].synlist.append(new NetCon(&v(0.48873007), syn_NCXLS_I4_I2L_Glutamate[0], 0.0, 0.0, 0.461967))}
+{a_I4[0].Dendrite2 a_I2L[0].synlist.append(new NetCon(&v(0.48873007), syn_NCXLS_I4_I2L_Glutamate[0], 0.0, 0.0, 0.400000))}
 
 
 //  Syn conn (type: Glutamate) from Dendrite2 on src cell 0 to Axon on tgt cell 0
@@ -2420,7 +2420,7 @@ objectvar syn_NCXLS_I4_I2L_Glutamate[5]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Axon syn_NCXLS_I4_I2L_Glutamate[1] = new Glutamate(0.735806)}
-{a_I4[0].Dendrite2 a_I2L[0].synlist.append(new NetCon(&v(0.40648326), syn_NCXLS_I4_I2L_Glutamate[1], 0.0, 0.0, 0.461967))}
+{a_I4[0].Dendrite2 a_I2L[0].synlist.append(new NetCon(&v(0.40648326), syn_NCXLS_I4_I2L_Glutamate[1], 0.0, 0.0, 0.400000))}
 
 
 //  Syn conn (type: Glutamate) from Dendrite2 on src cell 0 to Dendrite2 on tgt cell 0
@@ -2429,7 +2429,7 @@ objectvar syn_NCXLS_I4_I2L_Glutamate[5]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Dendrite2 syn_NCXLS_I4_I2L_Glutamate[2] = new Glutamate(0.06562568)}
-{a_I4[0].Dendrite2 a_I2L[0].synlist.append(new NetCon(&v(0.41997653), syn_NCXLS_I4_I2L_Glutamate[2], 0.0, 0.0, 0.461967))}
+{a_I4[0].Dendrite2 a_I2L[0].synlist.append(new NetCon(&v(0.41997653), syn_NCXLS_I4_I2L_Glutamate[2], 0.0, 0.0, 0.400000))}
 
 
 //  Syn conn (type: Glutamate) from Axon on src cell 0 to Axon on tgt cell 0
@@ -2438,7 +2438,7 @@ objectvar syn_NCXLS_I4_I2L_Glutamate[5]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Axon syn_NCXLS_I4_I2L_Glutamate[3] = new Glutamate(0.16764088)}
-{a_I4[0].Axon a_I2L[0].synlist.append(new NetCon(&v(0.5428816), syn_NCXLS_I4_I2L_Glutamate[3], 0.0, 0.0, 0.461967))}
+{a_I4[0].Axon a_I2L[0].synlist.append(new NetCon(&v(0.5428816), syn_NCXLS_I4_I2L_Glutamate[3], 0.0, 0.0, 0.400000))}
 
 
 //  Syn conn (type: Glutamate) from Axon on src cell 0 to Axon on tgt cell 0
@@ -2447,7 +2447,7 @@ objectvar syn_NCXLS_I4_I2L_Glutamate[5]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Axon syn_NCXLS_I4_I2L_Glutamate[4] = new Glutamate(0.7507311)}
-{a_I4[0].Axon a_I2L[0].synlist.append(new NetCon(&v(0.6701731), syn_NCXLS_I4_I2L_Glutamate[4], 0.0, 0.0, 0.461967))}
+{a_I4[0].Axon a_I2L[0].synlist.append(new NetCon(&v(0.6701731), syn_NCXLS_I4_I2L_Glutamate[4], 0.0, 0.0, 0.400000))}
 
 
 // Adding NetConn: NCXLS_MCL_I3 from: MCL to: I3 with 1 connections
@@ -2461,7 +2461,7 @@ objectvar syn_NCXLS_I4_I2L_Glutamate[5]
 objectvar syn_NCXLS_MCL_I3_Acetylcholine[1]
 
 {a_I3[0].Neurite4 syn_NCXLS_MCL_I3_Acetylcholine[0] = new Acetylcholine(0.5943176)}
-{a_MCL[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.07126685), syn_NCXLS_MCL_I3_Acetylcholine[0], 0.0, 0.0, 0.415977))}
+{a_MCL[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.07126685), syn_NCXLS_MCL_I3_Acetylcholine[0], 0.0, 0.0, 0.400000))}
 
 
 // Adding NetConn: NCXLS_M3L_M3R_GJ from: M3L to: M3R with 1 connections
@@ -2477,11 +2477,11 @@ objectvar elecsyn_NCXLS_M3L_M3R_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M3L_M3R_GJ_Generic_GJ_B[1]
 
 a_M3R[0].Neurite4 { elecsyn_NCXLS_M3L_M3R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.38322592) }
-elecsyn_NCXLS_M3L_M3R_GJ_Generic_GJ_A[0].weight = 0.541915
+elecsyn_NCXLS_M3L_M3R_GJ_Generic_GJ_A[0].weight = 0.500000
 setpointer elecsyn_NCXLS_M3L_M3R_GJ_Generic_GJ_A[0].vgap, a_M3L[0].Neurite4.v(0.68890643)
 
 a_M3L[0].Neurite4 { elecsyn_NCXLS_M3L_M3R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.68890643) }
-elecsyn_NCXLS_M3L_M3R_GJ_Generic_GJ_B[0].weight = 0.541915
+elecsyn_NCXLS_M3L_M3R_GJ_Generic_GJ_B[0].weight = 0.500000
 setpointer elecsyn_NCXLS_M3L_M3R_GJ_Generic_GJ_B[0].vgap, a_M3R[0].Neurite4.v(0.38322592)
 
 
@@ -2496,7 +2496,7 @@ setpointer elecsyn_NCXLS_M3L_M3R_GJ_Generic_GJ_B[0].vgap, a_M3R[0].Neurite4.v(0.
 objectvar syn_NCXLS_M3L_I6_Glutamate[1]
 
 {a_I6[0].Axon syn_NCXLS_M3L_I6_Glutamate[0] = new Glutamate(0.79961216)}
-{a_M3L[0].Neurite5 a_I6[0].synlist.append(new NetCon(&v(0.16413291), syn_NCXLS_M3L_I6_Glutamate[0], 0.0, 0.0, 0.823783))}
+{a_M3L[0].Neurite5 a_I6[0].synlist.append(new NetCon(&v(0.16413291), syn_NCXLS_M3L_I6_Glutamate[0], 0.0, 0.0, 0.800000))}
 
 
 // Adding NetConn: NCXLS_M3L_I5 from: M3L to: I5 with 3 connections
@@ -2510,7 +2510,7 @@ objectvar syn_NCXLS_M3L_I6_Glutamate[1]
 objectvar syn_NCXLS_M3L_I5_Glutamate[3]
 
 {a_I5[0].Neurite6 syn_NCXLS_M3L_I5_Glutamate[0] = new Glutamate(0.8416524)}
-{a_M3L[0].Neurite5 a_I5[0].synlist.append(new NetCon(&v(0.14925492), syn_NCXLS_M3L_I5_Glutamate[0], 0.0, 0.0, 0.457259))}
+{a_M3L[0].Neurite5 a_I5[0].synlist.append(new NetCon(&v(0.14925492), syn_NCXLS_M3L_I5_Glutamate[0], 0.0, 0.0, 0.400000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite5 on src cell 0 to Neurite7 on tgt cell 0
@@ -2519,7 +2519,7 @@ objectvar syn_NCXLS_M3L_I5_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite7 syn_NCXLS_M3L_I5_Glutamate[1] = new Glutamate(0.48962468)}
-{a_M3L[0].Neurite5 a_I5[0].synlist.append(new NetCon(&v(0.60573405), syn_NCXLS_M3L_I5_Glutamate[1], 0.0, 0.0, 0.457259))}
+{a_M3L[0].Neurite5 a_I5[0].synlist.append(new NetCon(&v(0.60573405), syn_NCXLS_M3L_I5_Glutamate[1], 0.0, 0.0, 0.400000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite3 on src cell 0 to Neurite6 on tgt cell 0
@@ -2528,7 +2528,7 @@ objectvar syn_NCXLS_M3L_I5_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite6 syn_NCXLS_M3L_I5_Glutamate[2] = new Glutamate(0.019349376)}
-{a_M3L[0].Neurite3 a_I5[0].synlist.append(new NetCon(&v(0.33813003), syn_NCXLS_M3L_I5_Glutamate[2], 0.0, 0.0, 0.457259))}
+{a_M3L[0].Neurite3 a_I5[0].synlist.append(new NetCon(&v(0.33813003), syn_NCXLS_M3L_I5_Glutamate[2], 0.0, 0.0, 0.400000))}
 
 
 // Adding NetConn: NCXLS_NSMR_I1R from: NSMR to: I1R with 2 connections
@@ -2542,7 +2542,7 @@ objectvar syn_NCXLS_M3L_I5_Glutamate[3]
 objectvar syn_NCXLS_NSMR_I1R_Serotonin_Glutamate[2]
 
 {a_I1R[0].Axon syn_NCXLS_NSMR_I1R_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.34838694)}
-{a_NSMR[0].Neurite2 a_I1R[0].synlist.append(new NetCon(&v(0.40374178), syn_NCXLS_NSMR_I1R_Serotonin_Glutamate[0], 0.0, 0.0, 0.209018))}
+{a_NSMR[0].Neurite2 a_I1R[0].synlist.append(new NetCon(&v(0.40374178), syn_NCXLS_NSMR_I1R_Serotonin_Glutamate[0], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Dendrite2 on tgt cell 0
@@ -2551,7 +2551,7 @@ objectvar syn_NCXLS_NSMR_I1R_Serotonin_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Dendrite2 syn_NCXLS_NSMR_I1R_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.82965505)}
-{a_NSMR[0].Neurite2 a_I1R[0].synlist.append(new NetCon(&v(0.10183321), syn_NCXLS_NSMR_I1R_Serotonin_Glutamate[1], 0.0, 0.0, 0.209018))}
+{a_NSMR[0].Neurite2 a_I1R[0].synlist.append(new NetCon(&v(0.10183321), syn_NCXLS_NSMR_I1R_Serotonin_Glutamate[1], 0.0, 0.0, 0.200000))}
 
 
 // Adding NetConn: NCXLS_NSML_I2L from: NSML to: I2L with 6 connections
@@ -2565,7 +2565,7 @@ objectvar syn_NCXLS_NSMR_I1R_Serotonin_Glutamate[2]
 objectvar syn_NCXLS_NSML_I2L_Serotonin_Glutamate[6]
 
 {a_I2L[0].Axon syn_NCXLS_NSML_I2L_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.7803023)}
-{a_NSML[0].Neurite3 a_I2L[0].synlist.append(new NetCon(&v(0.1781974), syn_NCXLS_NSML_I2L_Serotonin_Glutamate[0], 0.0, 0.0, 0.311980))}
+{a_NSML[0].Neurite3 a_I2L[0].synlist.append(new NetCon(&v(0.1781974), syn_NCXLS_NSML_I2L_Serotonin_Glutamate[0], 0.0, 0.0, 0.300000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Axon on tgt cell 0
@@ -2574,7 +2574,7 @@ objectvar syn_NCXLS_NSML_I2L_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Axon syn_NCXLS_NSML_I2L_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.12487585)}
-{a_NSML[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.69712645), syn_NCXLS_NSML_I2L_Serotonin_Glutamate[1], 0.0, 0.0, 0.311980))}
+{a_NSML[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.69712645), syn_NCXLS_NSML_I2L_Serotonin_Glutamate[1], 0.0, 0.0, 0.300000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Axon on tgt cell 0
@@ -2583,7 +2583,7 @@ objectvar syn_NCXLS_NSML_I2L_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Axon syn_NCXLS_NSML_I2L_Serotonin_Glutamate[2] = new Serotonin_Glutamate(0.81963384)}
-{a_NSML[0].Neurite3 a_I2L[0].synlist.append(new NetCon(&v(0.4942474), syn_NCXLS_NSML_I2L_Serotonin_Glutamate[2], 0.0, 0.0, 0.311980))}
+{a_NSML[0].Neurite3 a_I2L[0].synlist.append(new NetCon(&v(0.4942474), syn_NCXLS_NSML_I2L_Serotonin_Glutamate[2], 0.0, 0.0, 0.300000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Dendrite2 on tgt cell 0
@@ -2592,7 +2592,7 @@ objectvar syn_NCXLS_NSML_I2L_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Dendrite2 syn_NCXLS_NSML_I2L_Serotonin_Glutamate[3] = new Serotonin_Glutamate(0.51641834)}
-{a_NSML[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.22523637), syn_NCXLS_NSML_I2L_Serotonin_Glutamate[3], 0.0, 0.0, 0.311980))}
+{a_NSML[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.22523637), syn_NCXLS_NSML_I2L_Serotonin_Glutamate[3], 0.0, 0.0, 0.300000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Axon on tgt cell 0
@@ -2601,7 +2601,7 @@ objectvar syn_NCXLS_NSML_I2L_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Axon syn_NCXLS_NSML_I2L_Serotonin_Glutamate[4] = new Serotonin_Glutamate(0.25765952)}
-{a_NSML[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.75240195), syn_NCXLS_NSML_I2L_Serotonin_Glutamate[4], 0.0, 0.0, 0.311980))}
+{a_NSML[0].Neurite2 a_I2L[0].synlist.append(new NetCon(&v(0.75240195), syn_NCXLS_NSML_I2L_Serotonin_Glutamate[4], 0.0, 0.0, 0.300000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Axon on tgt cell 0
@@ -2610,7 +2610,7 @@ objectvar syn_NCXLS_NSML_I2L_Serotonin_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Axon syn_NCXLS_NSML_I2L_Serotonin_Glutamate[5] = new Serotonin_Glutamate(0.26975933)}
-{a_NSML[0].Neurite3 a_I2L[0].synlist.append(new NetCon(&v(0.95914805), syn_NCXLS_NSML_I2L_Serotonin_Glutamate[5], 0.0, 0.0, 0.311980))}
+{a_NSML[0].Neurite3 a_I2L[0].synlist.append(new NetCon(&v(0.95914805), syn_NCXLS_NSML_I2L_Serotonin_Glutamate[5], 0.0, 0.0, 0.300000))}
 
 
 // Adding NetConn: NCXLS_M3L_I4 from: M3L to: I4 with 2 connections
@@ -2624,7 +2624,7 @@ objectvar syn_NCXLS_NSML_I2L_Serotonin_Glutamate[6]
 objectvar syn_NCXLS_M3L_I4_Glutamate[2]
 
 {a_I4[0].Dendrite2 syn_NCXLS_M3L_I4_Glutamate[0] = new Glutamate(0.62918556)}
-{a_M3L[0].Neurite4 a_I4[0].synlist.append(new NetCon(&v(0.29082954), syn_NCXLS_M3L_I4_Glutamate[0], 0.0, 0.0, 0.702116))}
+{a_M3L[0].Neurite4 a_I4[0].synlist.append(new NetCon(&v(0.29082954), syn_NCXLS_M3L_I4_Glutamate[0], 0.0, 0.0, 0.700000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite5 on src cell 0 to Axon on tgt cell 0
@@ -2633,7 +2633,7 @@ objectvar syn_NCXLS_M3L_I4_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I4[0].Axon syn_NCXLS_M3L_I4_Glutamate[1] = new Glutamate(0.021014057)}
-{a_M3L[0].Neurite5 a_I4[0].synlist.append(new NetCon(&v(0.11313699), syn_NCXLS_M3L_I4_Glutamate[1], 0.0, 0.0, 0.702116))}
+{a_M3L[0].Neurite5 a_I4[0].synlist.append(new NetCon(&v(0.11313699), syn_NCXLS_M3L_I4_Glutamate[1], 0.0, 0.0, 0.700000))}
 
 
 // Adding NetConn: NCXLS_M5_M2R_GJ from: M5 to: M2R with 2 connections
@@ -2649,11 +2649,11 @@ objectvar elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_A[2]
 objectvar elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_B[2]
 
 a_M2R[0].Axon { elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.5040304) }
-elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_A[0].weight = 0.064319
+elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_A[0].weight = 0.000000
 setpointer elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_A[0].vgap, a_M5[0].Dendrite2.v(0.6773752)
 
 a_M5[0].Dendrite2 { elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.6773752) }
-elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_B[0].weight = 0.064319
+elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_B[0].weight = 0.000000
 setpointer elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_B[0].vgap, a_M2R[0].Axon.v(0.5040304)
 
 
@@ -2663,11 +2663,11 @@ setpointer elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_B[0].vgap, a_M2R[0].Axon.v(0.50403
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M2R[0].Axon { elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_A[1] = new Generic_GJ(0.1893583) }
-elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_A[1].weight = 0.064319
+elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_A[1].weight = 0.000000
 setpointer elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_A[1].vgap, a_M5[0].Axon.v(0.8277799)
 
 a_M5[0].Axon { elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_B[1] = new Generic_GJ(0.8277799) }
-elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_B[1].weight = 0.064319
+elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_B[1].weight = 0.000000
 setpointer elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_B[1].vgap, a_M2R[0].Axon.v(0.1893583)
 
 
@@ -2682,7 +2682,7 @@ setpointer elecsyn_NCXLS_M5_M2R_GJ_Generic_GJ_B[1].vgap, a_M2R[0].Axon.v(0.18935
 objectvar syn_NCXLS_I3_M2R_Glutamate[1]
 
 {a_M2R[0].Axon syn_NCXLS_I3_M2R_Glutamate[0] = new Glutamate(0.63159645)}
-{a_I3[0].Dendrite2 a_M2R[0].synlist.append(new NetCon(&v(0.79636997), syn_NCXLS_I3_M2R_Glutamate[0], 0.0, 0.0, 0.553186))}
+{a_I3[0].Dendrite2 a_M2R[0].synlist.append(new NetCon(&v(0.79636997), syn_NCXLS_I3_M2R_Glutamate[0], 0.0, 0.0, 0.500000))}
 
 
 // Adding NetConn: NCXLS_I3_M2L_GJ from: I3 to: M2L with 1 connections
@@ -2698,11 +2698,11 @@ objectvar elecsyn_NCXLS_I3_M2L_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I3_M2L_GJ_Generic_GJ_B[1]
 
 a_M2L[0].Axon { elecsyn_NCXLS_I3_M2L_GJ_Generic_GJ_A[0] = new Generic_GJ(0.4887956) }
-elecsyn_NCXLS_I3_M2L_GJ_Generic_GJ_A[0].weight = 0.924354
+elecsyn_NCXLS_I3_M2L_GJ_Generic_GJ_A[0].weight = 0.900000
 setpointer elecsyn_NCXLS_I3_M2L_GJ_Generic_GJ_A[0].vgap, a_I3[0].Dendrite2.v(0.6735074)
 
 a_I3[0].Dendrite2 { elecsyn_NCXLS_I3_M2L_GJ_Generic_GJ_B[0] = new Generic_GJ(0.6735074) }
-elecsyn_NCXLS_I3_M2L_GJ_Generic_GJ_B[0].weight = 0.924354
+elecsyn_NCXLS_I3_M2L_GJ_Generic_GJ_B[0].weight = 0.900000
 setpointer elecsyn_NCXLS_I3_M2L_GJ_Generic_GJ_B[0].vgap, a_M2L[0].Axon.v(0.4887956)
 
 
@@ -2717,7 +2717,7 @@ setpointer elecsyn_NCXLS_I3_M2L_GJ_Generic_GJ_B[0].vgap, a_M2L[0].Axon.v(0.48879
 objectvar syn_NCXLS_NSMR_I1L_Serotonin_Glutamate[2]
 
 {a_I1L[0].Axon syn_NCXLS_NSMR_I1L_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.6161181)}
-{a_NSMR[0].Neurite3 a_I1L[0].synlist.append(new NetCon(&v(0.34829387), syn_NCXLS_NSMR_I1L_Serotonin_Glutamate[0], 0.0, 0.0, 0.568287))}
+{a_NSMR[0].Neurite3 a_I1L[0].synlist.append(new NetCon(&v(0.34829387), syn_NCXLS_NSMR_I1L_Serotonin_Glutamate[0], 0.0, 0.0, 0.500000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Axon on src cell 0 to Axon on tgt cell 0
@@ -2726,7 +2726,7 @@ objectvar syn_NCXLS_NSMR_I1L_Serotonin_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Axon syn_NCXLS_NSMR_I1L_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.96879065)}
-{a_NSMR[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.4727978), syn_NCXLS_NSMR_I1L_Serotonin_Glutamate[1], 0.0, 0.0, 0.568287))}
+{a_NSMR[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.4727978), syn_NCXLS_NSMR_I1L_Serotonin_Glutamate[1], 0.0, 0.0, 0.500000))}
 
 
 // Adding NetConn: NCXLS_I3_M2L from: I3 to: M2L with 1 connections
@@ -2740,7 +2740,7 @@ objectvar syn_NCXLS_NSMR_I1L_Serotonin_Glutamate[2]
 objectvar syn_NCXLS_I3_M2L_Glutamate[1]
 
 {a_M2L[0].Axon syn_NCXLS_I3_M2L_Glutamate[0] = new Glutamate(0.6193197)}
-{a_I3[0].Dendrite2 a_M2L[0].synlist.append(new NetCon(&v(0.22822739), syn_NCXLS_I3_M2L_Glutamate[0], 0.0, 0.0, 0.924354))}
+{a_I3[0].Dendrite2 a_M2L[0].synlist.append(new NetCon(&v(0.22822739), syn_NCXLS_I3_M2L_Glutamate[0], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_I2L_I1R_GJ from: I2L to: I1R with 1 connections
@@ -2756,11 +2756,11 @@ objectvar elecsyn_NCXLS_I2L_I1R_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I2L_I1R_GJ_Generic_GJ_B[1]
 
 a_I1R[0].Axon { elecsyn_NCXLS_I2L_I1R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.20235313) }
-elecsyn_NCXLS_I2L_I1R_GJ_Generic_GJ_A[0].weight = 0.239342
+elecsyn_NCXLS_I2L_I1R_GJ_Generic_GJ_A[0].weight = 0.200000
 setpointer elecsyn_NCXLS_I2L_I1R_GJ_Generic_GJ_A[0].vgap, a_I2L[0].Axon.v(0.46128932)
 
 a_I2L[0].Axon { elecsyn_NCXLS_I2L_I1R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.46128932) }
-elecsyn_NCXLS_I2L_I1R_GJ_Generic_GJ_B[0].weight = 0.239342
+elecsyn_NCXLS_I2L_I1R_GJ_Generic_GJ_B[0].weight = 0.200000
 setpointer elecsyn_NCXLS_I2L_I1R_GJ_Generic_GJ_B[0].vgap, a_I1R[0].Axon.v(0.20235313)
 
 
@@ -2777,11 +2777,11 @@ objectvar elecsyn_NCXLS_M5_I5_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M5_I5_GJ_Generic_GJ_B[1]
 
 a_I5[0].Neurite6 { elecsyn_NCXLS_M5_I5_GJ_Generic_GJ_A[0] = new Generic_GJ(0.68412155) }
-elecsyn_NCXLS_M5_I5_GJ_Generic_GJ_A[0].weight = 0.905760
+elecsyn_NCXLS_M5_I5_GJ_Generic_GJ_A[0].weight = 0.900000
 setpointer elecsyn_NCXLS_M5_I5_GJ_Generic_GJ_A[0].vgap, a_M5[0].Dendrite2.v(0.44644812)
 
 a_M5[0].Dendrite2 { elecsyn_NCXLS_M5_I5_GJ_Generic_GJ_B[0] = new Generic_GJ(0.44644812) }
-elecsyn_NCXLS_M5_I5_GJ_Generic_GJ_B[0].weight = 0.905760
+elecsyn_NCXLS_M5_I5_GJ_Generic_GJ_B[0].weight = 0.900000
 setpointer elecsyn_NCXLS_M5_I5_GJ_Generic_GJ_B[0].vgap, a_I5[0].Neurite6.v(0.68412155)
 
 
@@ -2796,7 +2796,7 @@ setpointer elecsyn_NCXLS_M5_I5_GJ_Generic_GJ_B[0].vgap, a_I5[0].Neurite6.v(0.684
 objectvar syn_NCXLS_I2R_M1_Glutamate[2]
 
 {a_M1[0].Axon syn_NCXLS_I2R_M1_Glutamate[0] = new Glutamate(0.90388983)}
-{a_I2R[0].Dendrite2 a_M1[0].synlist.append(new NetCon(&v(0.82765955), syn_NCXLS_I2R_M1_Glutamate[0], 0.0, 0.0, 0.353775))}
+{a_I2R[0].Dendrite2 a_M1[0].synlist.append(new NetCon(&v(0.82765955), syn_NCXLS_I2R_M1_Glutamate[0], 0.0, 0.0, 0.300000))}
 
 
 //  Syn conn (type: Glutamate) from Axon on src cell 0 to Axon on tgt cell 0
@@ -2805,7 +2805,7 @@ objectvar syn_NCXLS_I2R_M1_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_M1[0].Axon syn_NCXLS_I2R_M1_Glutamate[1] = new Glutamate(0.56113356)}
-{a_I2R[0].Axon a_M1[0].synlist.append(new NetCon(&v(0.529643), syn_NCXLS_I2R_M1_Glutamate[1], 0.0, 0.0, 0.353775))}
+{a_I2R[0].Axon a_M1[0].synlist.append(new NetCon(&v(0.529643), syn_NCXLS_I2R_M1_Glutamate[1], 0.0, 0.0, 0.300000))}
 
 
 // Adding NetConn: NCXLS_M5_I6_GJ from: M5 to: I6 with 1 connections
@@ -2821,11 +2821,11 @@ objectvar elecsyn_NCXLS_M5_I6_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M5_I6_GJ_Generic_GJ_B[1]
 
 a_I6[0].Axon { elecsyn_NCXLS_M5_I6_GJ_Generic_GJ_A[0] = new Generic_GJ(0.1846381) }
-elecsyn_NCXLS_M5_I6_GJ_Generic_GJ_A[0].weight = 0.515147
+elecsyn_NCXLS_M5_I6_GJ_Generic_GJ_A[0].weight = 0.500000
 setpointer elecsyn_NCXLS_M5_I6_GJ_Generic_GJ_A[0].vgap, a_M5[0].Axon.v(0.0368081)
 
 a_M5[0].Axon { elecsyn_NCXLS_M5_I6_GJ_Generic_GJ_B[0] = new Generic_GJ(0.0368081) }
-elecsyn_NCXLS_M5_I6_GJ_Generic_GJ_B[0].weight = 0.515147
+elecsyn_NCXLS_M5_I6_GJ_Generic_GJ_B[0].weight = 0.500000
 setpointer elecsyn_NCXLS_M5_I6_GJ_Generic_GJ_B[0].vgap, a_I6[0].Axon.v(0.1846381)
 
 
@@ -2840,7 +2840,7 @@ setpointer elecsyn_NCXLS_M5_I6_GJ_Generic_GJ_B[0].vgap, a_I6[0].Axon.v(0.1846381
 objectvar syn_NCXLS_NSML_I1R_Serotonin_Glutamate[2]
 
 {a_I1R[0].Dendrite2 syn_NCXLS_NSML_I1R_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.17563377)}
-{a_NSML[0].Neurite2 a_I1R[0].synlist.append(new NetCon(&v(0.7118611), syn_NCXLS_NSML_I1R_Serotonin_Glutamate[0], 0.0, 0.0, 0.642272))}
+{a_NSML[0].Neurite2 a_I1R[0].synlist.append(new NetCon(&v(0.7118611), syn_NCXLS_NSML_I1R_Serotonin_Glutamate[0], 0.0, 0.0, 0.600000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Axon on tgt cell 0
@@ -2849,7 +2849,7 @@ objectvar syn_NCXLS_NSML_I1R_Serotonin_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Axon syn_NCXLS_NSML_I1R_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.47089392)}
-{a_NSML[0].Neurite3 a_I1R[0].synlist.append(new NetCon(&v(0.75396305), syn_NCXLS_NSML_I1R_Serotonin_Glutamate[1], 0.0, 0.0, 0.642272))}
+{a_NSML[0].Neurite3 a_I1R[0].synlist.append(new NetCon(&v(0.75396305), syn_NCXLS_NSML_I1R_Serotonin_Glutamate[1], 0.0, 0.0, 0.600000))}
 
 
 // Adding NetConn: NCXLS_M2R_M3L_GJ from: M2R to: M3L with 1 connections
@@ -2865,11 +2865,11 @@ objectvar elecsyn_NCXLS_M2R_M3L_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M2R_M3L_GJ_Generic_GJ_B[1]
 
 a_M3L[0].Neurite5 { elecsyn_NCXLS_M2R_M3L_GJ_Generic_GJ_A[0] = new Generic_GJ(0.27604604) }
-elecsyn_NCXLS_M2R_M3L_GJ_Generic_GJ_A[0].weight = 0.723187
+elecsyn_NCXLS_M2R_M3L_GJ_Generic_GJ_A[0].weight = 0.700000
 setpointer elecsyn_NCXLS_M2R_M3L_GJ_Generic_GJ_A[0].vgap, a_M2R[0].Axon.v(0.6719305)
 
 a_M2R[0].Axon { elecsyn_NCXLS_M2R_M3L_GJ_Generic_GJ_B[0] = new Generic_GJ(0.6719305) }
-elecsyn_NCXLS_M2R_M3L_GJ_Generic_GJ_B[0].weight = 0.723187
+elecsyn_NCXLS_M2R_M3L_GJ_Generic_GJ_B[0].weight = 0.700000
 setpointer elecsyn_NCXLS_M2R_M3L_GJ_Generic_GJ_B[0].vgap, a_M3L[0].Neurite5.v(0.27604604)
 
 
@@ -2884,7 +2884,7 @@ setpointer elecsyn_NCXLS_M2R_M3L_GJ_Generic_GJ_B[0].vgap, a_M3L[0].Neurite5.v(0.
 objectvar syn_NCXLS_MCR_I3_Acetylcholine[1]
 
 {a_I3[0].Dendrite2 syn_NCXLS_MCR_I3_Acetylcholine[0] = new Acetylcholine(0.7567335)}
-{a_MCR[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.28650692), syn_NCXLS_MCR_I3_Acetylcholine[0], 0.0, 0.0, 0.524441))}
+{a_MCR[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.28650692), syn_NCXLS_MCR_I3_Acetylcholine[0], 0.0, 0.0, 0.500000))}
 
 
 // Adding NetConn: NCXLS_M4_NSMR from: M4 to: NSMR with 1 connections
@@ -2898,7 +2898,7 @@ objectvar syn_NCXLS_MCR_I3_Acetylcholine[1]
 objectvar syn_NCXLS_M4_NSMR_Acetylcholine[1]
 
 {a_NSMR[0].Axon syn_NCXLS_M4_NSMR_Acetylcholine[0] = new Acetylcholine(0.8120093)}
-{a_M4[0].Dendrite3 a_NSMR[0].synlist.append(new NetCon(&v(0.24889636), syn_NCXLS_M4_NSMR_Acetylcholine[0], 0.0, 0.0, 0.030003))}
+{a_M4[0].Dendrite3 a_NSMR[0].synlist.append(new NetCon(&v(0.24889636), syn_NCXLS_M4_NSMR_Acetylcholine[0], 0.0, 0.0, 0.000000))}
 
 
 // Adding NetConn: NCXLS_M3R_I6 from: M3R to: I6 with 1 connections
@@ -2912,7 +2912,7 @@ objectvar syn_NCXLS_M4_NSMR_Acetylcholine[1]
 objectvar syn_NCXLS_M3R_I6_Glutamate[1]
 
 {a_I6[0].Dendrite2 syn_NCXLS_M3R_I6_Glutamate[0] = new Glutamate(0.13054822)}
-{a_M3R[0].Neurite2 a_I6[0].synlist.append(new NetCon(&v(0.79521805), syn_NCXLS_M3R_I6_Glutamate[0], 0.0, 0.0, 0.325835))}
+{a_M3R[0].Neurite2 a_I6[0].synlist.append(new NetCon(&v(0.79521805), syn_NCXLS_M3R_I6_Glutamate[0], 0.0, 0.0, 0.300000))}
 
 
 // Adding NetConn: NCXLS_M3R_I5 from: M3R to: I5 with 3 connections
@@ -2926,7 +2926,7 @@ objectvar syn_NCXLS_M3R_I6_Glutamate[1]
 objectvar syn_NCXLS_M3R_I5_Glutamate[3]
 
 {a_I5[0].Neurite7 syn_NCXLS_M3R_I5_Glutamate[0] = new Glutamate(0.9219876)}
-{a_M3R[0].Neurite4 a_I5[0].synlist.append(new NetCon(&v(0.4873223), syn_NCXLS_M3R_I5_Glutamate[0], 0.0, 0.0, 0.278778))}
+{a_M3R[0].Neurite4 a_I5[0].synlist.append(new NetCon(&v(0.4873223), syn_NCXLS_M3R_I5_Glutamate[0], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite5 on src cell 0 to Neurite3 on tgt cell 0
@@ -2935,7 +2935,7 @@ objectvar syn_NCXLS_M3R_I5_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite3 syn_NCXLS_M3R_I5_Glutamate[1] = new Glutamate(0.2288536)}
-{a_M3R[0].Neurite5 a_I5[0].synlist.append(new NetCon(&v(0.8288752), syn_NCXLS_M3R_I5_Glutamate[1], 0.0, 0.0, 0.278778))}
+{a_M3R[0].Neurite5 a_I5[0].synlist.append(new NetCon(&v(0.8288752), syn_NCXLS_M3R_I5_Glutamate[1], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite5 on src cell 0 to Neurite3 on tgt cell 0
@@ -2944,7 +2944,7 @@ objectvar syn_NCXLS_M3R_I5_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite3 syn_NCXLS_M3R_I5_Glutamate[2] = new Glutamate(0.30297506)}
-{a_M3R[0].Neurite5 a_I5[0].synlist.append(new NetCon(&v(0.07366039), syn_NCXLS_M3R_I5_Glutamate[2], 0.0, 0.0, 0.278778))}
+{a_M3R[0].Neurite5 a_I5[0].synlist.append(new NetCon(&v(0.07366039), syn_NCXLS_M3R_I5_Glutamate[2], 0.0, 0.0, 0.200000))}
 
 
 // Adding NetConn: NCXLS_M3R_I4 from: M3R to: I4 with 6 connections
@@ -2958,7 +2958,7 @@ objectvar syn_NCXLS_M3R_I5_Glutamate[3]
 objectvar syn_NCXLS_M3R_I4_Glutamate[6]
 
 {a_I4[0].Dendrite2 syn_NCXLS_M3R_I4_Glutamate[0] = new Glutamate(0.41678497)}
-{a_M3R[0].Neurite5 a_I4[0].synlist.append(new NetCon(&v(0.7080533), syn_NCXLS_M3R_I4_Glutamate[0], 0.0, 0.0, 0.123949))}
+{a_M3R[0].Neurite5 a_I4[0].synlist.append(new NetCon(&v(0.7080533), syn_NCXLS_M3R_I4_Glutamate[0], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite2 on src cell 0 to Dendrite2 on tgt cell 0
@@ -2967,7 +2967,7 @@ objectvar syn_NCXLS_M3R_I4_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I4[0].Dendrite2 syn_NCXLS_M3R_I4_Glutamate[1] = new Glutamate(0.036977872)}
-{a_M3R[0].Neurite2 a_I4[0].synlist.append(new NetCon(&v(0.32527027), syn_NCXLS_M3R_I4_Glutamate[1], 0.0, 0.0, 0.123949))}
+{a_M3R[0].Neurite2 a_I4[0].synlist.append(new NetCon(&v(0.32527027), syn_NCXLS_M3R_I4_Glutamate[1], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Dendrite2 on tgt cell 0
@@ -2976,7 +2976,7 @@ objectvar syn_NCXLS_M3R_I4_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I4[0].Dendrite2 syn_NCXLS_M3R_I4_Glutamate[2] = new Glutamate(0.4675687)}
-{a_M3R[0].Neurite4 a_I4[0].synlist.append(new NetCon(&v(0.41139984), syn_NCXLS_M3R_I4_Glutamate[2], 0.0, 0.0, 0.123949))}
+{a_M3R[0].Neurite4 a_I4[0].synlist.append(new NetCon(&v(0.41139984), syn_NCXLS_M3R_I4_Glutamate[2], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Dendrite2 on tgt cell 0
@@ -2985,7 +2985,7 @@ objectvar syn_NCXLS_M3R_I4_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I4[0].Dendrite2 syn_NCXLS_M3R_I4_Glutamate[3] = new Glutamate(0.3914027)}
-{a_M3R[0].Neurite4 a_I4[0].synlist.append(new NetCon(&v(0.4036507), syn_NCXLS_M3R_I4_Glutamate[3], 0.0, 0.0, 0.123949))}
+{a_M3R[0].Neurite4 a_I4[0].synlist.append(new NetCon(&v(0.4036507), syn_NCXLS_M3R_I4_Glutamate[3], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Glutamate) from Axon on src cell 0 to Axon on tgt cell 0
@@ -2994,7 +2994,7 @@ objectvar syn_NCXLS_M3R_I4_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I4[0].Axon syn_NCXLS_M3R_I4_Glutamate[4] = new Glutamate(0.80319303)}
-{a_M3R[0].Axon a_I4[0].synlist.append(new NetCon(&v(0.27875334), syn_NCXLS_M3R_I4_Glutamate[4], 0.0, 0.0, 0.123949))}
+{a_M3R[0].Axon a_I4[0].synlist.append(new NetCon(&v(0.27875334), syn_NCXLS_M3R_I4_Glutamate[4], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Axon on tgt cell 0
@@ -3003,7 +3003,7 @@ objectvar syn_NCXLS_M3R_I4_Glutamate[6]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I4[0].Axon syn_NCXLS_M3R_I4_Glutamate[5] = new Glutamate(0.890059)}
-{a_M3R[0].Neurite4 a_I4[0].synlist.append(new NetCon(&v(0.3403425), syn_NCXLS_M3R_I4_Glutamate[5], 0.0, 0.0, 0.123949))}
+{a_M3R[0].Neurite4 a_I4[0].synlist.append(new NetCon(&v(0.3403425), syn_NCXLS_M3R_I4_Glutamate[5], 0.0, 0.0, 0.100000))}
 
 
 // Adding NetConn: NCXLS_NSML_I1L from: NSML to: I1L with 1 connections
@@ -3017,7 +3017,7 @@ objectvar syn_NCXLS_M3R_I4_Glutamate[6]
 objectvar syn_NCXLS_NSML_I1L_Serotonin_Glutamate[1]
 
 {a_I1L[0].Axon syn_NCXLS_NSML_I1L_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.14602649)}
-{a_NSML[0].Neurite2 a_I1L[0].synlist.append(new NetCon(&v(0.4552605), syn_NCXLS_NSML_I1L_Serotonin_Glutamate[0], 0.0, 0.0, 0.754193))}
+{a_NSML[0].Neurite2 a_I1L[0].synlist.append(new NetCon(&v(0.4552605), syn_NCXLS_NSML_I1L_Serotonin_Glutamate[0], 0.0, 0.0, 0.700000))}
 
 
 // Adding NetConn: NCXLS_M3R_I3 from: M3R to: I3 with 2 connections
@@ -3031,7 +3031,7 @@ objectvar syn_NCXLS_NSML_I1L_Serotonin_Glutamate[1]
 objectvar syn_NCXLS_M3R_I3_Glutamate[2]
 
 {a_I3[0].Axon syn_NCXLS_M3R_I3_Glutamate[0] = new Glutamate(0.80785054)}
-{a_M3R[0].Neurite4 a_I3[0].synlist.append(new NetCon(&v(0.09972982), syn_NCXLS_M3R_I3_Glutamate[0], 0.0, 0.0, 0.981869))}
+{a_M3R[0].Neurite4 a_I3[0].synlist.append(new NetCon(&v(0.09972982), syn_NCXLS_M3R_I3_Glutamate[0], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Dendrite2 on tgt cell 0
@@ -3040,7 +3040,7 @@ objectvar syn_NCXLS_M3R_I3_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I3[0].Dendrite2 syn_NCXLS_M3R_I3_Glutamate[1] = new Glutamate(0.50854075)}
-{a_M3R[0].Neurite4 a_I3[0].synlist.append(new NetCon(&v(0.9599042), syn_NCXLS_M3R_I3_Glutamate[1], 0.0, 0.0, 0.981869))}
+{a_M3R[0].Neurite4 a_I3[0].synlist.append(new NetCon(&v(0.9599042), syn_NCXLS_M3R_I3_Glutamate[1], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_I4_I5 from: I4 to: I5 with 2 connections
@@ -3054,7 +3054,7 @@ objectvar syn_NCXLS_M3R_I3_Glutamate[2]
 objectvar syn_NCXLS_I4_I5_Glutamate[2]
 
 {a_I5[0].Neurite14 syn_NCXLS_I4_I5_Glutamate[0] = new Glutamate(0.81859607)}
-{a_I4[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.037544467), syn_NCXLS_I4_I5_Glutamate[0], 0.0, 0.0, 0.000944))}
+{a_I4[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.037544467), syn_NCXLS_I4_I5_Glutamate[0], 0.0, 0.0, 0.000000))}
 
 
 //  Syn conn (type: Glutamate) from Dendrite2 on src cell 0 to Neurite8 on tgt cell 0
@@ -3063,7 +3063,7 @@ objectvar syn_NCXLS_I4_I5_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite8 syn_NCXLS_I4_I5_Glutamate[1] = new Glutamate(0.8889685)}
-{a_I4[0].Dendrite2 a_I5[0].synlist.append(new NetCon(&v(0.8385881), syn_NCXLS_I4_I5_Glutamate[1], 0.0, 0.0, 0.000944))}
+{a_I4[0].Dendrite2 a_I5[0].synlist.append(new NetCon(&v(0.8385881), syn_NCXLS_I4_I5_Glutamate[1], 0.0, 0.0, 0.000000))}
 
 
 // Adding NetConn: NCXLS_I3_M2R_GJ from: I3 to: M2R with 1 connections
@@ -3079,11 +3079,11 @@ objectvar elecsyn_NCXLS_I3_M2R_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I3_M2R_GJ_Generic_GJ_B[1]
 
 a_M2R[0].Axon { elecsyn_NCXLS_I3_M2R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.847087) }
-elecsyn_NCXLS_I3_M2R_GJ_Generic_GJ_A[0].weight = 0.553186
+elecsyn_NCXLS_I3_M2R_GJ_Generic_GJ_A[0].weight = 0.500000
 setpointer elecsyn_NCXLS_I3_M2R_GJ_Generic_GJ_A[0].vgap, a_I3[0].Dendrite2.v(0.6684761)
 
 a_I3[0].Dendrite2 { elecsyn_NCXLS_I3_M2R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.6684761) }
-elecsyn_NCXLS_I3_M2R_GJ_Generic_GJ_B[0].weight = 0.553186
+elecsyn_NCXLS_I3_M2R_GJ_Generic_GJ_B[0].weight = 0.500000
 setpointer elecsyn_NCXLS_I3_M2R_GJ_Generic_GJ_B[0].vgap, a_M2R[0].Axon.v(0.847087)
 
 
@@ -3098,7 +3098,7 @@ setpointer elecsyn_NCXLS_I3_M2R_GJ_Generic_GJ_B[0].vgap, a_M2R[0].Axon.v(0.84708
 objectvar syn_NCXLS_M4_NSML_Acetylcholine[1]
 
 {a_NSML[0].Neurite2 syn_NCXLS_M4_NSML_Acetylcholine[0] = new Acetylcholine(0.4421764)}
-{a_M4[0].Dendrite3 a_NSML[0].synlist.append(new NetCon(&v(0.35047063), syn_NCXLS_M4_NSML_Acetylcholine[0], 0.0, 0.0, 0.981262))}
+{a_M4[0].Dendrite3 a_NSML[0].synlist.append(new NetCon(&v(0.35047063), syn_NCXLS_M4_NSML_Acetylcholine[0], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_M2L_I3 from: M2L to: I3 with 2 connections
@@ -3112,7 +3112,7 @@ objectvar syn_NCXLS_M4_NSML_Acetylcholine[1]
 objectvar syn_NCXLS_M2L_I3_Acetylcholine[2]
 
 {a_I3[0].Axon syn_NCXLS_M2L_I3_Acetylcholine[0] = new Acetylcholine(0.7162216)}
-{a_M2L[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.46401188), syn_NCXLS_M2L_I3_Acetylcholine[0], 0.0, 0.0, 0.728611))}
+{a_M2L[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.46401188), syn_NCXLS_M2L_I3_Acetylcholine[0], 0.0, 0.0, 0.700000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Dendrite2 on tgt cell 0
@@ -3121,7 +3121,7 @@ objectvar syn_NCXLS_M2L_I3_Acetylcholine[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I3[0].Dendrite2 syn_NCXLS_M2L_I3_Acetylcholine[1] = new Acetylcholine(0.32857105)}
-{a_M2L[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.9352124), syn_NCXLS_M2L_I3_Acetylcholine[1], 0.0, 0.0, 0.728611))}
+{a_M2L[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.9352124), syn_NCXLS_M2L_I3_Acetylcholine[1], 0.0, 0.0, 0.700000))}
 
 
 // Adding NetConn: NCXLS_I6_NSMR from: I6 to: NSMR with 2 connections
@@ -3135,7 +3135,7 @@ objectvar syn_NCXLS_M2L_I3_Acetylcholine[2]
 objectvar syn_NCXLS_I6_NSMR_Acetylcholine[2]
 
 {a_NSMR[0].Neurite3 syn_NCXLS_I6_NSMR_Acetylcholine[0] = new Acetylcholine(0.010874709)}
-{a_I6[0].Dendrite2 a_NSMR[0].synlist.append(new NetCon(&v(0.28403974), syn_NCXLS_I6_NSMR_Acetylcholine[0], 0.0, 0.0, 0.828599))}
+{a_I6[0].Dendrite2 a_NSMR[0].synlist.append(new NetCon(&v(0.28403974), syn_NCXLS_I6_NSMR_Acetylcholine[0], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Acetylcholine) from Neurite4 on src cell 0 to Neurite2 on tgt cell 0
@@ -3144,7 +3144,7 @@ objectvar syn_NCXLS_I6_NSMR_Acetylcholine[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_NSMR[0].Neurite2 syn_NCXLS_I6_NSMR_Acetylcholine[1] = new Acetylcholine(0.7632971)}
-{a_I6[0].Neurite4 a_NSMR[0].synlist.append(new NetCon(&v(0.6624428), syn_NCXLS_I6_NSMR_Acetylcholine[1], 0.0, 0.0, 0.828599))}
+{a_I6[0].Neurite4 a_NSMR[0].synlist.append(new NetCon(&v(0.6624428), syn_NCXLS_I6_NSMR_Acetylcholine[1], 0.0, 0.0, 0.800000))}
 
 
 // Adding NetConn: NCXLS_MCL_I2R from: MCL to: I2R with 1 connections
@@ -3158,7 +3158,7 @@ objectvar syn_NCXLS_I6_NSMR_Acetylcholine[2]
 objectvar syn_NCXLS_MCL_I2R_Acetylcholine[1]
 
 {a_I2R[0].Dendrite2 syn_NCXLS_MCL_I2R_Acetylcholine[0] = new Acetylcholine(0.77896106)}
-{a_MCL[0].Neurite4 a_I2R[0].synlist.append(new NetCon(&v(0.47524607), syn_NCXLS_MCL_I2R_Acetylcholine[0], 0.0, 0.0, 0.187700))}
+{a_MCL[0].Neurite4 a_I2R[0].synlist.append(new NetCon(&v(0.47524607), syn_NCXLS_MCL_I2R_Acetylcholine[0], 0.0, 0.0, 0.100000))}
 
 
 // Adding NetConn: NCXLS_I6_I3 from: I6 to: I3 with 1 connections
@@ -3172,7 +3172,7 @@ objectvar syn_NCXLS_MCL_I2R_Acetylcholine[1]
 objectvar syn_NCXLS_I6_I3_Acetylcholine[1]
 
 {a_I3[0].Dendrite2 syn_NCXLS_I6_I3_Acetylcholine[0] = new Acetylcholine(0.01268704)}
-{a_I6[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.6796646), syn_NCXLS_I6_I3_Acetylcholine[0], 0.0, 0.0, 0.027686))}
+{a_I6[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.6796646), syn_NCXLS_I6_I3_Acetylcholine[0], 0.0, 0.0, 0.000000))}
 
 
 // Adding NetConn: NCXLS_M3L_MI from: M3L to: MI with 1 connections
@@ -3186,7 +3186,7 @@ objectvar syn_NCXLS_I6_I3_Acetylcholine[1]
 objectvar syn_NCXLS_M3L_MI_Glutamate[1]
 
 {a_MI[0].Axon syn_NCXLS_M3L_MI_Glutamate[0] = new Glutamate(0.20472503)}
-{a_M3L[0].Neurite4 a_MI[0].synlist.append(new NetCon(&v(0.041435625), syn_NCXLS_M3L_MI_Glutamate[0], 0.0, 0.0, 0.835477))}
+{a_M3L[0].Neurite4 a_MI[0].synlist.append(new NetCon(&v(0.041435625), syn_NCXLS_M3L_MI_Glutamate[0], 0.0, 0.0, 0.800000))}
 
 
 // Adding NetConn: NCXLS_I6_NSML from: I6 to: NSML with 2 connections
@@ -3200,7 +3200,7 @@ objectvar syn_NCXLS_M3L_MI_Glutamate[1]
 objectvar syn_NCXLS_I6_NSML_Acetylcholine[2]
 
 {a_NSML[0].Neurite3 syn_NCXLS_I6_NSML_Acetylcholine[0] = new Acetylcholine(0.9734492)}
-{a_I6[0].Axon a_NSML[0].synlist.append(new NetCon(&v(0.68386745), syn_NCXLS_I6_NSML_Acetylcholine[0], 0.0, 0.0, 0.583736))}
+{a_I6[0].Axon a_NSML[0].synlist.append(new NetCon(&v(0.68386745), syn_NCXLS_I6_NSML_Acetylcholine[0], 0.0, 0.0, 0.500000))}
 
 
 //  Syn conn (type: Acetylcholine) from Dendrite2 on src cell 0 to Axon on tgt cell 0
@@ -3209,7 +3209,7 @@ objectvar syn_NCXLS_I6_NSML_Acetylcholine[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_NSML[0].Axon syn_NCXLS_I6_NSML_Acetylcholine[1] = new Acetylcholine(0.34903112)}
-{a_I6[0].Dendrite2 a_NSML[0].synlist.append(new NetCon(&v(0.28200004), syn_NCXLS_I6_NSML_Acetylcholine[1], 0.0, 0.0, 0.583736))}
+{a_I6[0].Dendrite2 a_NSML[0].synlist.append(new NetCon(&v(0.28200004), syn_NCXLS_I6_NSML_Acetylcholine[1], 0.0, 0.0, 0.500000))}
 
 
 // Adding NetConn: NCXLS_MCR_M2L_GJ from: MCR to: M2L with 2 connections
@@ -3225,11 +3225,11 @@ objectvar elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_A[2]
 objectvar elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_B[2]
 
 a_M2L[0].Axon { elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_A[0] = new Generic_GJ(0.54563266) }
-elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_A[0].weight = 0.602649
+elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_A[0].weight = 0.600000
 setpointer elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_A[0].vgap, a_MCR[0].Neurite4.v(0.7161139)
 
 a_MCR[0].Neurite4 { elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_B[0] = new Generic_GJ(0.7161139) }
-elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_B[0].weight = 0.602649
+elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_B[0].weight = 0.600000
 setpointer elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_B[0].vgap, a_M2L[0].Axon.v(0.54563266)
 
 
@@ -3239,11 +3239,11 @@ setpointer elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_B[0].vgap, a_M2L[0].Axon.v(0.5456
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M2L[0].Axon { elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_A[1] = new Generic_GJ(0.1611519) }
-elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_A[1].weight = 0.602649
+elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_A[1].weight = 0.600000
 setpointer elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_A[1].vgap, a_MCR[0].Axon.v(0.5947431)
 
 a_MCR[0].Axon { elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_B[1] = new Generic_GJ(0.5947431) }
-elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_B[1].weight = 0.602649
+elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_B[1].weight = 0.600000
 setpointer elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_B[1].vgap, a_M2L[0].Axon.v(0.1611519)
 
 
@@ -3258,7 +3258,7 @@ setpointer elecsyn_NCXLS_MCR_M2L_GJ_Generic_GJ_B[1].vgap, a_M2L[0].Axon.v(0.1611
 objectvar syn_NCXLS_MCR_I1R_Acetylcholine[3]
 
 {a_I1R[0].Axon syn_NCXLS_MCR_I1R_Acetylcholine[0] = new Acetylcholine(0.5907755)}
-{a_MCR[0].Neurite3 a_I1R[0].synlist.append(new NetCon(&v(0.9606157), syn_NCXLS_MCR_I1R_Acetylcholine[0], 0.0, 0.0, 0.174952))}
+{a_MCR[0].Neurite3 a_I1R[0].synlist.append(new NetCon(&v(0.9606157), syn_NCXLS_MCR_I1R_Acetylcholine[0], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Dendrite2 on tgt cell 0
@@ -3267,7 +3267,7 @@ objectvar syn_NCXLS_MCR_I1R_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Dendrite2 syn_NCXLS_MCR_I1R_Acetylcholine[1] = new Acetylcholine(0.29302183)}
-{a_MCR[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.47319227), syn_NCXLS_MCR_I1R_Acetylcholine[1], 0.0, 0.0, 0.174952))}
+{a_MCR[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.47319227), syn_NCXLS_MCR_I1R_Acetylcholine[1], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Acetylcholine) from Neurite4 on src cell 0 to Axon on tgt cell 0
@@ -3276,7 +3276,7 @@ objectvar syn_NCXLS_MCR_I1R_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Axon syn_NCXLS_MCR_I1R_Acetylcholine[2] = new Acetylcholine(0.63216174)}
-{a_MCR[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.2652249), syn_NCXLS_MCR_I1R_Acetylcholine[2], 0.0, 0.0, 0.174952))}
+{a_MCR[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.2652249), syn_NCXLS_MCR_I1R_Acetylcholine[2], 0.0, 0.0, 0.100000))}
 
 
 // Adding NetConn: NCXLS_MCL_I2L from: MCL to: I2L with 1 connections
@@ -3290,7 +3290,7 @@ objectvar syn_NCXLS_MCR_I1R_Acetylcholine[3]
 objectvar syn_NCXLS_MCL_I2L_Acetylcholine[1]
 
 {a_I2L[0].Dendrite2 syn_NCXLS_MCL_I2L_Acetylcholine[0] = new Acetylcholine(0.55416375)}
-{a_MCL[0].Neurite4 a_I2L[0].synlist.append(new NetCon(&v(0.2786439), syn_NCXLS_MCL_I2L_Acetylcholine[0], 0.0, 0.0, 0.984806))}
+{a_MCL[0].Neurite4 a_I2L[0].synlist.append(new NetCon(&v(0.2786439), syn_NCXLS_MCL_I2L_Acetylcholine[0], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_I6_M4_GJ from: I6 to: M4 with 1 connections
@@ -3306,11 +3306,11 @@ objectvar elecsyn_NCXLS_I6_M4_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I6_M4_GJ_Generic_GJ_B[1]
 
 a_M4[0].Dendrite3 { elecsyn_NCXLS_I6_M4_GJ_Generic_GJ_A[0] = new Generic_GJ(0.5101401) }
-elecsyn_NCXLS_I6_M4_GJ_Generic_GJ_A[0].weight = 0.575088
+elecsyn_NCXLS_I6_M4_GJ_Generic_GJ_A[0].weight = 0.500000
 setpointer elecsyn_NCXLS_I6_M4_GJ_Generic_GJ_A[0].vgap, a_I6[0].Axon.v(0.41343686)
 
 a_I6[0].Axon { elecsyn_NCXLS_I6_M4_GJ_Generic_GJ_B[0] = new Generic_GJ(0.41343686) }
-elecsyn_NCXLS_I6_M4_GJ_Generic_GJ_B[0].weight = 0.575088
+elecsyn_NCXLS_I6_M4_GJ_Generic_GJ_B[0].weight = 0.500000
 setpointer elecsyn_NCXLS_I6_M4_GJ_Generic_GJ_B[0].vgap, a_M4[0].Dendrite3.v(0.5101401)
 
 
@@ -3325,7 +3325,7 @@ setpointer elecsyn_NCXLS_I6_M4_GJ_Generic_GJ_B[0].vgap, a_M4[0].Dendrite3.v(0.51
 objectvar syn_NCXLS_M3R_NSMR_Glutamate[3]
 
 {a_NSMR[0].Neurite2 syn_NCXLS_M3R_NSMR_Glutamate[0] = new Glutamate(0.6096527)}
-{a_M3R[0].Neurite4 a_NSMR[0].synlist.append(new NetCon(&v(0.29989704), syn_NCXLS_M3R_NSMR_Glutamate[0], 0.0, 0.0, 0.964914))}
+{a_M3R[0].Neurite4 a_NSMR[0].synlist.append(new NetCon(&v(0.29989704), syn_NCXLS_M3R_NSMR_Glutamate[0], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Neurite2 on tgt cell 0
@@ -3334,7 +3334,7 @@ objectvar syn_NCXLS_M3R_NSMR_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_NSMR[0].Neurite2 syn_NCXLS_M3R_NSMR_Glutamate[1] = new Glutamate(0.698452)}
-{a_M3R[0].Neurite4 a_NSMR[0].synlist.append(new NetCon(&v(0.6500372), syn_NCXLS_M3R_NSMR_Glutamate[1], 0.0, 0.0, 0.964914))}
+{a_M3R[0].Neurite4 a_NSMR[0].synlist.append(new NetCon(&v(0.6500372), syn_NCXLS_M3R_NSMR_Glutamate[1], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Neurite3 on tgt cell 0
@@ -3343,7 +3343,7 @@ objectvar syn_NCXLS_M3R_NSMR_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_NSMR[0].Neurite3 syn_NCXLS_M3R_NSMR_Glutamate[2] = new Glutamate(0.62595636)}
-{a_M3R[0].Neurite4 a_NSMR[0].synlist.append(new NetCon(&v(0.22840674), syn_NCXLS_M3R_NSMR_Glutamate[2], 0.0, 0.0, 0.964914))}
+{a_M3R[0].Neurite4 a_NSMR[0].synlist.append(new NetCon(&v(0.22840674), syn_NCXLS_M3R_NSMR_Glutamate[2], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_MCR_I1L from: MCR to: I1L with 3 connections
@@ -3357,7 +3357,7 @@ objectvar syn_NCXLS_M3R_NSMR_Glutamate[3]
 objectvar syn_NCXLS_MCR_I1L_Acetylcholine[3]
 
 {a_I1L[0].Dendrite2 syn_NCXLS_MCR_I1L_Acetylcholine[0] = new Acetylcholine(0.02123087)}
-{a_MCR[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.24063222), syn_NCXLS_MCR_I1L_Acetylcholine[0], 0.0, 0.0, 0.065375))}
+{a_MCR[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.24063222), syn_NCXLS_MCR_I1L_Acetylcholine[0], 0.0, 0.0, 0.000000))}
 
 
 //  Syn conn (type: Acetylcholine) from Dendrite2 on src cell 0 to Axon on tgt cell 0
@@ -3366,7 +3366,7 @@ objectvar syn_NCXLS_MCR_I1L_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Axon syn_NCXLS_MCR_I1L_Acetylcholine[1] = new Acetylcholine(0.19001068)}
-{a_MCR[0].Dendrite2 a_I1L[0].synlist.append(new NetCon(&v(0.29068497), syn_NCXLS_MCR_I1L_Acetylcholine[1], 0.0, 0.0, 0.065375))}
+{a_MCR[0].Dendrite2 a_I1L[0].synlist.append(new NetCon(&v(0.29068497), syn_NCXLS_MCR_I1L_Acetylcholine[1], 0.0, 0.0, 0.000000))}
 
 
 //  Syn conn (type: Acetylcholine) from Neurite3 on src cell 0 to Axon on tgt cell 0
@@ -3375,7 +3375,7 @@ objectvar syn_NCXLS_MCR_I1L_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Axon syn_NCXLS_MCR_I1L_Acetylcholine[2] = new Acetylcholine(0.5973324)}
-{a_MCR[0].Neurite3 a_I1L[0].synlist.append(new NetCon(&v(0.6772593), syn_NCXLS_MCR_I1L_Acetylcholine[2], 0.0, 0.0, 0.065375))}
+{a_MCR[0].Neurite3 a_I1L[0].synlist.append(new NetCon(&v(0.6772593), syn_NCXLS_MCR_I1L_Acetylcholine[2], 0.0, 0.0, 0.000000))}
 
 
 // Adding NetConn: NCXLS_M2R_M3R_GJ from: M2R to: M3R with 1 connections
@@ -3391,11 +3391,11 @@ objectvar elecsyn_NCXLS_M2R_M3R_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M2R_M3R_GJ_Generic_GJ_B[1]
 
 a_M3R[0].Neurite5 { elecsyn_NCXLS_M2R_M3R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.992038) }
-elecsyn_NCXLS_M2R_M3R_GJ_Generic_GJ_A[0].weight = 0.899939
+elecsyn_NCXLS_M2R_M3R_GJ_Generic_GJ_A[0].weight = 0.800000
 setpointer elecsyn_NCXLS_M2R_M3R_GJ_Generic_GJ_A[0].vgap, a_M2R[0].Axon.v(0.73618925)
 
 a_M2R[0].Axon { elecsyn_NCXLS_M2R_M3R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.73618925) }
-elecsyn_NCXLS_M2R_M3R_GJ_Generic_GJ_B[0].weight = 0.899939
+elecsyn_NCXLS_M2R_M3R_GJ_Generic_GJ_B[0].weight = 0.800000
 setpointer elecsyn_NCXLS_M2R_M3R_GJ_Generic_GJ_B[0].vgap, a_M3R[0].Neurite5.v(0.992038)
 
 
@@ -3412,11 +3412,11 @@ objectvar elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_A[2]
 objectvar elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_B[2]
 
 a_M5[0].Axon { elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_A[0] = new Generic_GJ(0.2236697) }
-elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_A[0].weight = 0.673530
+elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_A[0].weight = 0.600000
 setpointer elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_A[0].vgap, a_I6[0].Dendrite2.v(0.28311715)
 
 a_I6[0].Dendrite2 { elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_B[0] = new Generic_GJ(0.28311715) }
-elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_B[0].weight = 0.673530
+elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_B[0].weight = 0.600000
 setpointer elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_B[0].vgap, a_M5[0].Axon.v(0.2236697)
 
 
@@ -3426,11 +3426,11 @@ setpointer elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_B[0].vgap, a_M5[0].Axon.v(0.2236697
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M5[0].Dendrite2 { elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_A[1] = new Generic_GJ(0.7862816) }
-elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_A[1].weight = 0.673530
+elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_A[1].weight = 0.600000
 setpointer elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_A[1].vgap, a_I6[0].Axon.v(0.3190765)
 
 a_I6[0].Axon { elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_B[1] = new Generic_GJ(0.3190765) }
-elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_B[1].weight = 0.673530
+elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_B[1].weight = 0.600000
 setpointer elecsyn_NCXLS_I6_M5_GJ_Generic_GJ_B[1].vgap, a_M5[0].Dendrite2.v(0.7862816)
 
 
@@ -3447,11 +3447,11 @@ objectvar elecsyn_NCXLS_M4_M2L_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M4_M2L_GJ_Generic_GJ_B[1]
 
 a_M2L[0].Axon { elecsyn_NCXLS_M4_M2L_GJ_Generic_GJ_A[0] = new Generic_GJ(0.72764593) }
-elecsyn_NCXLS_M4_M2L_GJ_Generic_GJ_A[0].weight = 0.728837
+elecsyn_NCXLS_M4_M2L_GJ_Generic_GJ_A[0].weight = 0.700000
 setpointer elecsyn_NCXLS_M4_M2L_GJ_Generic_GJ_A[0].vgap, a_M4[0].Axon.v(0.39190543)
 
 a_M4[0].Axon { elecsyn_NCXLS_M4_M2L_GJ_Generic_GJ_B[0] = new Generic_GJ(0.39190543) }
-elecsyn_NCXLS_M4_M2L_GJ_Generic_GJ_B[0].weight = 0.728837
+elecsyn_NCXLS_M4_M2L_GJ_Generic_GJ_B[0].weight = 0.700000
 setpointer elecsyn_NCXLS_M4_M2L_GJ_Generic_GJ_B[0].vgap, a_M2L[0].Axon.v(0.72764593)
 
 
@@ -3468,11 +3468,11 @@ objectvar elecsyn_NCXLS_I1R_I5_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I1R_I5_GJ_Generic_GJ_B[1]
 
 a_I5[0].Neurite3 { elecsyn_NCXLS_I1R_I5_GJ_Generic_GJ_A[0] = new Generic_GJ(0.43770692) }
-elecsyn_NCXLS_I1R_I5_GJ_Generic_GJ_A[0].weight = 0.669846
+elecsyn_NCXLS_I1R_I5_GJ_Generic_GJ_A[0].weight = 0.600000
 setpointer elecsyn_NCXLS_I1R_I5_GJ_Generic_GJ_A[0].vgap, a_I1R[0].Dendrite2.v(0.061649103)
 
 a_I1R[0].Dendrite2 { elecsyn_NCXLS_I1R_I5_GJ_Generic_GJ_B[0] = new Generic_GJ(0.061649103) }
-elecsyn_NCXLS_I1R_I5_GJ_Generic_GJ_B[0].weight = 0.669846
+elecsyn_NCXLS_I1R_I5_GJ_Generic_GJ_B[0].weight = 0.600000
 setpointer elecsyn_NCXLS_I1R_I5_GJ_Generic_GJ_B[0].vgap, a_I5[0].Neurite3.v(0.43770692)
 
 
@@ -3487,7 +3487,7 @@ setpointer elecsyn_NCXLS_I1R_I5_GJ_Generic_GJ_B[0].vgap, a_I5[0].Neurite3.v(0.43
 objectvar syn_NCXLS_M3R_NSML_Glutamate[2]
 
 {a_NSML[0].Axon syn_NCXLS_M3R_NSML_Glutamate[0] = new Glutamate(0.87208974)}
-{a_M3R[0].Neurite4 a_NSML[0].synlist.append(new NetCon(&v(0.45003468), syn_NCXLS_M3R_NSML_Glutamate[0], 0.0, 0.0, 0.500604))}
+{a_M3R[0].Neurite4 a_NSML[0].synlist.append(new NetCon(&v(0.45003468), syn_NCXLS_M3R_NSML_Glutamate[0], 0.0, 0.0, 0.500000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Neurite2 on tgt cell 0
@@ -3496,7 +3496,7 @@ objectvar syn_NCXLS_M3R_NSML_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_NSML[0].Neurite2 syn_NCXLS_M3R_NSML_Glutamate[1] = new Glutamate(0.3977217)}
-{a_M3R[0].Neurite4 a_NSML[0].synlist.append(new NetCon(&v(0.7305069), syn_NCXLS_M3R_NSML_Glutamate[1], 0.0, 0.0, 0.500604))}
+{a_M3R[0].Neurite4 a_NSML[0].synlist.append(new NetCon(&v(0.7305069), syn_NCXLS_M3R_NSML_Glutamate[1], 0.0, 0.0, 0.500000))}
 
 
 // Adding NetConn: NCXLS_I1L_I5_GJ from: I1L to: I5 with 1 connections
@@ -3512,11 +3512,11 @@ objectvar elecsyn_NCXLS_I1L_I5_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I1L_I5_GJ_Generic_GJ_B[1]
 
 a_I5[0].Neurite3 { elecsyn_NCXLS_I1L_I5_GJ_Generic_GJ_A[0] = new Generic_GJ(0.13819447) }
-elecsyn_NCXLS_I1L_I5_GJ_Generic_GJ_A[0].weight = 0.464705
+elecsyn_NCXLS_I1L_I5_GJ_Generic_GJ_A[0].weight = 0.400000
 setpointer elecsyn_NCXLS_I1L_I5_GJ_Generic_GJ_A[0].vgap, a_I1L[0].Axon.v(0.6636989)
 
 a_I1L[0].Axon { elecsyn_NCXLS_I1L_I5_GJ_Generic_GJ_B[0] = new Generic_GJ(0.6636989) }
-elecsyn_NCXLS_I1L_I5_GJ_Generic_GJ_B[0].weight = 0.464705
+elecsyn_NCXLS_I1L_I5_GJ_Generic_GJ_B[0].weight = 0.400000
 setpointer elecsyn_NCXLS_I1L_I5_GJ_Generic_GJ_B[0].vgap, a_I5[0].Neurite3.v(0.13819447)
 
 
@@ -3533,11 +3533,11 @@ objectvar elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[4]
 objectvar elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[4]
 
 a_M5[0].Dendrite2 { elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[0] = new Generic_GJ(0.2920413) }
-elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[0].weight = 0.508674
+elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[0].weight = 0.500000
 setpointer elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[0].vgap, a_M5[0].Neurite5.v(0.68157536)
 
 a_M5[0].Neurite5 { elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[0] = new Generic_GJ(0.68157536) }
-elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[0].weight = 0.508674
+elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[0].weight = 0.500000
 setpointer elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[0].vgap, a_M5[0].Dendrite2.v(0.2920413)
 
 
@@ -3547,11 +3547,11 @@ setpointer elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[0].vgap, a_M5[0].Dendrite2.v(0.29
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M5[0].Neurite7 { elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[1] = new Generic_GJ(0.47145656) }
-elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[1].weight = 0.508674
+elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[1].weight = 0.500000
 setpointer elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[1].vgap, a_M5[0].Dendrite2.v(0.44129997)
 
 a_M5[0].Dendrite2 { elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[1] = new Generic_GJ(0.44129997) }
-elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[1].weight = 0.508674
+elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[1].weight = 0.500000
 setpointer elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[1].vgap, a_M5[0].Neurite7.v(0.47145656)
 
 
@@ -3561,11 +3561,11 @@ setpointer elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[1].vgap, a_M5[0].Neurite7.v(0.471
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M5[0].Dendrite2 { elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[2] = new Generic_GJ(0.585463) }
-elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[2].weight = 0.508674
+elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[2].weight = 0.500000
 setpointer elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[2].vgap, a_M5[0].Axon.v(0.70929927)
 
 a_M5[0].Axon { elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[2] = new Generic_GJ(0.70929927) }
-elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[2].weight = 0.508674
+elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[2].weight = 0.500000
 setpointer elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[2].vgap, a_M5[0].Dendrite2.v(0.585463)
 
 
@@ -3575,11 +3575,11 @@ setpointer elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[2].vgap, a_M5[0].Dendrite2.v(0.58
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M5[0].Axon { elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[3] = new Generic_GJ(0.46023145) }
-elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[3].weight = 0.508674
+elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[3].weight = 0.500000
 setpointer elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_A[3].vgap, a_M5[0].Axon.v(0.45749056)
 
 a_M5[0].Axon { elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[3] = new Generic_GJ(0.45749056) }
-elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[3].weight = 0.508674
+elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[3].weight = 0.500000
 setpointer elecsyn_NCXLS_M5_M5_GJ_Generic_GJ_B[3].vgap, a_M5[0].Axon.v(0.46023145)
 
 
@@ -3596,11 +3596,11 @@ objectvar elecsyn_NCXLS_I1R_I1L_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I1R_I1L_GJ_Generic_GJ_B[1]
 
 a_I1L[0].Axon { elecsyn_NCXLS_I1R_I1L_GJ_Generic_GJ_A[0] = new Generic_GJ(0.45903614) }
-elecsyn_NCXLS_I1R_I1L_GJ_Generic_GJ_A[0].weight = 0.867651
+elecsyn_NCXLS_I1R_I1L_GJ_Generic_GJ_A[0].weight = 0.800000
 setpointer elecsyn_NCXLS_I1R_I1L_GJ_Generic_GJ_A[0].vgap, a_I1R[0].Axon.v(0.38565555)
 
 a_I1R[0].Axon { elecsyn_NCXLS_I1R_I1L_GJ_Generic_GJ_B[0] = new Generic_GJ(0.38565555) }
-elecsyn_NCXLS_I1R_I1L_GJ_Generic_GJ_B[0].weight = 0.867651
+elecsyn_NCXLS_I1R_I1L_GJ_Generic_GJ_B[0].weight = 0.800000
 setpointer elecsyn_NCXLS_I1R_I1L_GJ_Generic_GJ_B[0].vgap, a_I1L[0].Axon.v(0.45903614)
 
 
@@ -3615,7 +3615,7 @@ setpointer elecsyn_NCXLS_I1R_I1L_GJ_Generic_GJ_B[0].vgap, a_I1L[0].Axon.v(0.4590
 objectvar syn_NCXLS_M3L_NSMR_Glutamate[3]
 
 {a_NSMR[0].Neurite3 syn_NCXLS_M3L_NSMR_Glutamate[0] = new Glutamate(0.54818994)}
-{a_M3L[0].Neurite4 a_NSMR[0].synlist.append(new NetCon(&v(0.50570923), syn_NCXLS_M3L_NSMR_Glutamate[0], 0.0, 0.0, 0.054258))}
+{a_M3L[0].Neurite4 a_NSMR[0].synlist.append(new NetCon(&v(0.50570923), syn_NCXLS_M3L_NSMR_Glutamate[0], 0.0, 0.0, 0.000000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite5 on src cell 0 to Neurite2 on tgt cell 0
@@ -3624,7 +3624,7 @@ objectvar syn_NCXLS_M3L_NSMR_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_NSMR[0].Neurite2 syn_NCXLS_M3L_NSMR_Glutamate[1] = new Glutamate(0.72246355)}
-{a_M3L[0].Neurite5 a_NSMR[0].synlist.append(new NetCon(&v(0.6880377), syn_NCXLS_M3L_NSMR_Glutamate[1], 0.0, 0.0, 0.054258))}
+{a_M3L[0].Neurite5 a_NSMR[0].synlist.append(new NetCon(&v(0.6880377), syn_NCXLS_M3L_NSMR_Glutamate[1], 0.0, 0.0, 0.000000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Axon on tgt cell 0
@@ -3633,7 +3633,7 @@ objectvar syn_NCXLS_M3L_NSMR_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_NSMR[0].Axon syn_NCXLS_M3L_NSMR_Glutamate[2] = new Glutamate(0.64567065)}
-{a_M3L[0].Neurite4 a_NSMR[0].synlist.append(new NetCon(&v(0.30027974), syn_NCXLS_M3L_NSMR_Glutamate[2], 0.0, 0.0, 0.054258))}
+{a_M3L[0].Neurite4 a_NSMR[0].synlist.append(new NetCon(&v(0.30027974), syn_NCXLS_M3L_NSMR_Glutamate[2], 0.0, 0.0, 0.000000))}
 
 
 // Adding NetConn: NCXLS_M1_I2L_GJ from: M1 to: I2L with 2 connections
@@ -3649,11 +3649,11 @@ objectvar elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_A[2]
 objectvar elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_B[2]
 
 a_I2L[0].Dendrite2 { elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_A[0] = new Generic_GJ(0.85846645) }
-elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_A[0].weight = 0.899617
+elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_A[0].weight = 0.800000
 setpointer elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_A[0].vgap, a_M1[0].Axon.v(0.73223895)
 
 a_M1[0].Axon { elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_B[0] = new Generic_GJ(0.73223895) }
-elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_B[0].weight = 0.899617
+elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_B[0].weight = 0.800000
 setpointer elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_B[0].vgap, a_I2L[0].Dendrite2.v(0.85846645)
 
 
@@ -3663,11 +3663,11 @@ setpointer elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_B[0].vgap, a_I2L[0].Dendrite2.v(0.
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_I2L[0].Axon { elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_A[1] = new Generic_GJ(0.21917856) }
-elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_A[1].weight = 0.899617
+elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_A[1].weight = 0.800000
 setpointer elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_A[1].vgap, a_M1[0].Axon.v(0.46005535)
 
 a_M1[0].Axon { elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_B[1] = new Generic_GJ(0.46005535) }
-elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_B[1].weight = 0.899617
+elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_B[1].weight = 0.800000
 setpointer elecsyn_NCXLS_M1_I2L_GJ_Generic_GJ_B[1].vgap, a_I2L[0].Axon.v(0.21917856)
 
 
@@ -3684,11 +3684,11 @@ objectvar elecsyn_NCXLS_M4_I6_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M4_I6_GJ_Generic_GJ_B[1]
 
 a_I6[0].Dendrite2 { elecsyn_NCXLS_M4_I6_GJ_Generic_GJ_A[0] = new Generic_GJ(0.6417691) }
-elecsyn_NCXLS_M4_I6_GJ_Generic_GJ_A[0].weight = 0.163523
+elecsyn_NCXLS_M4_I6_GJ_Generic_GJ_A[0].weight = 0.100000
 setpointer elecsyn_NCXLS_M4_I6_GJ_Generic_GJ_A[0].vgap, a_M4[0].Axon.v(0.5757062)
 
 a_M4[0].Axon { elecsyn_NCXLS_M4_I6_GJ_Generic_GJ_B[0] = new Generic_GJ(0.5757062) }
-elecsyn_NCXLS_M4_I6_GJ_Generic_GJ_B[0].weight = 0.163523
+elecsyn_NCXLS_M4_I6_GJ_Generic_GJ_B[0].weight = 0.100000
 setpointer elecsyn_NCXLS_M4_I6_GJ_Generic_GJ_B[0].vgap, a_I6[0].Dendrite2.v(0.6417691)
 
 
@@ -3705,11 +3705,11 @@ objectvar elecsyn_NCXLS_M2R_MI_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M2R_MI_GJ_Generic_GJ_B[1]
 
 a_MI[0].Axon { elecsyn_NCXLS_M2R_MI_GJ_Generic_GJ_A[0] = new Generic_GJ(0.62425816) }
-elecsyn_NCXLS_M2R_MI_GJ_Generic_GJ_A[0].weight = 0.152029
+elecsyn_NCXLS_M2R_MI_GJ_Generic_GJ_A[0].weight = 0.100000
 setpointer elecsyn_NCXLS_M2R_MI_GJ_Generic_GJ_A[0].vgap, a_M2R[0].Axon.v(0.81914896)
 
 a_M2R[0].Axon { elecsyn_NCXLS_M2R_MI_GJ_Generic_GJ_B[0] = new Generic_GJ(0.81914896) }
-elecsyn_NCXLS_M2R_MI_GJ_Generic_GJ_B[0].weight = 0.152029
+elecsyn_NCXLS_M2R_MI_GJ_Generic_GJ_B[0].weight = 0.100000
 setpointer elecsyn_NCXLS_M2R_MI_GJ_Generic_GJ_B[0].vgap, a_MI[0].Axon.v(0.62425816)
 
 
@@ -3724,7 +3724,7 @@ setpointer elecsyn_NCXLS_M2R_MI_GJ_Generic_GJ_B[0].vgap, a_MI[0].Axon.v(0.624258
 objectvar syn_NCXLS_MCL_M1_Acetylcholine[1]
 
 {a_M1[0].Axon syn_NCXLS_MCL_M1_Acetylcholine[0] = new Acetylcholine(0.3178075)}
-{a_MCL[0].Neurite4 a_M1[0].synlist.append(new NetCon(&v(0.47724798), syn_NCXLS_MCL_M1_Acetylcholine[0], 0.0, 0.0, 0.538576))}
+{a_MCL[0].Neurite4 a_M1[0].synlist.append(new NetCon(&v(0.47724798), syn_NCXLS_MCL_M1_Acetylcholine[0], 0.0, 0.0, 0.500000))}
 
 
 // Adding NetConn: NCXLS_M2R_I3 from: M2R to: I3 with 2 connections
@@ -3738,7 +3738,7 @@ objectvar syn_NCXLS_MCL_M1_Acetylcholine[1]
 objectvar syn_NCXLS_M2R_I3_Acetylcholine[2]
 
 {a_I3[0].Neurite3 syn_NCXLS_M2R_I3_Acetylcholine[0] = new Acetylcholine(0.40338376)}
-{a_M2R[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.82295954), syn_NCXLS_M2R_I3_Acetylcholine[0], 0.0, 0.0, 0.847852))}
+{a_M2R[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.82295954), syn_NCXLS_M2R_I3_Acetylcholine[0], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Axon on tgt cell 0
@@ -3747,7 +3747,7 @@ objectvar syn_NCXLS_M2R_I3_Acetylcholine[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I3[0].Axon syn_NCXLS_M2R_I3_Acetylcholine[1] = new Acetylcholine(0.9611628)}
-{a_M2R[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.4608313), syn_NCXLS_M2R_I3_Acetylcholine[1], 0.0, 0.0, 0.847852))}
+{a_M2R[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.4608313), syn_NCXLS_M2R_I3_Acetylcholine[1], 0.0, 0.0, 0.800000))}
 
 
 // Adding NetConn: NCXLS_M3L_NSML from: M3L to: NSML with 2 connections
@@ -3761,7 +3761,7 @@ objectvar syn_NCXLS_M2R_I3_Acetylcholine[2]
 objectvar syn_NCXLS_M3L_NSML_Glutamate[2]
 
 {a_NSML[0].Neurite3 syn_NCXLS_M3L_NSML_Glutamate[0] = new Glutamate(0.2980702)}
-{a_M3L[0].Axon a_NSML[0].synlist.append(new NetCon(&v(0.10773742), syn_NCXLS_M3L_NSML_Glutamate[0], 0.0, 0.0, 0.751718))}
+{a_M3L[0].Axon a_NSML[0].synlist.append(new NetCon(&v(0.10773742), syn_NCXLS_M3L_NSML_Glutamate[0], 0.0, 0.0, 0.700000))}
 
 
 //  Syn conn (type: Glutamate) from Neurite4 on src cell 0 to Neurite3 on tgt cell 0
@@ -3770,7 +3770,7 @@ objectvar syn_NCXLS_M3L_NSML_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_NSML[0].Neurite3 syn_NCXLS_M3L_NSML_Glutamate[1] = new Glutamate(0.28828168)}
-{a_M3L[0].Neurite4 a_NSML[0].synlist.append(new NetCon(&v(0.59871113), syn_NCXLS_M3L_NSML_Glutamate[1], 0.0, 0.0, 0.751718))}
+{a_M3L[0].Neurite4 a_NSML[0].synlist.append(new NetCon(&v(0.59871113), syn_NCXLS_M3L_NSML_Glutamate[1], 0.0, 0.0, 0.700000))}
 
 
 // Adding NetConn: NCXLS_M3L_M1 from: M3L to: M1 with 1 connections
@@ -3784,7 +3784,7 @@ objectvar syn_NCXLS_M3L_NSML_Glutamate[2]
 objectvar syn_NCXLS_M3L_M1_Glutamate[1]
 
 {a_M1[0].Axon syn_NCXLS_M3L_M1_Glutamate[0] = new Glutamate(0.44433874)}
-{a_M3L[0].Neurite4 a_M1[0].synlist.append(new NetCon(&v(0.8023714), syn_NCXLS_M3L_M1_Glutamate[0], 0.0, 0.0, 0.835477))}
+{a_M3L[0].Neurite4 a_M1[0].synlist.append(new NetCon(&v(0.8023714), syn_NCXLS_M3L_M1_Glutamate[0], 0.0, 0.0, 0.800000))}
 
 
 // Adding NetConn: NCXLS_MCL_I1R from: MCL to: I1R with 3 connections
@@ -3798,7 +3798,7 @@ objectvar syn_NCXLS_M3L_M1_Glutamate[1]
 objectvar syn_NCXLS_MCL_I1R_Acetylcholine[3]
 
 {a_I1R[0].Axon syn_NCXLS_MCL_I1R_Acetylcholine[0] = new Acetylcholine(0.44539994)}
-{a_MCL[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.605459), syn_NCXLS_MCL_I1R_Acetylcholine[0], 0.0, 0.0, 0.234242))}
+{a_MCL[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.605459), syn_NCXLS_MCL_I1R_Acetylcholine[0], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Acetylcholine) from Neurite4 on src cell 0 to Dendrite2 on tgt cell 0
@@ -3807,7 +3807,7 @@ objectvar syn_NCXLS_MCL_I1R_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Dendrite2 syn_NCXLS_MCL_I1R_Acetylcholine[1] = new Acetylcholine(0.40184736)}
-{a_MCL[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.34929872), syn_NCXLS_MCL_I1R_Acetylcholine[1], 0.0, 0.0, 0.234242))}
+{a_MCL[0].Neurite4 a_I1R[0].synlist.append(new NetCon(&v(0.34929872), syn_NCXLS_MCL_I1R_Acetylcholine[1], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Dendrite2 on tgt cell 0
@@ -3816,7 +3816,7 @@ objectvar syn_NCXLS_MCL_I1R_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Dendrite2 syn_NCXLS_MCL_I1R_Acetylcholine[2] = new Acetylcholine(0.06617025)}
-{a_MCL[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.31668717), syn_NCXLS_MCL_I1R_Acetylcholine[2], 0.0, 0.0, 0.234242))}
+{a_MCL[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.31668717), syn_NCXLS_MCL_I1R_Acetylcholine[2], 0.0, 0.0, 0.200000))}
 
 
 // Adding NetConn: NCXLS_M3R_MI from: M3R to: MI with 1 connections
@@ -3830,7 +3830,7 @@ objectvar syn_NCXLS_MCL_I1R_Acetylcholine[3]
 objectvar syn_NCXLS_M3R_MI_Glutamate[1]
 
 {a_MI[0].Axon syn_NCXLS_M3R_MI_Glutamate[0] = new Glutamate(0.8256189)}
-{a_M3R[0].Neurite4 a_MI[0].synlist.append(new NetCon(&v(0.88455015), syn_NCXLS_M3R_MI_Glutamate[0], 0.0, 0.0, 0.994538))}
+{a_M3R[0].Neurite4 a_MI[0].synlist.append(new NetCon(&v(0.88455015), syn_NCXLS_M3R_MI_Glutamate[0], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_M4_I6 from: M4 to: I6 with 2 connections
@@ -3844,7 +3844,7 @@ objectvar syn_NCXLS_M3R_MI_Glutamate[1]
 objectvar syn_NCXLS_M4_I6_Acetylcholine[2]
 
 {a_I6[0].Axon syn_NCXLS_M4_I6_Acetylcholine[0] = new Acetylcholine(0.9590804)}
-{a_M4[0].Dendrite3 a_I6[0].synlist.append(new NetCon(&v(0.87647116), syn_NCXLS_M4_I6_Acetylcholine[0], 0.0, 0.0, 0.163523))}
+{a_M4[0].Dendrite3 a_I6[0].synlist.append(new NetCon(&v(0.87647116), syn_NCXLS_M4_I6_Acetylcholine[0], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Dendrite2 on tgt cell 0
@@ -3853,7 +3853,7 @@ objectvar syn_NCXLS_M4_I6_Acetylcholine[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I6[0].Dendrite2 syn_NCXLS_M4_I6_Acetylcholine[1] = new Acetylcholine(0.64592713)}
-{a_M4[0].Axon a_I6[0].synlist.append(new NetCon(&v(0.75938183), syn_NCXLS_M4_I6_Acetylcholine[1], 0.0, 0.0, 0.163523))}
+{a_M4[0].Axon a_I6[0].synlist.append(new NetCon(&v(0.75938183), syn_NCXLS_M4_I6_Acetylcholine[1], 0.0, 0.0, 0.100000))}
 
 
 // Adding NetConn: NCXLS_MCR_M2R_GJ from: MCR to: M2R with 2 connections
@@ -3869,11 +3869,11 @@ objectvar elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_A[2]
 objectvar elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_B[2]
 
 a_M2R[0].Axon { elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.40078) }
-elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_A[0].weight = 0.197957
+elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_A[0].weight = 0.100000
 setpointer elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_A[0].vgap, a_MCR[0].Dendrite2.v(0.8072853)
 
 a_MCR[0].Dendrite2 { elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.8072853) }
-elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_B[0].weight = 0.197957
+elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_B[0].weight = 0.100000
 setpointer elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_B[0].vgap, a_M2R[0].Axon.v(0.40078)
 
 
@@ -3883,11 +3883,11 @@ setpointer elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_B[0].vgap, a_M2R[0].Axon.v(0.4007
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M2R[0].Axon { elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_A[1] = new Generic_GJ(0.57528) }
-elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_A[1].weight = 0.197957
+elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_A[1].weight = 0.100000
 setpointer elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_A[1].vgap, a_MCR[0].Neurite4.v(0.21096556)
 
 a_MCR[0].Neurite4 { elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_B[1] = new Generic_GJ(0.21096556) }
-elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_B[1].weight = 0.197957
+elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_B[1].weight = 0.100000
 setpointer elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_B[1].vgap, a_M2R[0].Axon.v(0.57528)
 
 
@@ -3902,7 +3902,7 @@ setpointer elecsyn_NCXLS_MCR_M2R_GJ_Generic_GJ_B[1].vgap, a_M2R[0].Axon.v(0.5752
 objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 
 {a_I5[0].Neurite8 syn_NCXLS_M4_I5_Acetylcholine[0] = new Acetylcholine(0.13866313)}
-{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.7440336), syn_NCXLS_M4_I5_Acetylcholine[0], 0.0, 0.0, 0.972816))}
+{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.7440336), syn_NCXLS_M4_I5_Acetylcholine[0], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Dendrite3 on src cell 0 to Neurite8 on tgt cell 0
@@ -3911,7 +3911,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite8 syn_NCXLS_M4_I5_Acetylcholine[1] = new Acetylcholine(0.6128447)}
-{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.9968392), syn_NCXLS_M4_I5_Acetylcholine[1], 0.0, 0.0, 0.972816))}
+{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.9968392), syn_NCXLS_M4_I5_Acetylcholine[1], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Dendrite3 on src cell 0 to Neurite8 on tgt cell 0
@@ -3920,7 +3920,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite8 syn_NCXLS_M4_I5_Acetylcholine[2] = new Acetylcholine(0.56449336)}
-{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.758277), syn_NCXLS_M4_I5_Acetylcholine[2], 0.0, 0.0, 0.972816))}
+{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.758277), syn_NCXLS_M4_I5_Acetylcholine[2], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Neurite15 on tgt cell 0
@@ -3929,7 +3929,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite15 syn_NCXLS_M4_I5_Acetylcholine[3] = new Acetylcholine(0.834644)}
-{a_M4[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.7120939), syn_NCXLS_M4_I5_Acetylcholine[3], 0.0, 0.0, 0.972816))}
+{a_M4[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.7120939), syn_NCXLS_M4_I5_Acetylcholine[3], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Dendrite3 on src cell 0 to Neurite3 on tgt cell 0
@@ -3938,7 +3938,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite3 syn_NCXLS_M4_I5_Acetylcholine[4] = new Acetylcholine(0.35246447)}
-{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.91277206), syn_NCXLS_M4_I5_Acetylcholine[4], 0.0, 0.0, 0.972816))}
+{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.91277206), syn_NCXLS_M4_I5_Acetylcholine[4], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Neurite12 on tgt cell 0
@@ -3947,7 +3947,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite12 syn_NCXLS_M4_I5_Acetylcholine[5] = new Acetylcholine(0.27708426)}
-{a_M4[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.008806503), syn_NCXLS_M4_I5_Acetylcholine[5], 0.0, 0.0, 0.972816))}
+{a_M4[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.008806503), syn_NCXLS_M4_I5_Acetylcholine[5], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Dendrite3 on src cell 0 to Neurite6 on tgt cell 0
@@ -3956,7 +3956,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite6 syn_NCXLS_M4_I5_Acetylcholine[6] = new Acetylcholine(0.14052054)}
-{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.9131678), syn_NCXLS_M4_I5_Acetylcholine[6], 0.0, 0.0, 0.972816))}
+{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.9131678), syn_NCXLS_M4_I5_Acetylcholine[6], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Neurite3 on tgt cell 0
@@ -3965,7 +3965,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite3 syn_NCXLS_M4_I5_Acetylcholine[7] = new Acetylcholine(0.48321113)}
-{a_M4[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.19974107), syn_NCXLS_M4_I5_Acetylcholine[7], 0.0, 0.0, 0.972816))}
+{a_M4[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.19974107), syn_NCXLS_M4_I5_Acetylcholine[7], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Dendrite3 on src cell 0 to Neurite7 on tgt cell 0
@@ -3974,7 +3974,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite7 syn_NCXLS_M4_I5_Acetylcholine[8] = new Acetylcholine(0.6954355)}
-{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.05882032), syn_NCXLS_M4_I5_Acetylcholine[8], 0.0, 0.0, 0.972816))}
+{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.05882032), syn_NCXLS_M4_I5_Acetylcholine[8], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Neurite7 on tgt cell 0
@@ -3983,7 +3983,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite7 syn_NCXLS_M4_I5_Acetylcholine[9] = new Acetylcholine(0.24100496)}
-{a_M4[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.5891325), syn_NCXLS_M4_I5_Acetylcholine[9], 0.0, 0.0, 0.972816))}
+{a_M4[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.5891325), syn_NCXLS_M4_I5_Acetylcholine[9], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Neurite3 on tgt cell 0
@@ -3992,7 +3992,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite3 syn_NCXLS_M4_I5_Acetylcholine[10] = new Acetylcholine(0.38591182)}
-{a_M4[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.78796667), syn_NCXLS_M4_I5_Acetylcholine[10], 0.0, 0.0, 0.972816))}
+{a_M4[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.78796667), syn_NCXLS_M4_I5_Acetylcholine[10], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Dendrite3 on src cell 0 to Neurite6 on tgt cell 0
@@ -4001,7 +4001,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite6 syn_NCXLS_M4_I5_Acetylcholine[11] = new Acetylcholine(0.709273)}
-{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.11635451), syn_NCXLS_M4_I5_Acetylcholine[11], 0.0, 0.0, 0.972816))}
+{a_M4[0].Dendrite3 a_I5[0].synlist.append(new NetCon(&v(0.11635451), syn_NCXLS_M4_I5_Acetylcholine[11], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Dendrite2 on src cell 0 to Neurite6 on tgt cell 0
@@ -4010,7 +4010,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite6 syn_NCXLS_M4_I5_Acetylcholine[12] = new Acetylcholine(0.6392051)}
-{a_M4[0].Dendrite2 a_I5[0].synlist.append(new NetCon(&v(0.86710805), syn_NCXLS_M4_I5_Acetylcholine[12], 0.0, 0.0, 0.972816))}
+{a_M4[0].Dendrite2 a_I5[0].synlist.append(new NetCon(&v(0.86710805), syn_NCXLS_M4_I5_Acetylcholine[12], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_MCL_I1L from: MCL to: I1L with 3 connections
@@ -4024,7 +4024,7 @@ objectvar syn_NCXLS_M4_I5_Acetylcholine[13]
 objectvar syn_NCXLS_MCL_I1L_Acetylcholine[3]
 
 {a_I1L[0].Dendrite2 syn_NCXLS_MCL_I1L_Acetylcholine[0] = new Acetylcholine(0.19133462)}
-{a_MCL[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.5610151), syn_NCXLS_MCL_I1L_Acetylcholine[0], 0.0, 0.0, 0.687517))}
+{a_MCL[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.5610151), syn_NCXLS_MCL_I1L_Acetylcholine[0], 0.0, 0.0, 0.600000))}
 
 
 //  Syn conn (type: Acetylcholine) from Neurite4 on src cell 0 to Dendrite2 on tgt cell 0
@@ -4033,7 +4033,7 @@ objectvar syn_NCXLS_MCL_I1L_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Dendrite2 syn_NCXLS_MCL_I1L_Acetylcholine[1] = new Acetylcholine(0.2843007)}
-{a_MCL[0].Neurite4 a_I1L[0].synlist.append(new NetCon(&v(0.21329533), syn_NCXLS_MCL_I1L_Acetylcholine[1], 0.0, 0.0, 0.687517))}
+{a_MCL[0].Neurite4 a_I1L[0].synlist.append(new NetCon(&v(0.21329533), syn_NCXLS_MCL_I1L_Acetylcholine[1], 0.0, 0.0, 0.600000))}
 
 
 //  Syn conn (type: Acetylcholine) from Neurite4 on src cell 0 to Dendrite2 on tgt cell 0
@@ -4042,7 +4042,7 @@ objectvar syn_NCXLS_MCL_I1L_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Dendrite2 syn_NCXLS_MCL_I1L_Acetylcholine[2] = new Acetylcholine(0.85432315)}
-{a_MCL[0].Neurite4 a_I1L[0].synlist.append(new NetCon(&v(0.12207293), syn_NCXLS_MCL_I1L_Acetylcholine[2], 0.0, 0.0, 0.687517))}
+{a_MCL[0].Neurite4 a_I1L[0].synlist.append(new NetCon(&v(0.12207293), syn_NCXLS_MCL_I1L_Acetylcholine[2], 0.0, 0.0, 0.600000))}
 
 
 // Adding NetConn: NCXLS_M4_I3 from: M4 to: I3 with 1 connections
@@ -4056,7 +4056,7 @@ objectvar syn_NCXLS_MCL_I1L_Acetylcholine[3]
 objectvar syn_NCXLS_M4_I3_Acetylcholine[1]
 
 {a_I3[0].Dendrite2 syn_NCXLS_M4_I3_Acetylcholine[0] = new Acetylcholine(0.054911688)}
-{a_M4[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.83208025), syn_NCXLS_M4_I3_Acetylcholine[0], 0.0, 0.0, 0.093632))}
+{a_M4[0].Axon a_I3[0].synlist.append(new NetCon(&v(0.83208025), syn_NCXLS_M4_I3_Acetylcholine[0], 0.0, 0.0, 0.000000))}
 
 
 // Adding NetConn: NCXLS_I5_M5_GJ from: I5 to: M5 with 1 connections
@@ -4072,11 +4072,11 @@ objectvar elecsyn_NCXLS_I5_M5_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I5_M5_GJ_Generic_GJ_B[1]
 
 a_M5[0].Dendrite2 { elecsyn_NCXLS_I5_M5_GJ_Generic_GJ_A[0] = new Generic_GJ(0.93457264) }
-elecsyn_NCXLS_I5_M5_GJ_Generic_GJ_A[0].weight = 0.460718
+elecsyn_NCXLS_I5_M5_GJ_Generic_GJ_A[0].weight = 0.400000
 setpointer elecsyn_NCXLS_I5_M5_GJ_Generic_GJ_A[0].vgap, a_I5[0].Neurite3.v(0.558441)
 
 a_I5[0].Neurite3 { elecsyn_NCXLS_I5_M5_GJ_Generic_GJ_B[0] = new Generic_GJ(0.558441) }
-elecsyn_NCXLS_I5_M5_GJ_Generic_GJ_B[0].weight = 0.460718
+elecsyn_NCXLS_I5_M5_GJ_Generic_GJ_B[0].weight = 0.400000
 setpointer elecsyn_NCXLS_I5_M5_GJ_Generic_GJ_B[0].vgap, a_M5[0].Dendrite2.v(0.93457264)
 
 
@@ -4091,7 +4091,7 @@ setpointer elecsyn_NCXLS_I5_M5_GJ_Generic_GJ_B[0].vgap, a_M5[0].Dendrite2.v(0.93
 objectvar syn_NCXLS_M2L_MI_Acetylcholine[2]
 
 {a_MI[0].Axon syn_NCXLS_M2L_MI_Acetylcholine[0] = new Acetylcholine(0.2669751)}
-{a_M2L[0].Axon a_MI[0].synlist.append(new NetCon(&v(0.5407091), syn_NCXLS_M2L_MI_Acetylcholine[0], 0.0, 0.0, 0.687613))}
+{a_M2L[0].Axon a_MI[0].synlist.append(new NetCon(&v(0.5407091), syn_NCXLS_M2L_MI_Acetylcholine[0], 0.0, 0.0, 0.600000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Axon on tgt cell 0
@@ -4100,7 +4100,7 @@ objectvar syn_NCXLS_M2L_MI_Acetylcholine[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_MI[0].Axon syn_NCXLS_M2L_MI_Acetylcholine[1] = new Acetylcholine(0.9545342)}
-{a_M2L[0].Axon a_MI[0].synlist.append(new NetCon(&v(0.6463555), syn_NCXLS_M2L_MI_Acetylcholine[1], 0.0, 0.0, 0.687613))}
+{a_M2L[0].Axon a_MI[0].synlist.append(new NetCon(&v(0.6463555), syn_NCXLS_M2L_MI_Acetylcholine[1], 0.0, 0.0, 0.600000))}
 
 
 // Adding NetConn: NCXLS_M5_I5 from: M5 to: I5 with 3 connections
@@ -4114,7 +4114,7 @@ objectvar syn_NCXLS_M2L_MI_Acetylcholine[2]
 objectvar syn_NCXLS_M5_I5_Acetylcholine[3]
 
 {a_I5[0].Neurite7 syn_NCXLS_M5_I5_Acetylcholine[0] = new Acetylcholine(0.17491917)}
-{a_M5[0].Dendrite2 a_I5[0].synlist.append(new NetCon(&v(0.88854635), syn_NCXLS_M5_I5_Acetylcholine[0], 0.0, 0.0, 0.905760))}
+{a_M5[0].Dendrite2 a_I5[0].synlist.append(new NetCon(&v(0.88854635), syn_NCXLS_M5_I5_Acetylcholine[0], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Dendrite2 on src cell 0 to Neurite3 on tgt cell 0
@@ -4123,7 +4123,7 @@ objectvar syn_NCXLS_M5_I5_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite3 syn_NCXLS_M5_I5_Acetylcholine[1] = new Acetylcholine(0.7493018)}
-{a_M5[0].Dendrite2 a_I5[0].synlist.append(new NetCon(&v(0.8378018), syn_NCXLS_M5_I5_Acetylcholine[1], 0.0, 0.0, 0.905760))}
+{a_M5[0].Dendrite2 a_I5[0].synlist.append(new NetCon(&v(0.8378018), syn_NCXLS_M5_I5_Acetylcholine[1], 0.0, 0.0, 0.900000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Neurite9 on tgt cell 0
@@ -4132,7 +4132,7 @@ objectvar syn_NCXLS_M5_I5_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite9 syn_NCXLS_M5_I5_Acetylcholine[2] = new Acetylcholine(0.39011222)}
-{a_M5[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.98165673), syn_NCXLS_M5_I5_Acetylcholine[2], 0.0, 0.0, 0.905760))}
+{a_M5[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.98165673), syn_NCXLS_M5_I5_Acetylcholine[2], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_I5_MI from: I5 to: MI with 2 connections
@@ -4146,7 +4146,7 @@ objectvar syn_NCXLS_M5_I5_Acetylcholine[3]
 objectvar syn_NCXLS_I5_MI_Serotonin_Glutamate[2]
 
 {a_MI[0].Axon syn_NCXLS_I5_MI_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.45008782)}
-{a_I5[0].Neurite2 a_MI[0].synlist.append(new NetCon(&v(0.88273245), syn_NCXLS_I5_MI_Serotonin_Glutamate[0], 0.0, 0.0, 0.736376))}
+{a_I5[0].Neurite2 a_MI[0].synlist.append(new NetCon(&v(0.88273245), syn_NCXLS_I5_MI_Serotonin_Glutamate[0], 0.0, 0.0, 0.700000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite6 on src cell 0 to Axon on tgt cell 0
@@ -4155,7 +4155,7 @@ objectvar syn_NCXLS_I5_MI_Serotonin_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_MI[0].Axon syn_NCXLS_I5_MI_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.9963989)}
-{a_I5[0].Neurite6 a_MI[0].synlist.append(new NetCon(&v(0.03256802), syn_NCXLS_I5_MI_Serotonin_Glutamate[1], 0.0, 0.0, 0.736376))}
+{a_I5[0].Neurite6 a_MI[0].synlist.append(new NetCon(&v(0.03256802), syn_NCXLS_I5_MI_Serotonin_Glutamate[1], 0.0, 0.0, 0.700000))}
 
 
 // Adding NetConn: NCXLS_M4_M2R_GJ from: M4 to: M2R with 1 connections
@@ -4171,11 +4171,11 @@ objectvar elecsyn_NCXLS_M4_M2R_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M4_M2R_GJ_Generic_GJ_B[1]
 
 a_M2R[0].Axon { elecsyn_NCXLS_M4_M2R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.14857435) }
-elecsyn_NCXLS_M4_M2R_GJ_Generic_GJ_A[0].weight = 0.861212
+elecsyn_NCXLS_M4_M2R_GJ_Generic_GJ_A[0].weight = 0.800000
 setpointer elecsyn_NCXLS_M4_M2R_GJ_Generic_GJ_A[0].vgap, a_M4[0].Dendrite3.v(0.98041415)
 
 a_M4[0].Dendrite3 { elecsyn_NCXLS_M4_M2R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.98041415) }
-elecsyn_NCXLS_M4_M2R_GJ_Generic_GJ_B[0].weight = 0.861212
+elecsyn_NCXLS_M4_M2R_GJ_Generic_GJ_B[0].weight = 0.800000
 setpointer elecsyn_NCXLS_M4_M2R_GJ_Generic_GJ_B[0].vgap, a_M2R[0].Axon.v(0.14857435)
 
 
@@ -4192,11 +4192,11 @@ objectvar elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_A[2]
 objectvar elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_B[2]
 
 a_M2L[0].Axon { elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_A[0] = new Generic_GJ(0.06399733) }
-elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_A[0].weight = 0.900397
+elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_A[0].weight = 0.900000
 setpointer elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_A[0].vgap, a_MCL[0].Axon.v(0.95358366)
 
 a_MCL[0].Axon { elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_B[0] = new Generic_GJ(0.95358366) }
-elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_B[0].weight = 0.900397
+elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_B[0].weight = 0.900000
 setpointer elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_B[0].vgap, a_M2L[0].Axon.v(0.06399733)
 
 
@@ -4206,11 +4206,11 @@ setpointer elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_B[0].vgap, a_M2L[0].Axon.v(0.0639
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M2L[0].Axon { elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_A[1] = new Generic_GJ(0.33917987) }
-elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_A[1].weight = 0.900397
+elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_A[1].weight = 0.900000
 setpointer elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_A[1].vgap, a_MCL[0].Neurite3.v(0.87380993)
 
 a_MCL[0].Neurite3 { elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_B[1] = new Generic_GJ(0.87380993) }
-elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_B[1].weight = 0.900397
+elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_B[1].weight = 0.900000
 setpointer elecsyn_NCXLS_MCL_M2L_GJ_Generic_GJ_B[1].vgap, a_M2L[0].Axon.v(0.33917987)
 
 
@@ -4227,11 +4227,11 @@ objectvar elecsyn_NCXLS_I5_I1L_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I5_I1L_GJ_Generic_GJ_B[1]
 
 a_I1L[0].Dendrite2 { elecsyn_NCXLS_I5_I1L_GJ_Generic_GJ_A[0] = new Generic_GJ(0.04328244) }
-elecsyn_NCXLS_I5_I1L_GJ_Generic_GJ_A[0].weight = 0.896595
+elecsyn_NCXLS_I5_I1L_GJ_Generic_GJ_A[0].weight = 0.800000
 setpointer elecsyn_NCXLS_I5_I1L_GJ_Generic_GJ_A[0].vgap, a_I5[0].Neurite6.v(0.70477116)
 
 a_I5[0].Neurite6 { elecsyn_NCXLS_I5_I1L_GJ_Generic_GJ_B[0] = new Generic_GJ(0.70477116) }
-elecsyn_NCXLS_I5_I1L_GJ_Generic_GJ_B[0].weight = 0.896595
+elecsyn_NCXLS_I5_I1L_GJ_Generic_GJ_B[0].weight = 0.800000
 setpointer elecsyn_NCXLS_I5_I1L_GJ_Generic_GJ_B[0].vgap, a_I1L[0].Dendrite2.v(0.04328244)
 
 
@@ -4248,11 +4248,11 @@ objectvar elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_A[2]
 objectvar elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_B[2]
 
 a_I2R[0].Dendrite2 { elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.107741095) }
-elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_A[0].weight = 0.400694
+elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_A[0].weight = 0.400000
 setpointer elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_A[0].vgap, a_M1[0].Axon.v(0.25126165)
 
 a_M1[0].Axon { elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.25126165) }
-elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_B[0].weight = 0.400694
+elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_B[0].weight = 0.400000
 setpointer elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_B[0].vgap, a_I2R[0].Dendrite2.v(0.107741095)
 
 
@@ -4262,11 +4262,11 @@ setpointer elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_B[0].vgap, a_I2R[0].Dendrite2.v(0.
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_I2R[0].Axon { elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_A[1] = new Generic_GJ(0.6860769) }
-elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_A[1].weight = 0.400694
+elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_A[1].weight = 0.400000
 setpointer elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_A[1].vgap, a_M1[0].Axon.v(0.7957179)
 
 a_M1[0].Axon { elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_B[1] = new Generic_GJ(0.7957179) }
-elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_B[1].weight = 0.400694
+elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_B[1].weight = 0.400000
 setpointer elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_B[1].vgap, a_I2R[0].Axon.v(0.6860769)
 
 
@@ -4281,7 +4281,7 @@ setpointer elecsyn_NCXLS_M1_I2R_GJ_Generic_GJ_B[1].vgap, a_I2R[0].Axon.v(0.68607
 objectvar syn_NCXLS_MCR_M1_Acetylcholine[1]
 
 {a_M1[0].Axon syn_NCXLS_MCR_M1_Acetylcholine[0] = new Acetylcholine(0.5065963)}
-{a_MCR[0].Neurite3 a_M1[0].synlist.append(new NetCon(&v(0.29461655), syn_NCXLS_MCR_M1_Acetylcholine[0], 0.0, 0.0, 0.129989))}
+{a_MCR[0].Neurite3 a_M1[0].synlist.append(new NetCon(&v(0.29461655), syn_NCXLS_MCR_M1_Acetylcholine[0], 0.0, 0.0, 0.100000))}
 
 
 // Adding NetConn: NCXLS_I3_M1 from: I3 to: M1 with 2 connections
@@ -4295,7 +4295,7 @@ objectvar syn_NCXLS_MCR_M1_Acetylcholine[1]
 objectvar syn_NCXLS_I3_M1_Glutamate[2]
 
 {a_M1[0].Axon syn_NCXLS_I3_M1_Glutamate[0] = new Glutamate(0.84437406)}
-{a_I3[0].Dendrite2 a_M1[0].synlist.append(new NetCon(&v(0.39947417), syn_NCXLS_I3_M1_Glutamate[0], 0.0, 0.0, 0.591190))}
+{a_I3[0].Dendrite2 a_M1[0].synlist.append(new NetCon(&v(0.39947417), syn_NCXLS_I3_M1_Glutamate[0], 0.0, 0.0, 0.500000))}
 
 
 //  Syn conn (type: Glutamate) from Dendrite2 on src cell 0 to Axon on tgt cell 0
@@ -4304,7 +4304,7 @@ objectvar syn_NCXLS_I3_M1_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_M1[0].Axon syn_NCXLS_I3_M1_Glutamate[1] = new Glutamate(0.89218724)}
-{a_I3[0].Dendrite2 a_M1[0].synlist.append(new NetCon(&v(0.4352302), syn_NCXLS_I3_M1_Glutamate[1], 0.0, 0.0, 0.591190))}
+{a_I3[0].Dendrite2 a_M1[0].synlist.append(new NetCon(&v(0.4352302), syn_NCXLS_I3_M1_Glutamate[1], 0.0, 0.0, 0.500000))}
 
 
 // Adding NetConn: NCXLS_M2R_I3_GJ from: M2R to: I3 with 1 connections
@@ -4320,11 +4320,11 @@ objectvar elecsyn_NCXLS_M2R_I3_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M2R_I3_GJ_Generic_GJ_B[1]
 
 a_I3[0].Axon { elecsyn_NCXLS_M2R_I3_GJ_Generic_GJ_A[0] = new Generic_GJ(0.8547067) }
-elecsyn_NCXLS_M2R_I3_GJ_Generic_GJ_A[0].weight = 0.847852
+elecsyn_NCXLS_M2R_I3_GJ_Generic_GJ_A[0].weight = 0.800000
 setpointer elecsyn_NCXLS_M2R_I3_GJ_Generic_GJ_A[0].vgap, a_M2R[0].Axon.v(0.78544736)
 
 a_M2R[0].Axon { elecsyn_NCXLS_M2R_I3_GJ_Generic_GJ_B[0] = new Generic_GJ(0.78544736) }
-elecsyn_NCXLS_M2R_I3_GJ_Generic_GJ_B[0].weight = 0.847852
+elecsyn_NCXLS_M2R_I3_GJ_Generic_GJ_B[0].weight = 0.800000
 setpointer elecsyn_NCXLS_M2R_I3_GJ_Generic_GJ_B[0].vgap, a_I3[0].Axon.v(0.8547067)
 
 
@@ -4339,7 +4339,7 @@ setpointer elecsyn_NCXLS_M2R_I3_GJ_Generic_GJ_B[0].vgap, a_I3[0].Axon.v(0.854706
 objectvar syn_NCXLS_M3R_M1_Glutamate[1]
 
 {a_M1[0].Axon syn_NCXLS_M3R_M1_Glutamate[0] = new Glutamate(0.6327862)}
-{a_M3R[0].Neurite5 a_M1[0].synlist.append(new NetCon(&v(0.61592907), syn_NCXLS_M3R_M1_Glutamate[0], 0.0, 0.0, 0.994538))}
+{a_M3R[0].Neurite5 a_M1[0].synlist.append(new NetCon(&v(0.61592907), syn_NCXLS_M3R_M1_Glutamate[0], 0.0, 0.0, 0.900000))}
 
 
 // Adding NetConn: NCXLS_NSML_I6 from: NSML to: I6 with 2 connections
@@ -4353,7 +4353,7 @@ objectvar syn_NCXLS_M3R_M1_Glutamate[1]
 objectvar syn_NCXLS_NSML_I6_Serotonin_Glutamate[2]
 
 {a_I6[0].Axon syn_NCXLS_NSML_I6_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.5245272)}
-{a_NSML[0].Neurite2 a_I6[0].synlist.append(new NetCon(&v(0.30217105), syn_NCXLS_NSML_I6_Serotonin_Glutamate[0], 0.0, 0.0, 0.772979))}
+{a_NSML[0].Neurite2 a_I6[0].synlist.append(new NetCon(&v(0.30217105), syn_NCXLS_NSML_I6_Serotonin_Glutamate[0], 0.0, 0.0, 0.700000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Dendrite2 on tgt cell 0
@@ -4362,7 +4362,7 @@ objectvar syn_NCXLS_NSML_I6_Serotonin_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I6[0].Dendrite2 syn_NCXLS_NSML_I6_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.096196786)}
-{a_NSML[0].Neurite3 a_I6[0].synlist.append(new NetCon(&v(0.6139545), syn_NCXLS_NSML_I6_Serotonin_Glutamate[1], 0.0, 0.0, 0.772979))}
+{a_NSML[0].Neurite3 a_I6[0].synlist.append(new NetCon(&v(0.6139545), syn_NCXLS_NSML_I6_Serotonin_Glutamate[1], 0.0, 0.0, 0.700000))}
 
 
 // Adding NetConn: NCXLS_NSML_I5 from: NSML to: I5 with 2 connections
@@ -4376,7 +4376,7 @@ objectvar syn_NCXLS_NSML_I6_Serotonin_Glutamate[2]
 objectvar syn_NCXLS_NSML_I5_Serotonin_Glutamate[2]
 
 {a_I5[0].Neurite7 syn_NCXLS_NSML_I5_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.11404836)}
-{a_NSML[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.60361034), syn_NCXLS_NSML_I5_Serotonin_Glutamate[0], 0.0, 0.0, 0.862972))}
+{a_NSML[0].Axon a_I5[0].synlist.append(new NetCon(&v(0.60361034), syn_NCXLS_NSML_I5_Serotonin_Glutamate[0], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Neurite7 on tgt cell 0
@@ -4385,7 +4385,7 @@ objectvar syn_NCXLS_NSML_I5_Serotonin_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I5[0].Neurite7 syn_NCXLS_NSML_I5_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.31844315)}
-{a_NSML[0].Neurite2 a_I5[0].synlist.append(new NetCon(&v(0.22748159), syn_NCXLS_NSML_I5_Serotonin_Glutamate[1], 0.0, 0.0, 0.862972))}
+{a_NSML[0].Neurite2 a_I5[0].synlist.append(new NetCon(&v(0.22748159), syn_NCXLS_NSML_I5_Serotonin_Glutamate[1], 0.0, 0.0, 0.800000))}
 
 
 // Adding NetConn: NCXLS_M4_M4_GJ from: M4 to: M4 with 6 connections
@@ -4401,11 +4401,11 @@ objectvar elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[6]
 objectvar elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[6]
 
 a_M4[0].Axon { elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[0] = new Generic_GJ(0.06353129) }
-elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[0].weight = 0.951739
+elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[0].weight = 0.900000
 setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[0].vgap, a_M4[0].Axon.v(0.81606793)
 
 a_M4[0].Axon { elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[0] = new Generic_GJ(0.81606793) }
-elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[0].weight = 0.951739
+elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[0].weight = 0.900000
 setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[0].vgap, a_M4[0].Axon.v(0.06353129)
 
 
@@ -4415,11 +4415,11 @@ setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[0].vgap, a_M4[0].Axon.v(0.0635312
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M4[0].Dendrite3 { elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[1] = new Generic_GJ(0.7142434) }
-elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[1].weight = 0.951739
+elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[1].weight = 0.900000
 setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[1].vgap, a_M4[0].Axon.v(0.632281)
 
 a_M4[0].Axon { elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[1] = new Generic_GJ(0.632281) }
-elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[1].weight = 0.951739
+elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[1].weight = 0.900000
 setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[1].vgap, a_M4[0].Dendrite3.v(0.7142434)
 
 
@@ -4429,11 +4429,11 @@ setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[1].vgap, a_M4[0].Dendrite3.v(0.71
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M4[0].Axon { elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[2] = new Generic_GJ(0.73090684) }
-elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[2].weight = 0.951739
+elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[2].weight = 0.900000
 setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[2].vgap, a_M4[0].Axon.v(0.38507313)
 
 a_M4[0].Axon { elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[2] = new Generic_GJ(0.38507313) }
-elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[2].weight = 0.951739
+elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[2].weight = 0.900000
 setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[2].vgap, a_M4[0].Axon.v(0.73090684)
 
 
@@ -4443,11 +4443,11 @@ setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[2].vgap, a_M4[0].Axon.v(0.7309068
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M4[0].Axon { elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[3] = new Generic_GJ(0.1647888) }
-elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[3].weight = 0.951739
+elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[3].weight = 0.900000
 setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[3].vgap, a_M4[0].Dendrite3.v(0.2513414)
 
 a_M4[0].Dendrite3 { elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[3] = new Generic_GJ(0.2513414) }
-elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[3].weight = 0.951739
+elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[3].weight = 0.900000
 setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[3].vgap, a_M4[0].Axon.v(0.1647888)
 
 
@@ -4457,11 +4457,11 @@ setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[3].vgap, a_M4[0].Axon.v(0.1647888
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M4[0].Axon { elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[4] = new Generic_GJ(0.46358976) }
-elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[4].weight = 0.951739
+elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[4].weight = 0.900000
 setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[4].vgap, a_M4[0].Dendrite3.v(0.23673435)
 
 a_M4[0].Dendrite3 { elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[4] = new Generic_GJ(0.23673435) }
-elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[4].weight = 0.951739
+elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[4].weight = 0.900000
 setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[4].vgap, a_M4[0].Axon.v(0.46358976)
 
 
@@ -4471,11 +4471,11 @@ setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[4].vgap, a_M4[0].Axon.v(0.4635897
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M4[0].Dendrite3 { elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[5] = new Generic_GJ(0.22626787) }
-elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[5].weight = 0.951739
+elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[5].weight = 0.900000
 setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_A[5].vgap, a_M4[0].Axon.v(0.20105435)
 
 a_M4[0].Axon { elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[5] = new Generic_GJ(0.20105435) }
-elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[5].weight = 0.951739
+elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[5].weight = 0.900000
 setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[5].vgap, a_M4[0].Dendrite3.v(0.22626787)
 
 
@@ -4490,7 +4490,7 @@ setpointer elecsyn_NCXLS_M4_M4_GJ_Generic_GJ_B[5].vgap, a_M4[0].Dendrite3.v(0.22
 objectvar syn_NCXLS_I4_M1_Glutamate[2]
 
 {a_M1[0].Axon syn_NCXLS_I4_M1_Glutamate[0] = new Glutamate(0.712886)}
-{a_I4[0].Axon a_M1[0].synlist.append(new NetCon(&v(0.88231933), syn_NCXLS_I4_M1_Glutamate[0], 0.0, 0.0, 0.819379))}
+{a_I4[0].Axon a_M1[0].synlist.append(new NetCon(&v(0.88231933), syn_NCXLS_I4_M1_Glutamate[0], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Glutamate) from Dendrite2 on src cell 0 to Axon on tgt cell 0
@@ -4499,7 +4499,7 @@ objectvar syn_NCXLS_I4_M1_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_M1[0].Axon syn_NCXLS_I4_M1_Glutamate[1] = new Glutamate(0.09649083)}
-{a_I4[0].Dendrite2 a_M1[0].synlist.append(new NetCon(&v(0.8993436), syn_NCXLS_I4_M1_Glutamate[1], 0.0, 0.0, 0.819379))}
+{a_I4[0].Dendrite2 a_M1[0].synlist.append(new NetCon(&v(0.8993436), syn_NCXLS_I4_M1_Glutamate[1], 0.0, 0.0, 0.800000))}
 
 
 // Adding NetConn: NCXLS_NSML_I4 from: NSML to: I4 with 3 connections
@@ -4513,7 +4513,7 @@ objectvar syn_NCXLS_I4_M1_Glutamate[2]
 objectvar syn_NCXLS_NSML_I4_Serotonin_Glutamate[3]
 
 {a_I4[0].Axon syn_NCXLS_NSML_I4_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.67561406)}
-{a_NSML[0].Neurite2 a_I4[0].synlist.append(new NetCon(&v(0.8640606), syn_NCXLS_NSML_I4_Serotonin_Glutamate[0], 0.0, 0.0, 0.491211))}
+{a_NSML[0].Neurite2 a_I4[0].synlist.append(new NetCon(&v(0.8640606), syn_NCXLS_NSML_I4_Serotonin_Glutamate[0], 0.0, 0.0, 0.400000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Axon on tgt cell 0
@@ -4522,7 +4522,7 @@ objectvar syn_NCXLS_NSML_I4_Serotonin_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I4[0].Axon syn_NCXLS_NSML_I4_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.33441296)}
-{a_NSML[0].Neurite2 a_I4[0].synlist.append(new NetCon(&v(0.5393446), syn_NCXLS_NSML_I4_Serotonin_Glutamate[1], 0.0, 0.0, 0.491211))}
+{a_NSML[0].Neurite2 a_I4[0].synlist.append(new NetCon(&v(0.5393446), syn_NCXLS_NSML_I4_Serotonin_Glutamate[1], 0.0, 0.0, 0.400000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite3 on src cell 0 to Axon on tgt cell 0
@@ -4531,7 +4531,7 @@ objectvar syn_NCXLS_NSML_I4_Serotonin_Glutamate[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I4[0].Axon syn_NCXLS_NSML_I4_Serotonin_Glutamate[2] = new Serotonin_Glutamate(0.10494159)}
-{a_NSML[0].Neurite3 a_I4[0].synlist.append(new NetCon(&v(0.3803868), syn_NCXLS_NSML_I4_Serotonin_Glutamate[2], 0.0, 0.0, 0.491211))}
+{a_NSML[0].Neurite3 a_I4[0].synlist.append(new NetCon(&v(0.3803868), syn_NCXLS_NSML_I4_Serotonin_Glutamate[2], 0.0, 0.0, 0.400000))}
 
 
 // Adding NetConn: NCXLS_I5_M5 from: I5 to: M5 with 1 connections
@@ -4545,7 +4545,7 @@ objectvar syn_NCXLS_NSML_I4_Serotonin_Glutamate[3]
 objectvar syn_NCXLS_I5_M5_Serotonin_Glutamate[1]
 
 {a_M5[0].Dendrite2 syn_NCXLS_I5_M5_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.22737323)}
-{a_I5[0].Neurite7 a_M5[0].synlist.append(new NetCon(&v(0.96341974), syn_NCXLS_I5_M5_Serotonin_Glutamate[0], 0.0, 0.0, 0.460718))}
+{a_I5[0].Neurite7 a_M5[0].synlist.append(new NetCon(&v(0.96341974), syn_NCXLS_I5_M5_Serotonin_Glutamate[0], 0.0, 0.0, 0.400000))}
 
 
 // Adding NetConn: NCXLS_NSML_I3 from: NSML to: I3 with 2 connections
@@ -4559,7 +4559,7 @@ objectvar syn_NCXLS_I5_M5_Serotonin_Glutamate[1]
 objectvar syn_NCXLS_NSML_I3_Serotonin_Glutamate[2]
 
 {a_I3[0].Dendrite2 syn_NCXLS_NSML_I3_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.2163639)}
-{a_NSML[0].Neurite2 a_I3[0].synlist.append(new NetCon(&v(0.21800429), syn_NCXLS_NSML_I3_Serotonin_Glutamate[0], 0.0, 0.0, 0.323819))}
+{a_NSML[0].Neurite2 a_I3[0].synlist.append(new NetCon(&v(0.21800429), syn_NCXLS_NSML_I3_Serotonin_Glutamate[0], 0.0, 0.0, 0.300000))}
 
 
 //  Syn conn (type: Serotonin_Glutamate) from Neurite2 on src cell 0 to Dendrite2 on tgt cell 0
@@ -4568,7 +4568,7 @@ objectvar syn_NCXLS_NSML_I3_Serotonin_Glutamate[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I3[0].Dendrite2 syn_NCXLS_NSML_I3_Serotonin_Glutamate[1] = new Serotonin_Glutamate(0.43353748)}
-{a_NSML[0].Neurite2 a_I3[0].synlist.append(new NetCon(&v(0.8569612), syn_NCXLS_NSML_I3_Serotonin_Glutamate[1], 0.0, 0.0, 0.323819))}
+{a_NSML[0].Neurite2 a_I3[0].synlist.append(new NetCon(&v(0.8569612), syn_NCXLS_NSML_I3_Serotonin_Glutamate[1], 0.0, 0.0, 0.300000))}
 
 
 // Adding NetConn: NCXLS_NSMR_M3R from: NSMR to: M3R with 1 connections
@@ -4582,7 +4582,7 @@ objectvar syn_NCXLS_NSML_I3_Serotonin_Glutamate[2]
 objectvar syn_NCXLS_NSMR_M3R_Serotonin_Glutamate[1]
 
 {a_M3R[0].Neurite4 syn_NCXLS_NSMR_M3R_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.53801066)}
-{a_NSMR[0].Neurite2 a_M3R[0].synlist.append(new NetCon(&v(0.18657732), syn_NCXLS_NSMR_M3R_Serotonin_Glutamate[0], 0.0, 0.0, 0.200354))}
+{a_NSMR[0].Neurite2 a_M3R[0].synlist.append(new NetCon(&v(0.18657732), syn_NCXLS_NSMR_M3R_Serotonin_Glutamate[0], 0.0, 0.0, 0.200000))}
 
 
 // Adding NetConn: NCXLS_M4_M5_GJ from: M4 to: M5 with 1 connections
@@ -4598,11 +4598,11 @@ objectvar elecsyn_NCXLS_M4_M5_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M4_M5_GJ_Generic_GJ_B[1]
 
 a_M5[0].Axon { elecsyn_NCXLS_M4_M5_GJ_Generic_GJ_A[0] = new Generic_GJ(0.87881935) }
-elecsyn_NCXLS_M4_M5_GJ_Generic_GJ_A[0].weight = 0.399416
+elecsyn_NCXLS_M4_M5_GJ_Generic_GJ_A[0].weight = 0.300000
 setpointer elecsyn_NCXLS_M4_M5_GJ_Generic_GJ_A[0].vgap, a_M4[0].Dendrite3.v(0.60578674)
 
 a_M4[0].Dendrite3 { elecsyn_NCXLS_M4_M5_GJ_Generic_GJ_B[0] = new Generic_GJ(0.60578674) }
-elecsyn_NCXLS_M4_M5_GJ_Generic_GJ_B[0].weight = 0.399416
+elecsyn_NCXLS_M4_M5_GJ_Generic_GJ_B[0].weight = 0.300000
 setpointer elecsyn_NCXLS_M4_M5_GJ_Generic_GJ_B[0].vgap, a_M5[0].Axon.v(0.87881935)
 
 
@@ -4617,7 +4617,7 @@ setpointer elecsyn_NCXLS_M4_M5_GJ_Generic_GJ_B[0].vgap, a_M5[0].Axon.v(0.8788193
 objectvar syn_NCXLS_I5_M1_Serotonin_Glutamate[1]
 
 {a_M1[0].Axon syn_NCXLS_I5_M1_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.827294)}
-{a_I5[0].Neurite3 a_M1[0].synlist.append(new NetCon(&v(0.86948985), syn_NCXLS_I5_M1_Serotonin_Glutamate[0], 0.0, 0.0, 0.736376))}
+{a_I5[0].Neurite3 a_M1[0].synlist.append(new NetCon(&v(0.86948985), syn_NCXLS_I5_M1_Serotonin_Glutamate[0], 0.0, 0.0, 0.700000))}
 
 
 // Adding NetConn: NCXLS_I6_I2R from: I6 to: I2R with 2 connections
@@ -4631,7 +4631,7 @@ objectvar syn_NCXLS_I5_M1_Serotonin_Glutamate[1]
 objectvar syn_NCXLS_I6_I2R_Acetylcholine[2]
 
 {a_I2R[0].Axon syn_NCXLS_I6_I2R_Acetylcholine[0] = new Acetylcholine(0.88154954)}
-{a_I6[0].Axon a_I2R[0].synlist.append(new NetCon(&v(0.69279516), syn_NCXLS_I6_I2R_Acetylcholine[0], 0.0, 0.0, 0.348655))}
+{a_I6[0].Axon a_I2R[0].synlist.append(new NetCon(&v(0.69279516), syn_NCXLS_I6_I2R_Acetylcholine[0], 0.0, 0.0, 0.300000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Axon on tgt cell 0
@@ -4640,7 +4640,7 @@ objectvar syn_NCXLS_I6_I2R_Acetylcholine[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2R[0].Axon syn_NCXLS_I6_I2R_Acetylcholine[1] = new Acetylcholine(0.5297932)}
-{a_I6[0].Axon a_I2R[0].synlist.append(new NetCon(&v(0.47154048), syn_NCXLS_I6_I2R_Acetylcholine[1], 0.0, 0.0, 0.348655))}
+{a_I6[0].Axon a_I2R[0].synlist.append(new NetCon(&v(0.47154048), syn_NCXLS_I6_I2R_Acetylcholine[1], 0.0, 0.0, 0.300000))}
 
 
 // Adding NetConn: NCXLS_NSMR_M3L from: NSMR to: M3L with 1 connections
@@ -4654,7 +4654,7 @@ objectvar syn_NCXLS_I6_I2R_Acetylcholine[2]
 objectvar syn_NCXLS_NSMR_M3L_Serotonin_Glutamate[1]
 
 {a_M3L[0].Neurite5 syn_NCXLS_NSMR_M3L_Serotonin_Glutamate[0] = new Serotonin_Glutamate(0.2128101)}
-{a_NSMR[0].Neurite3 a_M3L[0].synlist.append(new NetCon(&v(0.03668803), syn_NCXLS_NSMR_M3L_Serotonin_Glutamate[0], 0.0, 0.0, 0.025714))}
+{a_NSMR[0].Neurite3 a_M3L[0].synlist.append(new NetCon(&v(0.03668803), syn_NCXLS_NSMR_M3L_Serotonin_Glutamate[0], 0.0, 0.0, 0.000000))}
 
 
 // Adding NetConn: NCXLS_M2R_MI from: M2R to: MI with 2 connections
@@ -4668,7 +4668,7 @@ objectvar syn_NCXLS_NSMR_M3L_Serotonin_Glutamate[1]
 objectvar syn_NCXLS_M2R_MI_Acetylcholine[2]
 
 {a_MI[0].Axon syn_NCXLS_M2R_MI_Acetylcholine[0] = new Acetylcholine(0.5936909)}
-{a_M2R[0].Axon a_MI[0].synlist.append(new NetCon(&v(0.46611708), syn_NCXLS_M2R_MI_Acetylcholine[0], 0.0, 0.0, 0.152029))}
+{a_M2R[0].Axon a_MI[0].synlist.append(new NetCon(&v(0.46611708), syn_NCXLS_M2R_MI_Acetylcholine[0], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Axon on tgt cell 0
@@ -4677,7 +4677,7 @@ objectvar syn_NCXLS_M2R_MI_Acetylcholine[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_MI[0].Axon syn_NCXLS_M2R_MI_Acetylcholine[1] = new Acetylcholine(0.8016099)}
-{a_M2R[0].Axon a_MI[0].synlist.append(new NetCon(&v(0.6921405), syn_NCXLS_M2R_MI_Acetylcholine[1], 0.0, 0.0, 0.152029))}
+{a_M2R[0].Axon a_MI[0].synlist.append(new NetCon(&v(0.6921405), syn_NCXLS_M2R_MI_Acetylcholine[1], 0.0, 0.0, 0.100000))}
 
 
 // Adding NetConn: NCXLS_M2R_I1R from: M2R to: I1R with 3 connections
@@ -4691,7 +4691,7 @@ objectvar syn_NCXLS_M2R_MI_Acetylcholine[2]
 objectvar syn_NCXLS_M2R_I1R_Acetylcholine[3]
 
 {a_I1R[0].Dendrite2 syn_NCXLS_M2R_I1R_Acetylcholine[0] = new Acetylcholine(0.35720682)}
-{a_M2R[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.5709569), syn_NCXLS_M2R_I1R_Acetylcholine[0], 0.0, 0.0, 0.101571))}
+{a_M2R[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.5709569), syn_NCXLS_M2R_I1R_Acetylcholine[0], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Axon on tgt cell 0
@@ -4700,7 +4700,7 @@ objectvar syn_NCXLS_M2R_I1R_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Axon syn_NCXLS_M2R_I1R_Acetylcholine[1] = new Acetylcholine(0.5563206)}
-{a_M2R[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.013853432), syn_NCXLS_M2R_I1R_Acetylcholine[1], 0.0, 0.0, 0.101571))}
+{a_M2R[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.013853432), syn_NCXLS_M2R_I1R_Acetylcholine[1], 0.0, 0.0, 0.100000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Axon on tgt cell 0
@@ -4709,7 +4709,7 @@ objectvar syn_NCXLS_M2R_I1R_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1R[0].Axon syn_NCXLS_M2R_I1R_Acetylcholine[2] = new Acetylcholine(0.2242165)}
-{a_M2R[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.5730267), syn_NCXLS_M2R_I1R_Acetylcholine[2], 0.0, 0.0, 0.101571))}
+{a_M2R[0].Axon a_I1R[0].synlist.append(new NetCon(&v(0.5730267), syn_NCXLS_M2R_I1R_Acetylcholine[2], 0.0, 0.0, 0.100000))}
 
 
 // Adding NetConn: NCXLS_M3R_MCL_GJ from: M3R to: MCL with 1 connections
@@ -4725,11 +4725,11 @@ objectvar elecsyn_NCXLS_M3R_MCL_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M3R_MCL_GJ_Generic_GJ_B[1]
 
 a_MCL[0].Neurite4 { elecsyn_NCXLS_M3R_MCL_GJ_Generic_GJ_A[0] = new Generic_GJ(0.6072145) }
-elecsyn_NCXLS_M3R_MCL_GJ_Generic_GJ_A[0].weight = 0.565502
+elecsyn_NCXLS_M3R_MCL_GJ_Generic_GJ_A[0].weight = 0.500000
 setpointer elecsyn_NCXLS_M3R_MCL_GJ_Generic_GJ_A[0].vgap, a_M3R[0].Neurite4.v(0.058056735)
 
 a_M3R[0].Neurite4 { elecsyn_NCXLS_M3R_MCL_GJ_Generic_GJ_B[0] = new Generic_GJ(0.058056735) }
-elecsyn_NCXLS_M3R_MCL_GJ_Generic_GJ_B[0].weight = 0.565502
+elecsyn_NCXLS_M3R_MCL_GJ_Generic_GJ_B[0].weight = 0.500000
 setpointer elecsyn_NCXLS_M3R_MCL_GJ_Generic_GJ_B[0].vgap, a_MCL[0].Neurite4.v(0.6072145)
 
 
@@ -4744,7 +4744,7 @@ setpointer elecsyn_NCXLS_M3R_MCL_GJ_Generic_GJ_B[0].vgap, a_MCL[0].Neurite4.v(0.
 objectvar syn_NCXLS_I6_I2L_Acetylcholine[2]
 
 {a_I2L[0].Axon syn_NCXLS_I6_I2L_Acetylcholine[0] = new Acetylcholine(0.6147645)}
-{a_I6[0].Axon a_I2L[0].synlist.append(new NetCon(&v(0.1646542), syn_NCXLS_I6_I2L_Acetylcholine[0], 0.0, 0.0, 0.800159))}
+{a_I6[0].Axon a_I2L[0].synlist.append(new NetCon(&v(0.1646542), syn_NCXLS_I6_I2L_Acetylcholine[0], 0.0, 0.0, 0.800000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Axon on tgt cell 0
@@ -4753,7 +4753,7 @@ objectvar syn_NCXLS_I6_I2L_Acetylcholine[2]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I2L[0].Axon syn_NCXLS_I6_I2L_Acetylcholine[1] = new Acetylcholine(0.6711591)}
-{a_I6[0].Axon a_I2L[0].synlist.append(new NetCon(&v(0.66415316), syn_NCXLS_I6_I2L_Acetylcholine[1], 0.0, 0.0, 0.800159))}
+{a_I6[0].Axon a_I2L[0].synlist.append(new NetCon(&v(0.66415316), syn_NCXLS_I6_I2L_Acetylcholine[1], 0.0, 0.0, 0.800000))}
 
 
 // Adding NetConn: NCXLS_M3R_M3L_GJ from: M3R to: M3L with 1 connections
@@ -4769,11 +4769,11 @@ objectvar elecsyn_NCXLS_M3R_M3L_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M3R_M3L_GJ_Generic_GJ_B[1]
 
 a_M3L[0].Neurite5 { elecsyn_NCXLS_M3R_M3L_GJ_Generic_GJ_A[0] = new Generic_GJ(0.46227655) }
-elecsyn_NCXLS_M3R_M3L_GJ_Generic_GJ_A[0].weight = 0.240336
+elecsyn_NCXLS_M3R_M3L_GJ_Generic_GJ_A[0].weight = 0.200000
 setpointer elecsyn_NCXLS_M3R_M3L_GJ_Generic_GJ_A[0].vgap, a_M3R[0].Neurite5.v(0.40147516)
 
 a_M3R[0].Neurite5 { elecsyn_NCXLS_M3R_M3L_GJ_Generic_GJ_B[0] = new Generic_GJ(0.40147516) }
-elecsyn_NCXLS_M3R_M3L_GJ_Generic_GJ_B[0].weight = 0.240336
+elecsyn_NCXLS_M3R_M3L_GJ_Generic_GJ_B[0].weight = 0.200000
 setpointer elecsyn_NCXLS_M3R_M3L_GJ_Generic_GJ_B[0].vgap, a_M3L[0].Neurite5.v(0.46227655)
 
 
@@ -4788,7 +4788,7 @@ setpointer elecsyn_NCXLS_M3R_M3L_GJ_Generic_GJ_B[0].vgap, a_M3L[0].Neurite5.v(0.
 objectvar syn_NCXLS_M2R_I1L_Acetylcholine[3]
 
 {a_I1L[0].Axon syn_NCXLS_M2R_I1L_Acetylcholine[0] = new Acetylcholine(0.79132605)}
-{a_M2R[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.40068278), syn_NCXLS_M2R_I1L_Acetylcholine[0], 0.0, 0.0, 0.261927))}
+{a_M2R[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.40068278), syn_NCXLS_M2R_I1L_Acetylcholine[0], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Dendrite2 on tgt cell 0
@@ -4797,7 +4797,7 @@ objectvar syn_NCXLS_M2R_I1L_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Dendrite2 syn_NCXLS_M2R_I1L_Acetylcholine[1] = new Acetylcholine(0.24493596)}
-{a_M2R[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.85905355), syn_NCXLS_M2R_I1L_Acetylcholine[1], 0.0, 0.0, 0.261927))}
+{a_M2R[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.85905355), syn_NCXLS_M2R_I1L_Acetylcholine[1], 0.0, 0.0, 0.200000))}
 
 
 //  Syn conn (type: Acetylcholine) from Axon on src cell 0 to Axon on tgt cell 0
@@ -4806,7 +4806,7 @@ objectvar syn_NCXLS_M2R_I1L_Acetylcholine[3]
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 {a_I1L[0].Axon syn_NCXLS_M2R_I1L_Acetylcholine[2] = new Acetylcholine(0.095429525)}
-{a_M2R[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.97120774), syn_NCXLS_M2R_I1L_Acetylcholine[2], 0.0, 0.0, 0.261927))}
+{a_M2R[0].Axon a_I1L[0].synlist.append(new NetCon(&v(0.97120774), syn_NCXLS_M2R_I1L_Acetylcholine[2], 0.0, 0.0, 0.200000))}
 
 
 // Adding NetConn: NCXLS_MCL_M2R_GJ from: MCL to: M2R with 2 connections
@@ -4822,11 +4822,11 @@ objectvar elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_A[2]
 objectvar elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_B[2]
 
 a_M2R[0].Axon { elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.11218929) }
-elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_A[0].weight = 0.286374
+elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_A[0].weight = 0.200000
 setpointer elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_A[0].vgap, a_MCL[0].Neurite4.v(0.1774661)
 
 a_MCL[0].Neurite4 { elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.1774661) }
-elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_B[0].weight = 0.286374
+elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_B[0].weight = 0.200000
 setpointer elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_B[0].vgap, a_M2R[0].Axon.v(0.11218929)
 
 
@@ -4836,11 +4836,11 @@ setpointer elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_B[0].vgap, a_M2R[0].Axon.v(0.1121
 //  Internal synapse delay (from Synaptic Props): 0.0, TOTAL delay: 0.0
 
 a_M2R[0].Axon { elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_A[1] = new Generic_GJ(0.31289706) }
-elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_A[1].weight = 0.286374
+elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_A[1].weight = 0.200000
 setpointer elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_A[1].vgap, a_MCL[0].Neurite4.v(0.17659654)
 
 a_MCL[0].Neurite4 { elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_B[1] = new Generic_GJ(0.17659654) }
-elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_B[1].weight = 0.286374
+elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_B[1].weight = 0.200000
 setpointer elecsyn_NCXLS_MCL_M2R_GJ_Generic_GJ_B[1].vgap, a_M2R[0].Axon.v(0.31289706)
 
 
@@ -4857,11 +4857,11 @@ objectvar elecsyn_NCXLS_I5_I1R_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_I5_I1R_GJ_Generic_GJ_B[1]
 
 a_I1R[0].Axon { elecsyn_NCXLS_I5_I1R_GJ_Generic_GJ_A[0] = new Generic_GJ(0.43931875) }
-elecsyn_NCXLS_I5_I1R_GJ_Generic_GJ_A[0].weight = 0.004535
+elecsyn_NCXLS_I5_I1R_GJ_Generic_GJ_A[0].weight = 0.000000
 setpointer elecsyn_NCXLS_I5_I1R_GJ_Generic_GJ_A[0].vgap, a_I5[0].Axon.v(0.5782856)
 
 a_I5[0].Axon { elecsyn_NCXLS_I5_I1R_GJ_Generic_GJ_B[0] = new Generic_GJ(0.5782856) }
-elecsyn_NCXLS_I5_I1R_GJ_Generic_GJ_B[0].weight = 0.004535
+elecsyn_NCXLS_I5_I1R_GJ_Generic_GJ_B[0].weight = 0.000000
 setpointer elecsyn_NCXLS_I5_I1R_GJ_Generic_GJ_B[0].vgap, a_I1R[0].Axon.v(0.43931875)
 
 
@@ -4878,11 +4878,11 @@ objectvar elecsyn_NCXLS_M2L_I3_GJ_Generic_GJ_A[1]
 objectvar elecsyn_NCXLS_M2L_I3_GJ_Generic_GJ_B[1]
 
 a_I3[0].Dendrite2 { elecsyn_NCXLS_M2L_I3_GJ_Generic_GJ_A[0] = new Generic_GJ(0.4646608) }
-elecsyn_NCXLS_M2L_I3_GJ_Generic_GJ_A[0].weight = 0.728611
+elecsyn_NCXLS_M2L_I3_GJ_Generic_GJ_A[0].weight = 0.700000
 setpointer elecsyn_NCXLS_M2L_I3_GJ_Generic_GJ_A[0].vgap, a_M2L[0].Axon.v(0.5087044)
 
 a_M2L[0].Axon { elecsyn_NCXLS_M2L_I3_GJ_Generic_GJ_B[0] = new Generic_GJ(0.5087044) }
-elecsyn_NCXLS_M2L_I3_GJ_Generic_GJ_B[0].weight = 0.728611
+elecsyn_NCXLS_M2L_I3_GJ_Generic_GJ_B[0].weight = 0.700000
 setpointer elecsyn_NCXLS_M2L_I3_GJ_Generic_GJ_B[0].vgap, a_I3[0].Dendrite2.v(0.4646608)
 
 
@@ -5676,6 +5676,70 @@ print "Data stored in ",savetime, "secs in directory: ", targetDir
 
 
 quit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

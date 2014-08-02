@@ -4,10 +4,12 @@
     <LocalDebuggerCommand>..\bin\wrigglenet.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(ProjectDir)\..\..\bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>-loadRun run0.txt -numGenerations 1 -saveRun run1.txt -logRun run1.log -numThreads 1</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerCommand>..\bin\wrigglenet.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(ProjectDir)\..\..\bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>-loadNetwork CElegans_network.txt -populationSize 8 -numOffspring 4 -numGenerations 2 -crossoverRate 0.5 -mutationRate 0.05 -movements 20 -periodParm 2.5 10.0 .1 -amplitudeParm .5 1.0 .05 -phaseParm 0.0 6.28 .39 -speedParm .09 0.39 .09 -saveRun run0.txt -randomSeed 77 -logRun run0.log -numThreads 1</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

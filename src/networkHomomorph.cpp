@@ -59,8 +59,8 @@ void NetworkHomomorph::mutate()
          synapseWeightsParm.minimum, synapseWeightsParm.maximum);
       for (k = 0; k < (int)network->synapses[i][j].size(); k++)
       {
-         synapse         = network->synapses[i][j][k];
-         synapse->weight = weight;
+         synapse = network->synapses[i][j][k];
+         synapse->setWeight(weight);
       }
    }
 }
@@ -88,7 +88,7 @@ void NetworkHomomorph::optimize(vector<Behavior *>& behaviors,
       {
          for (p = 0, q = (int)synapses[k].size(); p < q; p++)
          {
-            synapses[k][p]->weight = permutations[i][k];
+            synapses[k][p]->setWeight(permutations[i][k]);
          }
       }
       evaluate(behaviors, fitnessMotorList, maxStep);
@@ -102,7 +102,7 @@ void NetworkHomomorph::optimize(vector<Behavior *>& behaviors,
    {
       for (p = 0, q = (int)synapses[k].size(); p < q; p++)
       {
-         synapses[k][p]->weight = permutations[n][k];
+         synapses[k][p]->setWeight(permutations[n][k]);
       }
    }
    error = e;
@@ -401,7 +401,7 @@ void NetworkHomomorph::permuteWeights(vector<vector<float> >& weightRanges,
 
 
 // Clone.
-NetworkHomomorph *NetworkHomomorph::clone()
+NetworkHomomorph *NetworkHomomorph::clone(int tag)
 {
    int              i, n;
    NetworkHomomorph *networkMorph;

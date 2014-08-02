@@ -13,7 +13,7 @@ public:
    // Constructors.
    NetworkIsomorph(MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
                    MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
-                   int numSensors, int numMotors, Random *randomizer, int tag = 0);
+                   int numSensors, int numMotors, Random *randomizer, int tag = (-1));
    NetworkIsomorph(FILE *fp, Random *randomizer);
 
    // Destructor.
@@ -28,7 +28,7 @@ public:
    void mutate();
 
    // Clone.
-   NetworkIsomorph *clone();
+   NetworkIsomorph *clone(int tag = (-1));
 
    // Load.
    void load(FILE *fp);

@@ -19,6 +19,9 @@ char *getDataPath(char *file);
 char *getPath(char *dir, char *file);
 
 // File I/O.
+#define FOPEN_READ         myfopenRead
+#define FOPEN_WRITE        myfopenWrite
+#define FCLOSE              myfclose
 #define FREAD_INT           myfreadInt
 #define FWRITE_INT          myfwriteInt
 #define FREAD_SHORT         myfreadShort
@@ -39,6 +42,9 @@ char *getPath(char *dir, char *file);
 #define FWRITE_BYTES        myfwriteBytes
 #define FREAD_STRING        myfreadString
 #define FWRITE_STRING       myfwriteString
+FILE *myfopenRead(char *filename);
+FILE *myfopenWrite(char *filename);
+int myfclose(FILE *fp);
 int myfreadInt(int *, FILE *);
 int myfwriteInt(int *, FILE *);
 int myfreadShort(short *, FILE *);

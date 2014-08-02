@@ -17,7 +17,7 @@ public:
    UndulationNetworkHomomorph(int undulationMovements, Network *homomorph,
                               MutableParm& synapseWeightsParm,
                               vector<vector<pair<int, int> > > *motorConnections,
-                              Random *randomizer, int tag = 0);
+                              Random *randomizer, int tag = (-1));
    UndulationNetworkHomomorph(FILE *fp, int undulationMovements,
                               vector<vector<pair<int, int> > > *motorConnections,
                               Random *randomizer);
@@ -36,7 +36,7 @@ public:
    void evaluate();
 
    // Clone.
-   UndulationNetworkHomomorph *clone();
+   UndulationNetworkHomomorph *clone(int tag = (-1));
 
    // Load.
    void load(FILE *fp);
