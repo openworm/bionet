@@ -21,7 +21,7 @@ Synapse::Synapse()
 }
 
 
-float Synapse::WEIGHT_DECIMAL_QUANTIZER = 0.1f;
+float Synapse::WEIGHT_DECIMAL_QUANTIZER = -1.0f;
 
 // Set weight.
 void Synapse::setWeight(float weight)
