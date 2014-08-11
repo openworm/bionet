@@ -82,10 +82,10 @@ public:
    bool RAND_BOOL();
 
    // Load random state
-   void RAND_LOAD(FILE *fp);
+   void RAND_LOAD(FilePointer *fp);
 
    // Save random state
-   void RAND_SAVE(FILE *fp);
+   void RAND_SAVE(FilePointer *fp);
 
    // Save random state
    void RAND_PUSH();
@@ -129,10 +129,10 @@ private:
    double genrand_res53(void);
 
    /* load state from file pointer */
-   void load_genrand(FILE *fp);
+   void load_genrand(FilePointer *fp);
 
    /* save state to file pointer */
-   void save_genrand(FILE *fp);
+   void save_genrand(FilePointer *fp);
 
    // Save random state.
    void push_genrand();

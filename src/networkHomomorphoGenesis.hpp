@@ -17,6 +17,9 @@ class NetworkHomomorphoGenesis : public NetworkMorphoGenesis
 {
 public:
 
+   // Storage format.
+   enum { FORMAT = 1 };
+
    // Constructor.
    NetworkHomomorphoGenesis(vector<Behavior *>& behaviors,
                             Network *homomorph,
@@ -49,10 +52,10 @@ public:
                             int synapseOptimizedPathLength,
                             RANDOM randomSeed);
 
-   NetworkHomomorphoGenesis(vector<Behavior *>& behaviors, char *filename);
-   NetworkHomomorphoGenesis(int undulationMovements, char *filename);
+   NetworkHomomorphoGenesis(vector<Behavior *>& behaviors, char *filename, bool binary = false);
+   NetworkHomomorphoGenesis(int undulationMovements, char *filename, bool binary = false);
    NetworkHomomorphoGenesis(char *neuronExecPath, char *simDir, char *simHocFile,
-                            char *filename);
+                            char *filename, bool binary = false);
 
    // Destructor.
    ~NetworkHomomorphoGenesis();
@@ -113,16 +116,19 @@ public:
    void sort();
 
    // Load.
-   bool load(char *filename);
+   bool load(char *filename, bool binary = false);
 
    // Save.
-   bool save(char *filename);
+   bool save(char *filename, bool binary = false);
 
    // Print.
    void print(bool printNetwork = false);
 
    // Neurons connected to motors (indices).
    vector<vector<pair<int, int> > > motorConnections;
+
+   // Termination signal.
+   bool sigterm;
 
 private:
 

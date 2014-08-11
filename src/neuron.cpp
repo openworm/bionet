@@ -43,7 +43,7 @@ void Synapse::setWeight(float weight)
 
 
 // Load synapse.
-void Synapse::load(FILE *fp)
+void Synapse::load(FilePointer *fp)
 {
    int  t;
    char buf[BUFSIZ];
@@ -71,7 +71,7 @@ void Synapse::load(FILE *fp)
 
 
 // Save synapse.
-void Synapse::save(FILE *fp)
+void Synapse::save(FilePointer *fp)
 {
    int  t;
    char buf[BUFSIZ];
@@ -207,7 +207,7 @@ void Neuron::propagate()
 
 
 // Load neuron.
-void Neuron::load(FILE *fp)
+void Neuron::load(FilePointer *fp)
 {
    int  i;
    char buf[BUFSIZ];
@@ -233,7 +233,7 @@ void Neuron::load(FILE *fp)
 
 
 // Save neuron.
-void Neuron::save(FILE *fp)
+void Neuron::save(FilePointer *fp)
 {
    int  i;
    char buf[BUFSIZ];

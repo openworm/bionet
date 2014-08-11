@@ -14,7 +14,7 @@ public:
    Behavior(Network *network, int length, Random *randomizer);
    Behavior(Network *network, vector<vector<float> >& sensors);
    Behavior() {}
-   Behavior(FILE *fp);
+   Behavior(FilePointer *fp);
    ~Behavior();
 
    // Sensory-motor sequence.
@@ -22,10 +22,10 @@ public:
    vector<vector<float> > motorSequence;
 
    // Load.
-   void load(FILE *fp);
+   void load(FilePointer *fp);
 
    // Save.
-   void save(FILE *fp);
+   void save(FilePointer *fp);
 
    // Print.
    void print();
@@ -34,9 +34,9 @@ public:
    void printMotorDeltas(Behavior *behavior, float tolerance = 0.0f);
 
    // Load behaviors from file.
-   static bool loadBehaviors(char *filename, vector<Behavior *>& behaviors);
+   static bool loadBehaviors(vector<Behavior *>& behaviors, char *filename, bool binary = false);
 
    // Save behaviors to file.
-   static bool saveBehaviors(char *filename, vector<Behavior *>& behaviors);
+   static bool saveBehaviors(vector<Behavior *>& behaviors, char *filename, bool binary = false);
 };
 #endif

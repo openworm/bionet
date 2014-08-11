@@ -70,7 +70,7 @@ Behavior::Behavior(Network *network, vector<vector<float> >& sensorSequence)
 }
 
 
-Behavior::Behavior(FILE *fp)
+Behavior::Behavior(FilePointer *fp)
 {
    load(fp);
 }
@@ -85,7 +85,7 @@ Behavior::~Behavior()
 
 
 // Load behavior.
-void Behavior::load(FILE *fp)
+void Behavior::load(FilePointer *fp)
 {
    int   i, j, n, numSensors, numMotors;
    float f;
@@ -114,7 +114,7 @@ void Behavior::load(FILE *fp)
 
 
 // Save behavior.
-void Behavior::save(FILE *fp)
+void Behavior::save(FilePointer *fp)
 {
    int   i, j, n, numSensors, numMotors;
    float f;
@@ -204,17 +204,17 @@ void Behavior::printMotorDeltas(Behavior *behavior, float tolerance)
 
 
 // Load behaviors from file.
-bool Behavior::loadBehaviors(char *filename, vector<Behavior *>& behaviors)
+bool Behavior::loadBehaviors(vector<Behavior *>& behaviors, char *filename, bool binary)
 {
    int i, n;
 
-   FILE *fp = FOPEN_READ(filename);
+   FilePointer *fp = FOPEN_READ(filename, binary);
 
    if (fp == NULL)
    {
       return(false);
    }
-   if (fscanf(fp, "%d", &n) != 1)
+   if (FREAD_INT(&n, fp) != 1)
    {
       return(false);
    }
@@ -231,18 +231,18 @@ bool Behavior::loadBehaviors(char *filename, vector<Behavior *>& behaviors)
 
 
 // Save behaviors to file.
-bool Behavior::saveBehaviors(char *filename, vector<Behavior *>& behaviors)
+bool Behavior::saveBehaviors(vector<Behavior *>& behaviors, char *filename, bool binary)
 {
    int i, n;
 
-   FILE *fp = FOPEN_WRITE(filename);
+   FilePointer *fp = FOPEN_WRITE(filename, binary);
 
    if (fp == NULL)
    {
       return(false);
    }
    n = (int)behaviors.size();
-   fprintf(fp, "%d\n", n);
+   FWRITE_INT(&n, fp);
    for (i = 0; i < n; i++)
    {
       behaviors[i]->save(fp);

@@ -277,6 +277,18 @@ public class CElegansBionet
             bw.write(0.0f + "\n");
             bw.write("\"" + neuronNames[i] + "\"\n");
          }
+         n = 0;
+         for (int i = 0; i < numNeurons; i++)
+         {
+            for (int j = 0; j < numNeurons; j++)
+            {
+               if (synapses[i][j] != null)
+               {
+                  n++;
+               }
+            }
+         }
+         bw.write(n + "\n");
          Random random = new Random(randomSeed);
          float  scale  = maxSynapseWeight - minSynapseWeight;
          for (int i = 0; i < numNeurons; i++)
@@ -285,14 +297,13 @@ public class CElegansBionet
             {
                if (synapses[i][j] != null)
                {
+                  bw.write(i + "\n");
+                  bw.write(j + "\n");
                   bw.write(1 + "\n");
                   bw.write(((random.nextFloat() * scale) + minSynapseWeight) + "\n");
+                  bw.write(0 + "\n");
                   bw.write(0.0f + "\n");
                   bw.write("\"" + synapses[i][j] + "\"\n");
-               }
-               else
-               {
-                  bw.write(0 + "\n");
                }
             }
          }

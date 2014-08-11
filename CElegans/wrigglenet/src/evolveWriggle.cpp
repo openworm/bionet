@@ -293,11 +293,11 @@ void EvolveWriggle::sort()
 // Load.
 bool EvolveWriggle::load(char *filename)
 {
-   int     i, n;
-   FILE    *fp;
-   Wriggle *wriggle;
+   int         i, n;
+   FilePointer *fp;
+   Wriggle     *wriggle;
 
-   if ((fp = FOPEN_READ(filename)) == NULL)
+   if ((fp = FOPEN_READ(filename, false)) == NULL)
    {
       fprintf(stderr, "Cannot load from file %s\n", filename);
       return(false);
@@ -342,10 +342,10 @@ bool EvolveWriggle::load(char *filename)
 // Save.
 bool EvolveWriggle::save(char *filename)
 {
-   int  i, n;
-   FILE *fp;
+   int         i, n;
+   FilePointer *fp;
 
-   if ((fp = FOPEN_WRITE(filename)) == NULL)
+   if ((fp = FOPEN_WRITE(filename, false)) == NULL)
    {
       fprintf(stderr, "Cannot save to file %s\n", filename);
       return(false);

@@ -457,7 +457,7 @@ void loadBehaviors()
    vector<Behavior *> behaviors;
    Behavior           *behavior;
 
-   if (!Behavior::loadBehaviors(BehaviorsLoadFile, behaviors))
+   if (!Behavior::loadBehaviors(behaviors, BehaviorsLoadFile))
    {
       fprintf(stderr, (char *)"Cannot load behavior file %s\n", BehaviorsLoadFile);
       exit(1);
@@ -562,7 +562,7 @@ void saveBehaviors()
       }
    }
    behaviors.push_back(behavior);
-   if (!Behavior::saveBehaviors(BehaviorsSaveFile, behaviors))
+   if (!Behavior::saveBehaviors(behaviors, BehaviorsSaveFile))
    {
       fprintf(stderr, (char *)"Cannot save behavior file %s\n", BehaviorsSaveFile);
       exit(1);

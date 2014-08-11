@@ -26,7 +26,7 @@ NetworkHomomorph::NetworkHomomorph()
 }
 
 
-NetworkHomomorph::NetworkHomomorph(FILE *fp,
+NetworkHomomorph::NetworkHomomorph(FilePointer *fp,
                                    vector<vector<pair<int, int> > > *motorConnections,
                                    Random *randomizer)
 {
@@ -421,7 +421,7 @@ NetworkHomomorph *NetworkHomomorph::clone(int tag)
 
 
 // Load.
-void NetworkHomomorph::load(FILE *fp)
+void NetworkHomomorph::load(FilePointer *fp)
 {
    int  i, n;
    bool b;
@@ -448,7 +448,7 @@ void NetworkHomomorph::load(FILE *fp)
 
 
 // Save.
-void NetworkHomomorph::save(FILE *fp)
+void NetworkHomomorph::save(FilePointer *fp)
 {
    int  i, n;
    bool b;

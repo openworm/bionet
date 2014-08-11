@@ -135,15 +135,15 @@ Network::Network(int numNeurons, int numSensors, int numMotors,
 }
 
 
-Network::Network(char *filename)
+Network::Network(char *filename, bool binary)
 {
    neurons.clear();
    synapses.clear();
-   load(filename);
+   load(filename, binary);
 }
 
 
-Network::Network(FILE *fp)
+Network::Network(FilePointer *fp)
 {
    neurons.clear();
    synapses.clear();
@@ -392,9 +392,9 @@ void Network::step()
 
 
 // Load network.
-bool Network::load(char *filename)
+bool Network::load(char *filename, bool binary)
 {
-   FILE *fp = FOPEN_READ(filename);
+   FilePointer *fp = FOPEN_READ(filename, binary);
 
    if (fp == NULL)
    {
@@ -407,9 +407,9 @@ bool Network::load(char *filename)
 
 
 // Load network.
-void Network::load(FILE *fp)
+void Network::load(FilePointer *fp)
 {
-   int     i, j, k, n;
+   int     i, j, k, n, x, y;
    Neuron  *neuron;
    Synapse *synapse;
 
@@ -429,11 +429,11 @@ void Network::load(FILE *fp)
       neurons[i] = neuron;
       neuron->load(fp);
    }
-   for (i = 0, n = (int)synapses.size(); i < n; i++)
+   for (i = 0; i < n; i++)
    {
       for (j = 0; j < n; j++)
       {
-         for (k = 0; k < (int)synapses[i][j].size(); k++)
+         for (k = 0, x = (int)synapses[i][j].size(); k < x; k++)
          {
             delete synapses[i][j][k];
          }
@@ -444,26 +444,28 @@ void Network::load(FILE *fp)
    for (i = 0; i < numNeurons; i++)
    {
       synapses[i].resize(numNeurons);
-      for (j = 0; j < numNeurons; j++)
+   }
+   FREAD_INT(&n, fp);
+   for (i = 0; i < n; i++)
+   {
+      FREAD_INT(&x, fp);
+      FREAD_INT(&y, fp);
+      FREAD_INT(&k, fp);
+      for (j = 0; j < k; j++)
       {
-         synapses[i][j].clear();
-         FREAD_INT(&n, fp);
-         for (k = 0; k < n; k++)
-         {
-            synapse = new Synapse();
-            assert(synapse != NULL);
-            synapses[i][j].push_back(synapse);
-            synapse->load(fp);
-         }
+         synapse = new Synapse();
+         assert(synapse != NULL);
+         synapses[x][y].push_back(synapse);
+         synapse->load(fp);
       }
    }
 }
 
 
 // Save network.
-bool Network::save(char *filename)
+bool Network::save(char *filename, bool binary)
 {
-   FILE *fp = FOPEN_WRITE(filename);
+   FilePointer *fp = FOPEN_WRITE(filename, binary);
 
    if (fp == NULL)
    {
@@ -476,7 +478,7 @@ bool Network::save(char *filename)
 
 
 // Save network.
-void Network::save(FILE *fp)
+void Network::save(FilePointer *fp)
 {
    int i, j, k, n;
 
@@ -487,15 +489,32 @@ void Network::save(FILE *fp)
    {
       neurons[i]->save(fp);
    }
+   n = 0;
+   for (i = 0; i < numNeurons; i++)
+   {
+      for (j = 0; j < numNeurons; j++)
+      {
+         if ((int)synapses[i][j].size() > 0)
+         {
+            n++;
+         }
+      }
+   }
+   FWRITE_INT(&n, fp);
    for (i = 0; i < numNeurons; i++)
    {
       for (j = 0; j < numNeurons; j++)
       {
          n = (int)synapses[i][j].size();
-         FWRITE_INT(&n, fp);
-         for (k = 0; k < n; k++)
+         if (n > 0)
          {
-            synapses[i][j][k]->save(fp);
+            FWRITE_INT(&i, fp);
+            FWRITE_INT(&j, fp);
+            FWRITE_INT(&n, fp);
+            for (k = 0; k < n; k++)
+            {
+               synapses[i][j][k]->save(fp);
+            }
          }
       }
    }

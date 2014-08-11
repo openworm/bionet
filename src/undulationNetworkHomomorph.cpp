@@ -32,7 +32,7 @@ UndulationNetworkHomomorph::UndulationNetworkHomomorph(int undulationMovements, 
 }
 
 
-UndulationNetworkHomomorph::UndulationNetworkHomomorph(FILE *fp, int undulationMovements,
+UndulationNetworkHomomorph::UndulationNetworkHomomorph(FilePointer *fp, int undulationMovements,
                                                        vector<vector<pair<int, int> > > *motorConnections,
                                                        Random *randomizer)
 {
@@ -678,7 +678,7 @@ UndulationNetworkHomomorph *UndulationNetworkHomomorph::clone(int tag)
 
 
 // Load.
-void UndulationNetworkHomomorph::load(FILE *fp)
+void UndulationNetworkHomomorph::load(FilePointer *fp)
 {
    int  i, n;
    bool b;
@@ -704,7 +704,7 @@ void UndulationNetworkHomomorph::load(FILE *fp)
 
 
 // Save.
-void UndulationNetworkHomomorph::save(FILE *fp)
+void UndulationNetworkHomomorph::save(FilePointer *fp)
 {
    int  i, n;
    bool b;

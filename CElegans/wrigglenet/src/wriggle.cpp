@@ -56,7 +56,7 @@ Wriggle::Wriggle()
 }
 
 
-Wriggle::Wriggle(FILE *fp, Network *homomorph, Random *randomizer)
+Wriggle::Wriggle(FilePointer *fp, Network *homomorph, Random *randomizer)
 {
    this->homomorph  = homomorph;
    this->randomizer = randomizer;
@@ -536,7 +536,7 @@ Wriggle *Wriggle::clone()
 
 
 // Load.
-void Wriggle::load(FILE *fp)
+void Wriggle::load(FilePointer *fp)
 {
    bool b;
 
@@ -561,7 +561,7 @@ void Wriggle::load(FILE *fp)
 
 
 // Save.
-void Wriggle::save(FILE *fp)
+void Wriggle::save(FilePointer *fp)
 {
    bool b;
 

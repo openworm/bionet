@@ -36,7 +36,7 @@ NetworkIsomorph::NetworkIsomorph(MutableParm& excitatoryNeuronsParm, MutableParm
 }
 
 
-NetworkIsomorph::NetworkIsomorph(FILE *fp, Random *randomizer)
+NetworkIsomorph::NetworkIsomorph(FilePointer *fp, Random *randomizer)
 {
    network          = NULL;
    this->randomizer = randomizer;
@@ -536,7 +536,7 @@ NetworkIsomorph *NetworkIsomorph::clone(int tag)
 
 
 // Load.
-void NetworkIsomorph::load(FILE *fp)
+void NetworkIsomorph::load(FilePointer *fp)
 {
    int  i, n;
    bool b;
@@ -565,7 +565,7 @@ void NetworkIsomorph::load(FILE *fp)
 
 
 // Save.
-void NetworkIsomorph::save(FILE *fp)
+void NetworkIsomorph::save(FilePointer *fp)
 {
    int  i, n;
    bool b;

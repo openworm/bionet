@@ -13,14 +13,27 @@
 #include <string.h>
 #include <assert.h>
 
+// File pointer.
+class FilePointer
+{
+public:
+   FILE *fp;
+   bool binary;
+   FilePointer(FILE *fp, bool binary)
+   {
+	   this->fp = fp;
+	   this->binary = binary;
+   }
+};
+
 // Find paths to files.
 char *getResourcePath(char *file);
 char *getDataPath(char *file);
 char *getPath(char *dir, char *file);
 
 // File I/O.
-#define FOPEN_READ         myfopenRead
-#define FOPEN_WRITE        myfopenWrite
+#define FOPEN_READ          myfopenRead
+#define FOPEN_WRITE         myfopenWrite
 #define FCLOSE              myfclose
 #define FREAD_INT           myfreadInt
 #define FWRITE_INT          myfwriteInt
@@ -42,27 +55,27 @@ char *getPath(char *dir, char *file);
 #define FWRITE_BYTES        myfwriteBytes
 #define FREAD_STRING        myfreadString
 #define FWRITE_STRING       myfwriteString
-FILE *myfopenRead(char *filename);
-FILE *myfopenWrite(char *filename);
-int myfclose(FILE *fp);
-int myfreadInt(int *, FILE *);
-int myfwriteInt(int *, FILE *);
-int myfreadShort(short *, FILE *);
-int myfwriteShort(short *, FILE *);
-int myfreadLong(unsigned long *, FILE *);
-int myfwriteLong(unsigned long *, FILE *);
-int myfreadLongLong(unsigned long long *, FILE *);
-int myfwriteLongLong(unsigned long long *, FILE *);
-int myfreadFloat(float *, FILE *);
-int myfwriteFloat(float *, FILE *);
-int myfreadDouble(double *, FILE *);
-int myfwriteDouble(double *, FILE *);
-int myfreadBool(bool *, FILE *);
-int myfwriteBool(bool *, FILE *);
-int myfreadChar(unsigned char *, FILE *);
-int myfwriteChar(unsigned char *, FILE *);
-int myfreadBytes(unsigned char *, int size, FILE *);
-int myfwriteBytes(unsigned char *, int size, FILE *);
-int myfreadString(char *, int size, FILE *);
-int myfwriteString(char *, int size, FILE *);
+FilePointer *myfopenRead(char *filename, bool binary);
+FilePointer *myfopenWrite(char *filename, bool binary);
+int myfclose(FilePointer *fp);
+int myfreadInt(int *, FilePointer *);
+int myfwriteInt(int *, FilePointer *);
+int myfreadShort(short *, FilePointer *);
+int myfwriteShort(short *, FilePointer *);
+int myfreadLong(unsigned long *, FilePointer *);
+int myfwriteLong(unsigned long *, FilePointer *);
+int myfreadLongLong(unsigned long long *, FilePointer *);
+int myfwriteLongLong(unsigned long long *, FilePointer *);
+int myfreadFloat(float *, FilePointer *);
+int myfwriteFloat(float *, FilePointer *);
+int myfreadDouble(double *, FilePointer *);
+int myfwriteDouble(double *, FilePointer *);
+int myfreadBool(bool *, FilePointer *);
+int myfwriteBool(bool *, FilePointer *);
+int myfreadChar(unsigned char *, FilePointer *);
+int myfwriteChar(unsigned char *, FilePointer *);
+int myfreadBytes(unsigned char *, int size, FilePointer *);
+int myfwriteBytes(unsigned char *, int size, FilePointer *);
+int myfreadString(char *, int size, FilePointer *);
+int myfwriteString(char *, int size, FilePointer *);
 #endif

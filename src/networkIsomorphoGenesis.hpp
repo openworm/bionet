@@ -14,6 +14,9 @@ class NetworkIsomorphoGenesis : NetworkMorphoGenesis
 {
 public:
 
+   // Storage format.
+   enum { FORMAT = 1 };
+
    // Constructors.
    NetworkIsomorphoGenesis(vector<Behavior *>& behaviors,
                            int populationSize, int numOffspring,
@@ -22,7 +25,7 @@ public:
                            MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
                            RANDOM randomSeed);
 
-   NetworkIsomorphoGenesis(vector<Behavior *>& behaviors, char *filename);
+   NetworkIsomorphoGenesis(vector<Behavior *>& behaviors, char *filename, bool binary = false);
 
    // Destructor.
    ~NetworkIsomorphoGenesis();
@@ -42,10 +45,10 @@ public:
    void prune();
 
    // Load.
-   bool load(char *filename);
+   bool load(char *filename, bool binary = false);
 
    // Save.
-   bool save(char *filename);
+   bool save(char *filename, bool binary = false);
 
    // Print.
    void print(bool printNetwork = false);

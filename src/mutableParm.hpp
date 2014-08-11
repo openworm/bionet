@@ -26,8 +26,8 @@ public:
    void initValue(Random *randomizer);
    void setValue(float value);
    void mutateValue(Random *randomizer);
-   void load(FILE *fp);
-   void save(FILE *fp);
+   void load(FilePointer *fp);
+   void save(FilePointer *fp);
    void print();
 };
 #endif

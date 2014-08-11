@@ -214,12 +214,13 @@ void NetworkHomomorphoGenesis::init(Network *homomorph,
       }
       population.push_back(networkMorph);
    }
+   sigterm = false;
 }
 
 
 // Load constructor.
 NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(
-   vector<Behavior *>& behaviors, char *filename)
+   vector<Behavior *>& behaviors, char *filename, bool binary)
 {
    int i, j;
 
@@ -228,11 +229,12 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(
    neuronSim           = false;
    modelSim            = NULL;
    randomizer          = NULL;
+   sigterm             = false;
    for (i = 0, j = (int)behaviors.size(); i < j; i++)
    {
       this->behaviors.push_back(behaviors[i]);
    }
-   if (!load(filename))
+   if (!load(filename, binary))
    {
       fprintf(stderr, "Cannot load morph from file %s\n", filename);
       exit(1);
@@ -242,14 +244,16 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(
 
 
 // Load constructor for undulation homomorphogenesis.
-NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int undulationMovements, char *filename)
+NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int undulationMovements,
+                                                   char *filename, bool binary)
 {
    undulationBehavior        = true;
    this->undulationMovements = undulationMovements;
    neuronSim  = false;
    modelSim   = NULL;
    randomizer = NULL;
-   if (!load(filename))
+   sigterm    = false;
+   if (!load(filename, binary))
    {
       fprintf(stderr, "Cannot load morph from file %s\n", filename);
       exit(1);
@@ -260,7 +264,7 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int undulationMovements, char
 
 // Load constructor for homomorphogenesis with NEURON network simulator evaluation.
 NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(char *neuronExecPath, char *simDir,
-                                                   char *simHocFile, char *filename)
+                                                   char *simHocFile, char *filename, bool binary)
 {
    neuronSim = true;
    char buf[BUFSIZ];
@@ -274,7 +278,8 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(char *neuronExecPath, char *s
    undulationBehavior  = false;
    undulationMovements = -1;
    randomizer          = NULL;
-   if (!load(filename))
+   sigterm             = false;
+   if (!load(filename, binary))
    {
       fprintf(stderr, "Cannot load morph from file %s\n", filename);
       exit(1);
@@ -533,6 +538,12 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
    fflush(morphfp);
    for (g = 0; g < numGenerations; g++)
    {
+      if (sigterm)
+      {
+         fprintf(morphfp, "Termination signal\n");
+         fflush(morphfp);
+         break;
+      }
       if ((behaveCutoff != -1) && ((behaviorStep == -1) || (behaviorStep == maxBehaviorStep)))
       {
          if (behaveCount >= behaveCutoff)
@@ -1257,19 +1268,28 @@ void NetworkHomomorphoGenesis::sort()
 
 
 // Load morph.
-bool NetworkHomomorphoGenesis::load(char *filename)
+bool NetworkHomomorphoGenesis::load(char *filename, bool binary)
 {
-   int                        i, j, n;
-   FILE                       *fp;
+   int                        i, j, n, format;
+   FilePointer                *fp;
    NetworkHomomorph           *networkMorph;
    UndulationNetworkHomomorph *undulationNetworkMorph;
    NeuronSimNetworkHomomorph  *neuronSimNetworkMorph;
 
-   if ((fp = FOPEN_READ(filename)) == NULL)
+   if ((fp = FOPEN_READ(filename, binary)) == NULL)
    {
       fprintf(stderr, "Cannot load from file %s\n", filename);
       return(false);
    }
+
+   // Check format compatibility.
+   FREAD_INT(&format, fp);
+   if (format != FORMAT)
+   {
+      fprintf(stderr, "File format %d is incompatible with expected format %d\n", format, FORMAT);
+      return(false);
+   }
+
    if (randomizer != NULL)
    {
       delete randomizer;
@@ -1356,16 +1376,18 @@ bool NetworkHomomorphoGenesis::load(char *filename)
 
 
 // Save morph.
-bool NetworkHomomorphoGenesis::save(char *filename)
+bool NetworkHomomorphoGenesis::save(char *filename, bool binary)
 {
-   int  i, j, n;
-   FILE *fp;
+   int         i, j, n, format;
+   FilePointer *fp;
 
-   if ((fp = FOPEN_WRITE(filename)) == NULL)
+   if ((fp = FOPEN_WRITE(filename, binary)) == NULL)
    {
       fprintf(stderr, "Cannot save to file %s\n", filename);
       return(false);
    }
+   format = FORMAT;
+   FWRITE_INT(&format, fp);
    randomizer->RAND_SAVE(fp);
    homomorph->save(fp);
    FWRITE_FLOAT(&crossoverRate, fp);
@@ -1430,6 +1452,7 @@ void NetworkHomomorphoGenesis::print(bool printNetwork)
 {
    int i, n;
 
+   printf("FORMAT=%d\n", FORMAT);
    printf("behaviors:\n");
    for (i = 0, n = (int)behaviors.size(); i < n; i++)
    {

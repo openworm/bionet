@@ -14,7 +14,7 @@ public:
    NetworkIsomorph(MutableParm& excitatoryNeuronsParm, MutableParm& inhibitoryNeuronsParm,
                    MutableParm& synapsePropensitiesParm, MutableParm& synapseWeightsParm,
                    int numSensors, int numMotors, Random *randomizer, int tag = (-1));
-   NetworkIsomorph(FILE *fp, Random *randomizer);
+   NetworkIsomorph(FilePointer *fp, Random *randomizer);
 
    // Destructor.
    ~NetworkIsomorph();
@@ -31,10 +31,10 @@ public:
    NetworkIsomorph *clone(int tag = (-1));
 
    // Load.
-   void load(FILE *fp);
+   void load(FilePointer *fp);
 
    // Save.
-   void save(FILE *fp);
+   void save(FilePointer *fp);
 
    // Print.
    void print(bool printNetwork = false);

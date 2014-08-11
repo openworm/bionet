@@ -18,7 +18,7 @@ public:
            MutableParm& speedParm,
            Random *randomizer, int tag = 0);
    Wriggle();
-   Wriggle(FILE *fp, Network *homomorph, Random *randomizer);
+   Wriggle(FilePointer *fp, Network *homomorph, Random *randomizer);
 
    // Destructor.
    ~Wriggle();
@@ -58,10 +58,10 @@ public:
    Wriggle *clone();
 
    // Load.
-   void load(FILE *fp);
+   void load(FilePointer *fp);
 
    // Save.
-   void save(FILE *fp);
+   void save(FilePointer *fp);
 
    // Print.
    void print(bool printNetwork = false);

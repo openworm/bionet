@@ -58,7 +58,8 @@ NetworkIsomorphoGenesis::NetworkIsomorphoGenesis(vector<Behavior *>& behaviors,
 
 
 // Load constructor.
-NetworkIsomorphoGenesis::NetworkIsomorphoGenesis(vector<Behavior *>& behaviors, char *filename)
+NetworkIsomorphoGenesis::NetworkIsomorphoGenesis(vector<Behavior *>& behaviors,
+                                                 char *filename, bool binary)
 {
    int i, j;
 
@@ -67,7 +68,7 @@ NetworkIsomorphoGenesis::NetworkIsomorphoGenesis(vector<Behavior *>& behaviors, 
    {
       this->behaviors.push_back(behaviors[i]);
    }
-   if (!load(filename))
+   if (!load(filename, binary))
    {
       fprintf(stderr, "Cannot load morph from file %s\n", filename);
       exit(1);
@@ -342,16 +343,25 @@ void NetworkIsomorphoGenesis::prune()
 
 
 // Load morph.
-bool NetworkIsomorphoGenesis::load(char *filename)
+bool NetworkIsomorphoGenesis::load(char *filename, bool binary)
 {
-   int  i, n;
-   FILE *fp;
+   int         i, n, format;
+   FilePointer *fp;
 
-   if ((fp = FOPEN_READ(filename)) == NULL)
+   if ((fp = FOPEN_READ(filename, binary)) == NULL)
    {
       fprintf(stderr, "Cannot load from file %s\n", filename);
       return(false);
    }
+
+   // Check format compatibility.
+   FREAD_INT(&format, fp);
+   if (format != FORMAT)
+   {
+      fprintf(stderr, "File format %d is incompatible with expected format %d\n", format, FORMAT);
+      return(false);
+   }
+
    if (randomizer != NULL)
    {
       delete randomizer;
@@ -390,16 +400,18 @@ bool NetworkIsomorphoGenesis::load(char *filename)
 
 
 // Save morph.
-bool NetworkIsomorphoGenesis::save(char *filename)
+bool NetworkIsomorphoGenesis::save(char *filename, bool binary)
 {
-   int  i, n;
-   FILE *fp;
+   int         i, n, format;
+   FilePointer *fp;
 
-   if ((fp = FOPEN_WRITE(filename)) == NULL)
+   if ((fp = FOPEN_WRITE(filename, binary)) == NULL)
    {
       fprintf(stderr, "Cannot save to file %s\n", filename);
       return(false);
    }
+   format = FORMAT;
+   FWRITE_INT(&format, fp);
    randomizer->RAND_SAVE(fp);
    FWRITE_INT(&populationSize, fp);
    FWRITE_INT(&numOffspring, fp);
@@ -425,6 +437,7 @@ void NetworkIsomorphoGenesis::print(bool printNetwork)
 {
    int i, n;
 
+   printf("FORMAT=%d\n", FORMAT);
    printf("behaviors:\n");
    for (i = 0, n = (int)behaviors.size(); i < n; i++)
    {

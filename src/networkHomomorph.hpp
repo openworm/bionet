@@ -17,7 +17,7 @@ public:
                     vector<vector<pair<int, int> > > *motorConnections,
                     Random *randomizer, int tag = (-1));
    NetworkHomomorph();
-   NetworkHomomorph(FILE *fp,
+   NetworkHomomorph(FilePointer *fp,
                     vector<vector<pair<int, int> > > *motorConnections,
                     Random *randomizer);
 
@@ -38,10 +38,10 @@ public:
    NetworkHomomorph *clone(int tag = (-1));
 
    // Load.
-   void load(FILE *fp);
+   void load(FilePointer *fp);
 
    // Save.
-   void save(FILE *fp);
+   void save(FilePointer *fp);
 
    // Print.
    void print(bool printNetwork = false);

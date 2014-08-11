@@ -18,7 +18,7 @@ public:
                               MutableParm& synapseWeightsParm,
                               vector<vector<pair<int, int> > > *motorConnections,
                               Random *randomizer, int tag = (-1));
-   UndulationNetworkHomomorph(FILE *fp, int undulationMovements,
+   UndulationNetworkHomomorph(FilePointer *fp, int undulationMovements,
                               vector<vector<pair<int, int> > > *motorConnections,
                               Random *randomizer);
 
@@ -39,10 +39,10 @@ public:
    UndulationNetworkHomomorph *clone(int tag = (-1));
 
    // Load.
-   void load(FILE *fp);
+   void load(FilePointer *fp);
 
    // Save.
-   void save(FILE *fp);
+   void save(FilePointer *fp);
 
    // Print.
    void print(bool printNetwork = false);

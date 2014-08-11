@@ -200,7 +200,7 @@ double Random::genrand_res53(void)
 /* Load and save added by TEP: */
 
 /* load state from file pointer */
-void Random::load_genrand(FILE *fp)
+void Random::load_genrand(FilePointer *fp)
 {
    for (int i = 0; i < RAND_N; i++)
    {
@@ -211,7 +211,7 @@ void Random::load_genrand(FILE *fp)
 
 
 /* save state to file pointer */
-void Random::save_genrand(FILE *fp)
+void Random::save_genrand(FilePointer *fp)
 {
    for (int i = 0; i < RAND_N; i++)
    {
@@ -313,14 +313,14 @@ bool Random::RAND_BOOL()
 
 
 // Load random state
-void Random::RAND_LOAD(FILE *fp)
+void Random::RAND_LOAD(FilePointer *fp)
 {
    load_genrand(fp);
 }
 
 
 // Save random state
-void Random::RAND_SAVE(FILE *fp)
+void Random::RAND_SAVE(FilePointer *fp)
 {
    save_genrand(fp);
 }

@@ -81,7 +81,7 @@ void MutableParm::mutateValue(Random *randomizer)
 }
 
 
-void MutableParm::load(FILE *fp)
+void MutableParm::load(FilePointer *fp)
 {
    FREAD_FLOAT(&value, fp);
    FREAD_FLOAT(&minimum, fp);
@@ -91,7 +91,7 @@ void MutableParm::load(FILE *fp)
 }
 
 
-void MutableParm::save(FILE *fp)
+void MutableParm::save(FilePointer *fp)
 {
    FWRITE_FLOAT(&value, fp);
    FWRITE_FLOAT(&minimum, fp);

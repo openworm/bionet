@@ -180,354 +180,413 @@ char *getPath(char *dir, char *file)
 }
 
 
-FILE *myfopenRead(char *filename)
+FilePointer *myfopenRead(char *filename, bool binary)
 {
-   return(fopen(filename, "rb"));
-}
+   FILE *fp = fopen(filename, "rb");
 
-
-FILE *myfopenWrite(char *filename)
-{
-   return(fopen(filename, "wb"));
-}
-
-
-int myfclose(FILE *fp)
-{
-   return(fclose(fp));
-}
-
-
-int myfreadInt(int *i, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fread(i, sizeof(int), 1, fp));
-
-#else
-   return(fscanf(fp, "%d", i));
-#endif
-}
-
-
-int myfwriteInt(int *i, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fwrite(i, sizeof(int), 1, fp));
-
-#else
-   return(fprintf(fp, "%d\n", *i));
-#endif
-}
-
-
-int myfreadShort(short *s, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fread(s, sizeof(short), 1, fp));
-
-#else
-   short v;
-   int   ret = fscanf(fp, "%hd", &v);
-   *s = v;
-   return(ret);
-#endif
-}
-
-
-int myfwriteShort(short *s, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fwrite(s, sizeof(short), 1, fp));
-
-#else
-   short v;
-   v = *s;
-   return(fprintf(fp, "%hd\n", v));
-#endif
-}
-
-
-int myfreadLong(unsigned long *l, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fread(l, sizeof(unsigned long), 1, fp));
-
-#else
-   return(fscanf(fp, "%lu", l));
-#endif
-}
-
-
-int myfwriteLong(unsigned long *l, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fwrite(l, sizeof(unsigned long), 1, fp));
-
-#else
-   return(fprintf(fp, "%lu\n", *l));
-#endif
-}
-
-
-int myfreadLongLong(unsigned long long *l, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fread(l, sizeof(unsigned long long), 1, fp));
-
-#else
-   return(fscanf(fp, "%llu", l));
-#endif
-}
-
-
-int myfwriteLongLong(unsigned long long *l, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fwrite(l, sizeof(unsigned long long), 1, fp));
-
-#else
-   return(fprintf(fp, "%llu\n", *l));
-#endif
-}
-
-
-int myfreadFloat(float *f, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fread(f, sizeof(float), 1, fp));
-
-#else
-   char buf[100];
-   int  ret = fscanf(fp, "%s", buf);
-   *f = (float)atof(buf);
-   return(ret);
-#endif
-}
-
-
-int myfwriteFloat(float *f, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fwrite(f, sizeof(float), 1, fp));
-
-#else
-   return(fprintf(fp, "%f\n", *f));
-#endif
-}
-
-
-int myfreadDouble(double *d, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fread(d, sizeof(double), 1, fp));
-
-#else
-   char buf[100];
-   int  ret = fscanf(fp, "%s", buf);
-   *d = strtod(buf, NULL);
-   return(ret);
-#endif
-}
-
-
-int myfwriteDouble(double *d, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fwrite(d, sizeof(double), 1, fp));
-
-#else
-   return(fprintf(fp, "%f\n", *d));
-#endif
-}
-
-
-int myfreadBool(bool *b, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fread(b, sizeof(bool), 1, fp));
-
-#else
-   int v;
-   int ret = fscanf(fp, "%d", &v);
-   if (v == 1)
+   if (fp == NULL)
    {
-      *b = true;
+      return(NULL);
+   }
+   FilePointer *filePointer = new FilePointer(fp, binary);
+   assert(filePointer != NULL);
+   return(filePointer);
+}
+
+
+FilePointer *myfopenWrite(char *filename, bool binary)
+{
+   FILE *fp = fopen(filename, "wb");
+
+   if (fp == NULL)
+   {
+      return(NULL);
+   }
+   FilePointer *filePointer = new FilePointer(fp, binary);
+   assert(filePointer != NULL);
+   return(filePointer);
+}
+
+
+int myfclose(FilePointer *fp)
+{
+   int result = fclose(fp->fp);
+
+   delete fp;
+   return(result);
+}
+
+
+int myfreadInt(int *i, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fread(i, sizeof(int), 1, fp->fp));
    }
    else
    {
-      *b = false;
+      return(fscanf(fp->fp, "%d", i));
    }
-   return(ret);
-#endif
 }
 
 
-int myfwriteBool(bool *b, FILE *fp)
+int myfwriteInt(int *i, FilePointer *fp)
 {
-#ifdef BINARY_FILE_FORMAT
-   return((int)fwrite(b, sizeof(bool), 1, fp));
-
-#else
-   if (*b)
+   if (fp->binary)
    {
-      return(fprintf(fp, "1\n"));
+      return((int)fwrite(i, sizeof(int), 1, fp->fp));
    }
    else
    {
-      return(fprintf(fp, "0\n"));
+      return(fprintf(fp->fp, "%d\n", *i));
    }
-#endif
 }
 
 
-int myfreadChar(unsigned char *c, FILE *fp)
+int myfreadShort(short *s, FilePointer *fp)
 {
-#ifdef BINARY_FILE_FORMAT
-   return((int)fread(c, sizeof(unsigned char), 1, fp));
-
-#else
-   char buf[10];
-   int  ret = fscanf(fp, "%s", buf);
-   *c = buf[0];
-   return(ret);
-#endif
-}
-
-
-int myfwriteChar(unsigned char *c, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fwrite(c, sizeof(unsigned char), 1, fp));
-
-#else
-   return(fprintf(fp, "%c\n", *c));
-#endif
-}
-
-
-int myfreadBytes(unsigned char *bytes, int size, FILE *fp)
-{
-#ifdef BINARY_FILE_FORMAT
-   return((int)fread(bytes, size, 1, fp));
-
-#else
-   int           len  = (2 * size) + 1;
-   unsigned char *buf = new unsigned char[len];
-   assert(buf != NULL);
-   int ret = fscanf(fp, "%s", buf);
-   int i, j, d1, d2;
-   for (i = 0; i < size; i++)
+   if (fp->binary)
    {
-      j = 2 * i;
-      if ((buf[j] >= '0') && (buf[j] <= '9'))
+      return((int)fread(s, sizeof(short), 1, fp->fp));
+   }
+   else
+   {
+      short v;
+      int   ret = fscanf(fp->fp, "%hd", &v);
+      *s = v;
+      return(ret);
+   }
+}
+
+
+int myfwriteShort(short *s, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fwrite(s, sizeof(short), 1, fp->fp));
+   }
+   else
+   {
+      short v;
+      v = *s;
+      return(fprintf(fp->fp, "%hd\n", v));
+   }
+}
+
+
+int myfreadLong(unsigned long *l, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fread(l, sizeof(unsigned long), 1, fp->fp));
+   }
+   else
+   {
+      return(fscanf(fp->fp, "%lu", l));
+   }
+}
+
+
+int myfwriteLong(unsigned long *l, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fwrite(l, sizeof(unsigned long), 1, fp->fp));
+   }
+   else
+   {
+      return(fprintf(fp->fp, "%lu\n", *l));
+   }
+}
+
+
+int myfreadLongLong(unsigned long long *l, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fread(l, sizeof(unsigned long long), 1, fp->fp));
+   }
+   else
+   {
+      return(fscanf(fp->fp, "%llu", l));
+   }
+}
+
+
+int myfwriteLongLong(unsigned long long *l, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fwrite(l, sizeof(unsigned long long), 1, fp->fp));
+   }
+   else
+   {
+      return(fprintf(fp->fp, "%llu\n", *l));
+   }
+}
+
+
+int myfreadFloat(float *f, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fread(f, sizeof(float), 1, fp->fp));
+   }
+   else
+   {
+      char buf[100];
+      int  ret = fscanf(fp->fp, "%s", buf);
+      *f = (float)atof(buf);
+      return(ret);
+   }
+}
+
+
+int myfwriteFloat(float *f, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fwrite(f, sizeof(float), 1, fp->fp));
+   }
+   else
+   {
+      return(fprintf(fp->fp, "%f\n", *f));
+   }
+}
+
+
+int myfreadDouble(double *d, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fread(d, sizeof(double), 1, fp->fp));
+   }
+   else
+   {
+      char buf[100];
+      int  ret = fscanf(fp->fp, "%s", buf);
+      *d = strtod(buf, NULL);
+      return(ret);
+   }
+}
+
+
+int myfwriteDouble(double *d, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fwrite(d, sizeof(double), 1, fp->fp));
+   }
+   else
+   {
+      return(fprintf(fp->fp, "%f\n", *d));
+   }
+}
+
+
+int myfreadBool(bool *b, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fread(b, sizeof(bool), 1, fp->fp));
+   }
+   else
+   {
+      int v;
+      int ret = fscanf(fp->fp, "%d", &v);
+      if (v == 1)
       {
-         d1 = buf[j] - '0';
+         *b = true;
       }
       else
       {
-         d1 = buf[j] - 'a' + 10;
+         *b = false;
       }
-      j++;
-      if ((buf[j] >= '0') && (buf[j] <= '9'))
+      return(ret);
+   }
+}
+
+
+int myfwriteBool(bool *b, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fwrite(b, sizeof(bool), 1, fp->fp));
+   }
+   else
+   {
+      if (*b)
       {
-         d2 = buf[j] - '0';
+         return(fprintf(fp->fp, "1\n"));
       }
       else
       {
-         d2 = buf[j] - 'a' + 10;
+         return(fprintf(fp->fp, "0\n"));
       }
-      bytes[i] = (d1 * 16) + d2;
    }
-   delete [] buf;
-   return(ret);
-#endif
 }
 
 
-int myfwriteBytes(unsigned char *bytes, int size, FILE *fp)
+int myfreadChar(unsigned char *c, FilePointer *fp)
 {
-#ifdef BINARY_FILE_FORMAT
-   return((int)fwrite(bytes, size, 1, fp));
-
-#else
-   int  len  = (2 * size) + 1;
-   char *buf = new char[len];
-   assert(buf != NULL);
-   for (int i = 0; i < size; i++)
+   if (fp->binary)
    {
-      sprintf(&buf[2 * i], "%02x", bytes[i]);
+      return((int)fread(c, sizeof(unsigned char), 1, fp->fp));
    }
-   buf[len - 1] = '\0';
-   int ret = fprintf(fp, "%s\n", buf);
-   delete [] buf;
-   return(ret);
-#endif
+   else
+   {
+      char buf[10];
+      int  ret = fscanf(fp->fp, "%s", buf);
+      *c = buf[0];
+      return(ret);
+   }
 }
 
 
-int myfreadString(char *str, int size, FILE *fp)
+int myfwriteChar(unsigned char *c, FilePointer *fp)
 {
-#ifdef BINARY_FILE_FORMAT
-   return((int)fread(str, size, 1, fp));
-
-#else
-   // String is delimited by double quotes.
-   char c;
-   while (true)
+   if (fp->binary)
    {
-      c = fgetc(fp);
-      if (c == EOF)
-      {
-         return(0);
-      }
-      if (c == '"')
-      {
-         break;
-      }
+      return((int)fwrite(c, sizeof(unsigned char), 1, fp->fp));
    }
-   int i = 0;
-   for ( ; i < size; i++)
+   else
    {
-      c = fgetc(fp);
-      if (c == EOF)
-      {
-         return(i);
-      }
-      if (c == '"')
-      {
-         str[i] = '\0';
-         return(i);
-      }
-      else
-      {
-         str[i] = c;
-      }
+      return(fprintf(fp->fp, "%c\n", *c));
    }
-   fgetc(fp);
-   return(i);
-#endif
 }
 
 
-int myfwriteString(char *str, int size, FILE *fp)
+int myfreadBytes(unsigned char *bytes, int size, FilePointer *fp)
 {
-#ifdef BINARY_FILE_FORMAT
-   return((int)fwrite(str, size, 1, fp));
-
-#else
-   // Delimit string with double quotes.
-   fputc('"', fp);
-   int ret = 0;
-   for (int i = 0; i < size && str[i] != '\0'; i++)
+   if (fp->binary)
    {
-      if (str[i] != '"')
-      {
-         fputc(str[i], fp);
-         ret++;
-      }
+      return((int)fread(bytes, size, 1, fp->fp));
    }
-   fputc('"', fp);
-   fputc('\n', fp);
-   return(ret);
-#endif
+   else
+   {
+      int           len  = (2 * size) + 1;
+      unsigned char *buf = new unsigned char[len];
+      assert(buf != NULL);
+      int ret = fscanf(fp->fp, "%s", buf);
+      int i, j, d1, d2;
+      for (i = 0; i < size; i++)
+      {
+         j = 2 * i;
+         if ((buf[j] >= '0') && (buf[j] <= '9'))
+         {
+            d1 = buf[j] - '0';
+         }
+         else
+         {
+            d1 = buf[j] - 'a' + 10;
+         }
+         j++;
+         if ((buf[j] >= '0') && (buf[j] <= '9'))
+         {
+            d2 = buf[j] - '0';
+         }
+         else
+         {
+            d2 = buf[j] - 'a' + 10;
+         }
+         bytes[i] = (d1 * 16) + d2;
+      }
+      delete[] buf;
+      return(ret);
+   }
+}
+
+
+int myfwriteBytes(unsigned char *bytes, int size, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fwrite(bytes, size, 1, fp->fp));
+   }
+   else
+   {
+      int  len  = (2 * size) + 1;
+      char *buf = new char[len];
+      assert(buf != NULL);
+      for (int i = 0; i < size; i++)
+      {
+         sprintf(&buf[2 * i], "%02x", bytes[i]);
+      }
+      buf[len - 1] = '\0';
+      int ret = fprintf(fp->fp, "%s\n", buf);
+      delete[] buf;
+      return(ret);
+   }
+}
+
+
+int myfreadString(char *str, int size, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fread(str, size, 1, fp->fp));
+   }
+   else
+   {
+      // String is delimited by double quotes.
+      char c;
+      while (true)
+      {
+         c = fgetc(fp->fp);
+         if (c == EOF)
+         {
+            return(0);
+         }
+         if (c == '"')
+         {
+            break;
+         }
+      }
+      int i = 0;
+      for ( ; i < size; i++)
+      {
+         c = fgetc(fp->fp);
+         if (c == EOF)
+         {
+            return(i);
+         }
+         if (c == '"')
+         {
+            str[i] = '\0';
+            return(i);
+         }
+         else
+         {
+            str[i] = c;
+         }
+      }
+      fgetc(fp->fp);
+      return(i);
+   }
+}
+
+
+int myfwriteString(char *str, int size, FilePointer *fp)
+{
+   if (fp->binary)
+   {
+      return((int)fwrite(str, size, 1, fp->fp));
+   }
+   else
+   {
+      // Delimit string with double quotes.
+      fputc('"', fp->fp);
+      int ret = 0;
+      for (int i = 0; i < size && str[i] != '\0'; i++)
+      {
+         if (str[i] != '"')
+         {
+            fputc(str[i], fp->fp);
+            ret++;
+         }
+      }
+      fputc('"', fp->fp);
+      fputc('\n', fp->fp);
+      return(ret);
+   }
 }

@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <vector>
 #include <string>
+#include "fileio.h"
 using namespace std;
 
 class Network;
@@ -27,8 +28,8 @@ public:
    float  signal;
    string label;
 
-   void load(FILE *fp);
-   void save(FILE *fp);
+   void load(FilePointer *fp);
+   void save(FilePointer *fp);
    void print(bool terse = true, bool labels = false);
 
    // Weight quantization: .1 for one decimal digit, .01 for two digits, etc.
@@ -55,8 +56,8 @@ public:
 
    void fire();
    void propagate();
-   void load(FILE *fp);
-   void save(FILE *fp);
+   void load(FilePointer *fp);
+   void save(FilePointer *fp);
    void print(bool terse = true, bool labels = false);
 };
 #endif

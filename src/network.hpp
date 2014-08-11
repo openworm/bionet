@@ -20,8 +20,8 @@ public:
            float maxSynapseWeight = 1.0f,
            RANDOM randomSeed = DEFAULT_RANDOM_SEED);
 
-   Network(char *filename);
-   Network(FILE *fp);
+   Network(char *filename, bool binary = false);
+   Network(FilePointer *fp);
    ~Network();
 
    // Default inhibitory neuron density.
@@ -50,12 +50,12 @@ public:
    void step();
 
    // Load network.
-   bool load(char *filename);
-   void load(FILE *fp);
+   bool load(char *filename, bool binary = false);
+   void load(FilePointer *fp);
 
    // Save network.
-   bool save(char *filename);
-   void save(FILE *fp);
+   bool save(char *filename, bool binary = false);
+   void save(FilePointer *fp);
 
    // Print network.
    void print(bool network = true, bool connectivity = false);

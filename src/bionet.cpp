@@ -1,4 +1,8 @@
-// bionet: a "biological" (irregular) neural network.
+// bionet: a "biological" neural network.
+
+// Version (SCCS "what" format).
+#define BIONET_VERSION    "@(#)bionet version 1.0"
+const char *BionetVersion = BIONET_VERSION;
 
 #include "networkHomomorphoGenesis.hpp"
 #include "networkIsomorphoGenesis.hpp"
@@ -6,12 +10,17 @@
 #include <sys/stat.h>
 #ifndef WIN32
 #include <sys/sysinfo.h>
+#include <signal.h>
 #endif
 
 // Usage.
 char *Usage[] =
 {
    (char *)"Usage:",
+   (char *)"",
+   (char *)"Version:",
+   (char *)"",
+   (char *)"bionet -version",
    (char *)"",
    (char *)"Create network:",
    (char *)"",
@@ -716,7 +725,7 @@ int createNetworkBehaviors(int argc, char *argv[])
    }
    else if (sensorBehaviorsLoadFile != NULL)
    {
-      if (!Behavior::loadBehaviors(sensorBehaviorsLoadFile, sensorBehaviors))
+      if (!Behavior::loadBehaviors(sensorBehaviors, sensorBehaviorsLoadFile))
       {
          fprintf(stderr, "Cannot load behaviors from file %s\n", sensorBehaviorsLoadFile);
          delete network;
@@ -768,7 +777,7 @@ int createNetworkBehaviors(int argc, char *argv[])
    }
    if (behaviorsSaveFile != NULL)
    {
-      if (!Behavior::saveBehaviors(behaviorsSaveFile, behaviors))
+      if (!Behavior::saveBehaviors(behaviors, behaviorsSaveFile))
       {
          fprintf(stderr, "Cannot save behaviors to file %s\n", behaviorsSaveFile);
          result = 1;
@@ -852,7 +861,7 @@ int testNetworkBehaviors(int argc, char *argv[])
    Network *network = new Network(networkLoadFile);
    assert(network != NULL);
    network->print();
-   if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
+   if (!Behavior::loadBehaviors(behaviors, behaviorsLoadFile))
    {
       fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
       delete network;
@@ -924,7 +933,7 @@ int printNetworkBehaviors(int argc, char *argv[])
    }
 
    // Print behaviors.
-   if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
+   if (!Behavior::loadBehaviors(behaviors, behaviorsLoadFile))
    {
       fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
       return(1);
@@ -940,6 +949,9 @@ int printNetworkBehaviors(int argc, char *argv[])
    return(0);
 }
 
+
+// Global homomorphogenesis.
+NetworkHomomorphoGenesis *MorphoGenesis = NULL;
 
 // Create homomorphic networks.
 int createHomomorphicNetworks(int argc, char *argv[])
@@ -1477,7 +1489,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
    vector<Behavior *> behaviors;
    if (behaviorsLoadFile != NULL)
    {
-      if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
+      if (!Behavior::loadBehaviors(behaviors, behaviorsLoadFile))
       {
          fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
          return(1);
@@ -1663,7 +1675,6 @@ int createHomomorphicNetworks(int argc, char *argv[])
 #endif
    }
    Network *homomorph = NULL;
-   NetworkHomomorphoGenesis *morphoGenesis = NULL;
 #ifdef THREADS
    if (numThreads == -1)
    {
@@ -1714,7 +1725,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
       assert(homomorph != NULL);
       if (behaviorsLoadFile != NULL)
       {
-         morphoGenesis =
+         MorphoGenesis =
             new NetworkHomomorphoGenesis(
                behaviors, homomorph,
                populationSize, numOffspring, parentLongevity,
@@ -1725,7 +1736,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
       }
       else if (undulationMovements != -1)
       {
-         morphoGenesis =
+         MorphoGenesis =
             new NetworkHomomorphoGenesis(
                undulationMovements, homomorph,
                populationSize, numOffspring, parentLongevity,
@@ -1735,7 +1746,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
       }
       else
       {
-         morphoGenesis =
+         MorphoGenesis =
             new NetworkHomomorphoGenesis(
                neuronExecPath, simDir, simHocFile, homomorph,
                populationSize, numOffspring, parentLongevity,
@@ -1743,7 +1754,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
                synapseCrossoverBondStrength, synapseOptimizedPathLength,
                randomSeed);
       }
-      assert(morphoGenesis != NULL);
+      assert(MorphoGenesis != NULL);
    }
    else   // Resume morph.
    {
@@ -1760,57 +1771,57 @@ int createHomomorphicNetworks(int argc, char *argv[])
       }
       if (behaviorsLoadFile != NULL)
       {
-         morphoGenesis = new NetworkHomomorphoGenesis(behaviors, morphLoadFile);
+         MorphoGenesis = new NetworkHomomorphoGenesis(behaviors, morphLoadFile);
       }
       else if (undulationMovements != -1)
       {
-         morphoGenesis = new NetworkHomomorphoGenesis(undulationMovements, morphLoadFile);
+         MorphoGenesis = new NetworkHomomorphoGenesis(undulationMovements, morphLoadFile);
       }
       else
       {
-         morphoGenesis = new NetworkHomomorphoGenesis(neuronExecPath, simDir, simHocFile, morphLoadFile);
+         MorphoGenesis = new NetworkHomomorphoGenesis(neuronExecPath, simDir, simHocFile, morphLoadFile);
       }
-      assert(morphoGenesis != NULL);
+      assert(MorphoGenesis != NULL);
       if (fitnessMotorList.size() > 0)
       {
-         n = morphoGenesis->homomorph->numMotors;
-         ((NetworkMorphoGenesis *)morphoGenesis)->fitnessMotorList.resize(n, false);
+         n = MorphoGenesis->homomorph->numMotors;
+         ((NetworkMorphoGenesis *)MorphoGenesis)->fitnessMotorList.resize(n, false);
          for (i = 0, j = (int)fitnessMotorList.size(); i < j; i++)
          {
             k = fitnessMotorList[i];
             assert(k >= 0 && k < n);
-            ((NetworkMorphoGenesis *)morphoGenesis)->fitnessMotorList[k] = true;
+            ((NetworkMorphoGenesis *)MorphoGenesis)->fitnessMotorList[k] = true;
          }
       }
       else if (gotFitnessMotorList)
       {
-         ((NetworkMorphoGenesis *)morphoGenesis)->fitnessMotorList.clear();
+         ((NetworkMorphoGenesis *)MorphoGenesis)->fitnessMotorList.clear();
       }
       if (crossoverRate != -1.0f)
       {
-         morphoGenesis->crossoverRate = crossoverRate;
+         MorphoGenesis->crossoverRate = crossoverRate;
       }
       if (mutationRate != -1.0f)
       {
-         morphoGenesis->mutationRate = mutationRate;
+         MorphoGenesis->mutationRate = mutationRate;
       }
       if (synapseCrossoverBondStrength != -1.0f)
       {
-         morphoGenesis->synapseCrossoverBondStrength = synapseCrossoverBondStrength;
+         MorphoGenesis->synapseCrossoverBondStrength = synapseCrossoverBondStrength;
       }
       if (synapseOptimizedPathLength != -1)
       {
-         morphoGenesis->synapseOptimizedPathLength = synapseOptimizedPathLength;
+         MorphoGenesis->synapseOptimizedPathLength = synapseOptimizedPathLength;
       }
    }
 #ifdef THREADS
-   morphoGenesis->morph(numGenerations, numThreads, behaveCutoff, logFile, morphSaveFile);
+   MorphoGenesis->morph(numGenerations, numThreads, behaveCutoff, logFile, morphSaveFile);
 #else
-   morphoGenesis->morph(numGenerations, behaveCutoff, logFile, morphSaveFile);
+   MorphoGenesis->morph(numGenerations, behaveCutoff, logFile, morphSaveFile);
 #endif
    if (morphSaveFile != NULL)
    {
-      if (!morphoGenesis->save(morphSaveFile))
+      if (!MorphoGenesis->save(morphSaveFile))
       {
          fprintf(stderr, "Cannot save morph to file %s\n", morphSaveFile);
          result = 1;
@@ -1818,9 +1829,10 @@ int createHomomorphicNetworks(int argc, char *argv[])
    }
    if (saveNetworks)
    {
-      ((NetworkMorphoGenesis *)morphoGenesis)->saveNetworks(filesPrefix);
+      ((NetworkMorphoGenesis *)MorphoGenesis)->saveNetworks(filesPrefix);
    }
-   delete morphoGenesis;
+   delete MorphoGenesis;
+   MorphoGenesis = NULL;
    for (i = 0, n = (int)behaviors.size(); i < n; i++)
    {
       delete behaviors[i];
@@ -2292,7 +2304,7 @@ int createIsomorphicNetworks(int argc, char *argv[])
    }
 
    vector<Behavior *> behaviors;
-   if (!Behavior::loadBehaviors(behaviorsLoadFile, behaviors))
+   if (!Behavior::loadBehaviors(behaviors, behaviorsLoadFile))
    {
       fprintf(stderr, "Cannot load behaviors from file %s\n", behaviorsLoadFile);
       return(1);
@@ -2388,6 +2400,19 @@ int createIsomorphicNetworks(int argc, char *argv[])
 }
 
 
+#ifndef WIN32
+// Termination signal catcher.
+void term(int signum)
+{
+   if (MorphoGenesis != NULL)
+   {
+      MorphoGenesis->sigterm = true;
+   }
+}
+
+
+#endif
+
 int behaviorSearch(int argc, char *argv[]);
 
 int main(int argc, char *argv[])
@@ -2407,6 +2432,14 @@ int main(int argc, char *argv[])
       UNASSIGNED
    }
    command = UNASSIGNED;
+
+#ifndef WIN32
+   // Catch termination signal.
+   struct sigaction action;
+   memset(&action, 0, sizeof(struct sigaction));
+   action.sa_handler = term;
+   sigaction(SIGTERM, &action, NULL);
+#endif
 
    for (int i = 1; i < argc; i++)
    {
@@ -2523,6 +2556,19 @@ int main(int argc, char *argv[])
          if (command == UNASSIGNED)
          {
             command = BEHAVIOR_SEARCH;
+         }
+         else
+         {
+            printUsageError((char *)"multiple commands");
+            return(1);
+         }
+      }
+      if ((strcmp(argv[i], "-version") == 0))
+      {
+         if (command == UNASSIGNED)
+         {
+            fprintf(stderr, (char *)"%s\n", &BionetVersion[4]);
+            return(0);
          }
          else
          {

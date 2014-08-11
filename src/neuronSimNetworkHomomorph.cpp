@@ -18,7 +18,7 @@ NeuronSimNetworkHomomorph::NeuronSimNetworkHomomorph(Network *homomorph,
 }
 
 
-NeuronSimNetworkHomomorph::NeuronSimNetworkHomomorph(FILE *fp,
+NeuronSimNetworkHomomorph::NeuronSimNetworkHomomorph(FilePointer *fp,
                                                      vector<vector<pair<int, int> > > *motorConnections,
                                                      Random *randomizer)
 {
@@ -106,7 +106,7 @@ NeuronSimNetworkHomomorph *NeuronSimNetworkHomomorph::clone(int tag)
 
 
 // Load.
-void NeuronSimNetworkHomomorph::load(FILE *fp)
+void NeuronSimNetworkHomomorph::load(FilePointer *fp)
 {
    int  i, n;
    bool b;
@@ -132,7 +132,7 @@ void NeuronSimNetworkHomomorph::load(FILE *fp)
 
 
 // Save.
-void NeuronSimNetworkHomomorph::save(FILE *fp)
+void NeuronSimNetworkHomomorph::save(FilePointer *fp)
 {
    int  i, n;
    bool b;
