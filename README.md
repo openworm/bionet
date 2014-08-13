@@ -43,8 +43,10 @@ that are specific to C. elegans.
    a. Generate and export C. elegans simulation with NeuroConstruct:
       github.com/openworm/OpenWorm/wiki/Running-the-C.-elegans-model-in-neuroConstruct
    b. Evaluate with NEURON simulator: www.neuron.yale.edu/neuron/
-      If you have to compile sim/model/mod files for a new platform:
+   c. If you have to compile sim/model/mod files for a new platform, see:
       www.neuron.yale.edu/neuron/faq#compilemod
+      For example, to compile under UNIX/Linux:
+      Run "modlunit filename" on each mod file, then run nrnivmodl to compile.
 
 ###To build:
 

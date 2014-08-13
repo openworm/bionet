@@ -170,6 +170,7 @@ char *Usage[] =
    (char *)"   -createHomomorphicNetworks",
    (char *)"   -neuronExec <path to NEURON simulator executable>",
    (char *)"   -simDir <directory containing model directory and simulation files>",
+   (char *)"      (see README.md for how to compile platform-dependent mod files)",
    (char *)"   -simHocFile <simulation hoc file name>",
    (char *)"   -loadNetwork <homomorph network file name>",
    (char *)"   -populationSize <number population members>",

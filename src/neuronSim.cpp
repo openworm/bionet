@@ -169,7 +169,7 @@ void NeuronSim::run()
    sprintf(buf, "cd %s & %s %s", workDir.c_str(), neuronExecPath.c_str(), hocFilename.c_str());
 #else
    unlink(buf);
-   sprintf(buf, "cd %s; %s %s", workDir.c_str(), neuronExecPath.c_str(), hocFilename.c_str());
+   sprintf(buf, "cd %s; %s %s >/dev/null 2>&1", workDir.c_str(), neuronExecPath.c_str(), hocFilename.c_str());
 #endif
    if (system(buf) != 0)
    {
