@@ -41,9 +41,10 @@ that are specific to C. elegans.
    FFTW3 Fourier Transform package: http://www.fftw.org
 2. NEURON network simulator evaluation:
    a. Generate and export C. elegans simulation with NeuroConstruct:
-      https://github.com/openworm/OpenWorm/wiki/Running-the-C.-elegans-model-in-neuroConstruct 
-   b. Evaluate with NEURON simulator: http://www.neuron.yale.edu/neuron/
-
+      github.com/openworm/OpenWorm/wiki/Running-the-C.-elegans-model-in-neuroConstruct
+   b. Evaluate with NEURON simulator: www.neuron.yale.edu/neuron/
+      If you have to compile sim/model/mod files for a new platform:
+      www.neuron.yale.edu/neuron/faq#compilemod
 
 ###To build:
 
