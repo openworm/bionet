@@ -45,6 +45,6 @@ public:
    void run();
 
    // Get activation difference between simulations.
-   float activationDelta(NeuronSim *sim);
+   void activationDelta(NeuronSim *sim, float& total, float& average);
 };
 #endif

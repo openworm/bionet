@@ -18,7 +18,7 @@ class NetworkHomomorphoGenesis : public NetworkMorphoGenesis
 public:
 
    // Storage format.
-   enum { FORMAT = 1 };
+   enum { FORMAT = 2 };
 
    // Constructor.
    NetworkHomomorphoGenesis(vector<Behavior *>& behaviors,

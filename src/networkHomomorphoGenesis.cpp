@@ -517,7 +517,8 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
       for (i = 0, n = (int)population.size(); i < n; i++)
       {
          neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)population[i];
-         fprintf(morphfp, "%d\t%d\t\t%f\n", i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error);
+         fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n", i, neuronSimNetworkMorph->tag,
+                 neuronSimNetworkMorph->error, neuronSimNetworkMorph->meanError);
       }
    }
    else
@@ -575,7 +576,8 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
          for (i = 0, n = (int)population.size(); i < n; i++)
          {
             neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)population[i];
-            fprintf(morphfp, "%d\t%d\t\t%f\n", i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error);
+            fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n", i, neuronSimNetworkMorph->tag,
+                    neuronSimNetworkMorph->error, neuronSimNetworkMorph->meanError);
          }
       }
       else
@@ -887,9 +889,9 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
          {
             neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)offspring[i];
             neuronSimNetworkMorph->evaluate(modelSim, evaluationSims[threadNum]);
-            fprintf(morphfp, "%d\t%d\t\t%f\t%d %d\n",
+            fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\t%d %d\n",
                     i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error,
-                    population[p1]->tag, population[p2]->tag);
+                    neuronSimNetworkMorph->meanError, population[p1]->tag, population[p2]->tag);
          }
          else
          {
@@ -909,8 +911,9 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
          else if (neuronSim)
          {
             neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)offspring[i];
-            fprintf(morphfp, "%d\t%d\t\t%f\t%d\n",
-                    i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error, population[p1]->tag);
+            fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\t%d\n",
+                    i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error,
+                    neuronSimNetworkMorph->meanError, population[p1]->tag);
          }
          else
          {
@@ -1032,8 +1035,9 @@ void NetworkHomomorphoGenesis::mutate(int threadNum)
          {
             neuronSimNetworkMorph->mutate();
             neuronSimNetworkMorph->evaluate(modelSim, evaluationSims[threadNum]);
-            fprintf(morphfp, "%d\t%d\t\t%f\n",
-                    i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error);
+            fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n",
+                    i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error,
+                    neuronSimNetworkMorph->meanError);
          }
       }
       else
@@ -1102,8 +1106,9 @@ void NetworkHomomorphoGenesis::optimize(int threadNum)
          neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)offspring[i];
          neuronSimNetworkMorph->optimize(synapseOptimizedPathLength,
                                          modelSim, evaluationSims[threadNum]);
-         fprintf(morphfp, "%d\t%d\t\t%f\n",
-                 i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error);
+         fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n",
+                 i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error,
+                 neuronSimNetworkMorph->meanError);
       }
       else
       {
@@ -1145,7 +1150,8 @@ void NetworkHomomorphoGenesis::prune()
       else if (neuronSim)
       {
          neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)population[i];
-         fprintf(morphfp, "%d\t%d\t\t%f\n", i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error);
+         fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n", i, neuronSimNetworkMorph->tag,
+                 neuronSimNetworkMorph->error, neuronSimNetworkMorph->meanError);
          delete (NeuronSimNetworkHomomorph *)neuronSimNetworkMorph;
       }
       else
@@ -1180,7 +1186,8 @@ void NetworkHomomorphoGenesis::prune()
             else if (neuronSim)
             {
                neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)population[i];
-               fprintf(morphfp, "%d\t%d\t\t%f", i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error);
+               fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)", i, neuronSimNetworkMorph->tag,
+                       neuronSimNetworkMorph->error, neuronSimNetworkMorph->meanError);
                population[i] = (NetworkMorph *)new NeuronSimNetworkHomomorph(
                   homomorph, networkMorph->synapseWeightsParm, &motorConnections,
                   randomizer, NetworkMorphoGenesis::tagGenerator++);
@@ -1188,7 +1195,8 @@ void NetworkHomomorphoGenesis::prune()
                delete neuronSimNetworkMorph;
                neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)population[i];
                neuronSimNetworkMorph->evaluate(modelSim, evaluationSims[0]);
-               fprintf(morphfp, "\t%f\n", neuronSimNetworkMorph->error);
+               fprintf(morphfp, "\t%.2f (%.2f)\n", neuronSimNetworkMorph->error,
+                       neuronSimNetworkMorph->meanError);
             }
             else
             {

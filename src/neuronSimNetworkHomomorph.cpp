@@ -14,6 +14,7 @@ NeuronSimNetworkHomomorph::NeuronSimNetworkHomomorph(Network *homomorph,
    this->randomizer       = randomizer;
    this->tag = tag;
    network   = homomorph->clone();
+   meanError = 0.0f;
    motorErrors.resize(network->numMotors, false);
 }
 
@@ -40,7 +41,7 @@ void NeuronSimNetworkHomomorph::optimize(int synapseOptimizedPathLength,
                                          NeuronSim *modelSim, NeuronSim *evalSim)
 {
    int   i, j, k, n, p, q;
-   float e;
+   float e, r;
 
    // Initialize optimization.
    vector<vector<Synapse *> > synapses;
@@ -50,6 +51,7 @@ void NeuronSimNetworkHomomorph::optimize(int synapseOptimizedPathLength,
    // Hill-climb synapse weight permutations.
    n = 0;
    e = error;
+   r = meanError;
    for (i = 1, j = (int)permutations.size(); i < j; i++)
    {
       for (k = 0; k < (int)synapses.size(); k++)
@@ -64,6 +66,7 @@ void NeuronSimNetworkHomomorph::optimize(int synapseOptimizedPathLength,
       {
          n = i;
          e = error;
+         r = meanError;
       }
    }
    for (k = 0; k < (int)synapses.size(); k++)
@@ -73,7 +76,8 @@ void NeuronSimNetworkHomomorph::optimize(int synapseOptimizedPathLength,
          synapses[k][p]->setWeight(permutations[n][k]);
       }
    }
-   error = e;
+   error     = e;
+   meanError = r;
 }
 
 
@@ -82,7 +86,7 @@ void NeuronSimNetworkHomomorph::evaluate(NeuronSim *modelSim, NeuronSim *evalSim
 {
    evalSim->importSynapseWeights(network);
    evalSim->run();
-   error = evalSim->activationDelta(modelSim);
+   evalSim->activationDelta(modelSim, error, meanError);
 }
 
 
@@ -96,7 +100,8 @@ NeuronSimNetworkHomomorph *NeuronSimNetworkHomomorph::clone(int tag)
       network, synapseWeightsParm,
       motorConnections, randomizer, tag);
    assert(simNetworkMorph != NULL);
-   simNetworkMorph->error = error;
+   simNetworkMorph->error     = error;
+   simNetworkMorph->meanError = meanError;
    for (i = 0, n = (int)motorErrors.size(); i < n; i++)
    {
       simNetworkMorph->motorErrors[i] = motorErrors[i];
@@ -120,6 +125,7 @@ void NeuronSimNetworkHomomorph::load(FilePointer *fp)
    assert(network != NULL);
    FREAD_INT(&tag, fp);
    FREAD_FLOAT(&error, fp);
+   FREAD_FLOAT(&meanError, fp);
    n = (int)network->numMotors;
    motorErrors.resize(n, false);
    for (i = 0; i < n; i++)
@@ -141,6 +147,7 @@ void NeuronSimNetworkHomomorph::save(FilePointer *fp)
    network->save(fp);
    FWRITE_INT(&tag, fp);
    FWRITE_FLOAT(&error, fp);
+   FWRITE_FLOAT(&meanError, fp);
    n = (int)motorErrors.size();
    for (i = 0; i < n; i++)
    {
@@ -170,6 +177,7 @@ void NeuronSimNetworkHomomorph::print(bool printNetwork)
    }
    printf("tag=%d\n", tag);
    printf("error=%f\n", error);
+   printf("meanError=%f\n", error);
    printf("motorErrors: ");
    for (i = 0, n = (int)motorErrors.size(); i < n; i++)
    {

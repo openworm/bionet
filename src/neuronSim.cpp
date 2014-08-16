@@ -219,21 +219,28 @@ void NeuronSim::run()
 
 
 // Get activation difference between simulations.
-float NeuronSim::activationDelta(NeuronSim *sim)
+void NeuronSim::activationDelta(NeuronSim *sim, float& total, float& average)
 {
-   int i, j, p, q;
+   int i, j, p, q, n;
 
    vector<float> *a1, *a2;
-   float         delta = 0.0f;
+   float         f1, f2;
 
-   for (i = 0, j = (int)hocDoc->neurons.size(); i < j; i++)
+   total = average = 0.0f;
+   for (i = n = 0, j = (int)hocDoc->neurons.size(); i < j; i++)
    {
       a1 = &neuronActivations[hocDoc->neurons[i]];
       a2 = &sim->neuronActivations[hocDoc->neurons[i]];
       for (p = 0, q = (int)a1->size(); p < q; p++)
       {
-         delta += fabs((*a1)[p] - (*a2)[p]);
+         f1     = (*a1)[p];
+         f2     = (*a2)[p];
+         total += fabs(f1 - f2);
+         n++;
       }
    }
-   return(delta);
+   if (n > 0)
+   {
+      average = total / (float)n;
+   }
 }

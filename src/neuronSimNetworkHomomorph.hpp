@@ -23,6 +23,9 @@ public:
    // Destructor.
    ~NeuronSimNetworkHomomorph();
 
+   // Mean absolute error (MAE).
+   float meanError;
+
    // Optimize synapses.
    void optimize(int synapseOptimizedPathLength,
                  NeuronSim *modelSim, NeuronSim *evalSim);
