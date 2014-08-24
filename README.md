@@ -30,13 +30,13 @@ In addition to bionet, see the CElegans/Readme.txt for related projects
 that are specific to C. elegans.
 
 ##Required packages:
-
+```
 1. UNIX: the gcc compiler, make command, and the bash shell.
 2. Windows: Microsoft Visual C++ 2012 (or later) IDE.
 3. Pthreads.
-
+```
 ##Optional packages:
-
+```
 1. Fourier Transform undulation behavior evaluation:
    FFTW3 Fourier Transform package: www.fftw.org
 2. NEURON simulator evaluation:
@@ -64,15 +64,15 @@ that are specific to C. elegans.
 	  Stimuli:
 	  <neuron name>
 	  ...
-
+```
 ###To build:
-
+```
 UNIX: 
 1. 'make'
 2. For Fourier Transform undulation behavior evaluation: 'make fft_undulation_eval'
 
 Windows: use VC++ solution and project files.
-
+```
 ###Commands:
 
 **Create network:**
