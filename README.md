@@ -38,8 +38,8 @@ that are specific to C. elegans.
 ##Optional packages:
 
 1. Fourier Transform undulation behavior evaluation:
-   FFTW3 Fourier Transform package: http://www.fftw.org
-2. NEURON network simulator evaluation:
+   FFTW3 Fourier Transform package: www.fftw.org
+2. NEURON simulator evaluation:
    a. Generate and export C. elegans simulation with NeuroConstruct:
       github.com/openworm/OpenWorm/wiki/Running-the-C.-elegans-model-in-neuroConstruct
    b. Evaluate with NEURON simulator: www.neuron.yale.edu/neuron/
@@ -47,6 +47,23 @@ that are specific to C. elegans.
       www.neuron.yale.edu/neuron/faq#compilemod
       For example, to compile under UNIX/Linux:
       Run "modlunit filename" on each mod file, then run nrnivmodl to compile.
+3. c302 simulator evaluation:
+   a. Install python with neuroml, numpy, etc. packages. (Anaconda installs these).
+   b. Install jNeuroML using link from c302 README:
+      github.com/openworm/CElegansNeuroML/tree/master/CElegans/pythonScripts/c302 
+   c. Download CElegansNeuroML from github.com/openworm/CElegansNeuroML
+      into sim directory and unzip.
+   d. Create sim/CElegansNeuroML/CElegans/pythonScripts/c302/c302_network.txt file with format:
+	  Cells:
+	  <neuron name>
+	  ...
+	  Synapses:
+	  <source neuron> <target neuron> <weight>
+	  (Example: "ADAL AIBL 0.5")
+	  ...
+	  Stimuli:
+	  <neuron name>
+	  ...
 
 ###To build:
 
@@ -233,11 +250,48 @@ bionet (new morph with NEURON network simulator evaluation)
 ```
 
 ```
-bionet (resume morph with NEURON network simulator evaluation)
+bionet (resume morph with NEURON simulator evaluation)
    -createHomomorphicNetworks
    -neuronExec <path to NEURON simulator executable>
    -simDir <directory containing model directory and simulation files>
    -simHocFile <simulation hoc file name>
+   -loadMorph <morph file name>
+   -numGenerations <number of evolution generations>
+   [-crossoverRate <probability> (defaults to loaded value)]
+   [-mutationRate <probability> (defaults to loaded value)]
+   [-synapseCrossoverBondStrength <probability of connected neurons crossing over together>]
+   [-synapseOptimizedPathLength <synapse path length optimized as a group>]
+   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
+   [-logMorph <morph log file name> (instead of standard output)]
+   [-numThreads <number of threads> (defaults to system capacity)]
+```
+
+```
+bionet (new morph with c302 simulator evaluation)
+   -createHomomorphicNetworks
+   -jnmlCmd <path to jnml command>
+   -simDir <path to the CElegansNeuroML directory>
+   -loadNetwork <homomorph network file name>
+   -populationSize <number population members>
+   -numOffspring <number offspring per generation>
+   [-parentLongevity <parent dies after this many offspring>]
+   -numGenerations <number of evolution generations>
+   -crossoverRate <probability>
+   -mutationRate <probability>
+   -synapseWeights <minimum> <maximum> <max delta>
+   -synapseCrossoverBondStrength <probability of connected neurons crossing over together>
+   -synapseOptimizedPathLength <synapse path length optimized as a group>
+   -saveMorph <morph file name> and/or -saveNetworks [<files prefix (default="network_")>]
+   [-randomSeed <random seed>]
+   [-logMorph <morph log file name> (instead of standard output)]
+   [-numThreads <number of threads> (defaults to system capacity)]
+```
+
+```
+bionet (resume morph with c302 simulator evaluation)
+   -createHomomorphicNetworks
+   -jnmlCmd <path to jnml command>
+   -simDir <path to the CElegansNeuroML directory>
    -loadMorph <morph file name>
    -numGenerations <number of evolution generations>
    [-crossoverRate <probability> (defaults to loaded value)]

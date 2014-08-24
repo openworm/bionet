@@ -55,6 +55,12 @@
     <ClCompile Include="networkHomomorphoGenesis.cpp">
       <Filter>network</Filter>
     </ClCompile>
+    <ClCompile Include="c302Sim.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="c302SimNetworkHomomorph.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="behavior.hpp">
@@ -106,6 +112,12 @@
       <Filter>network</Filter>
     </ClInclude>
     <ClInclude Include="networkHomomorphoGenesis.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="c302Sim.hpp">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="c302SimNetworkHomomorph.hpp">
       <Filter>network</Filter>
     </ClInclude>
   </ItemGroup>

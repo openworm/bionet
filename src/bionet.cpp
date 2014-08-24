@@ -1,7 +1,7 @@
 // bionet: a "biological" neural network.
 
 // Version (SCCS "what" format).
-#define BIONET_VERSION    "@(#)bionet version 1.0"
+#define BIONET_VERSION    "@(#)bionet version 1.1"
 const char *BionetVersion = BIONET_VERSION;
 
 #include "networkHomomorphoGenesis.hpp"
@@ -166,7 +166,7 @@ char *Usage[] =
    (char *)"   [-logMorph <morph log file name>(instead of standard output)]",
    (char *)"   [-numThreads <number of threads>(defaults to system capacity)]",
    (char *)"",
-   (char *)"bionet (new morph with NEURON network simulator evaluation)",
+   (char *)"bionet (new morph with NEURON simulator evaluation)",
    (char *)"   -createHomomorphicNetworks",
    (char *)"   -neuronExec <path to NEURON simulator executable>",
    (char *)"   -simDir <directory containing model directory and simulation files>",
@@ -187,11 +187,44 @@ char *Usage[] =
    (char *)"   [-logMorph <morph log file name>(instead of standard output)]",
    (char *)"   [-numThreads <number of threads>(defaults to system capacity)]",
    (char *)"",
-   (char *)"bionet (resume morph with NEURON network simulator evaluation)",
+   (char *)"bionet (resume morph with NEURON simulator evaluation)",
    (char *)"   -createHomomorphicNetworks",
    (char *)"   -neuronExec <path to NEURON simulator executable>",
    (char *)"   -simDir <directory containing model directory and simulation files>",
    (char *)"   -simHocFile <simulation hoc file name>",
+   (char *)"   -loadMorph <morph file name>",
+   (char *)"   -numGenerations <number of evolution generations>",
+   (char *)"   [-crossoverRate <probability>(defaults to loaded value)]",
+   (char *)"   [-mutationRate <probability>(defaults to loaded value)]",
+   (char *)"   [-synapseCrossoverBondStrength <probability of connected neurons crossing over together>]",
+   (char *)"   [-synapseOptimizedPathLength <synapse path length optimized as a group>]",
+   (char *)"   -saveMorph <morph file name> and / or -saveNetworks [<files prefix(default = \"network_\")>]",
+   (char *)"   [-logMorph <morph log file name>(instead of standard output)]",
+   (char *)"   [-numThreads <number of threads>(defaults to system capacity)]",
+   (char *)"",
+   (char *)"bionet (new morph with c302 simulator evaluation)",
+   (char *)"   -createHomomorphicNetworks",
+   (char *)"   -jnmlCmd <path to jnml command>",
+   (char *)"   -simDir <path to the CElegansNeuroML directory>",
+   (char *)"   -loadNetwork <homomorph network file name>",
+   (char *)"   -populationSize <number population members>",
+   (char *)"   -numOffspring <number offspring per generation>",
+   (char *)"   [-parentLongevity <parent dies after this many offspring>]",
+   (char *)"   -numGenerations <number of evolution generations>",
+   (char *)"   -crossoverRate <probability>",
+   (char *)"   -mutationRate <probability>",
+   (char *)"   -synapseWeights <minimum> <maximum> <max delta>",
+   (char *)"   -synapseCrossoverBondStrength <probability of connected neurons crossing over together>",
+   (char *)"   -synapseOptimizedPathLength <synapse path length optimized as a group>",
+   (char *)"   -saveMorph <morph file name> and / or -saveNetworks [<files prefix(default = \"network_\")>]",
+   (char *)"   [-randomSeed <random seed>]",
+   (char *)"   [-logMorph <morph log file name>(instead of standard output)]",
+   (char *)"   [-numThreads <number of threads>(defaults to system capacity)]",
+   (char *)"",
+   (char *)"bionet (resume morph with c302 simulator evaluation)",
+   (char *)"   -createHomomorphicNetworks",
+   (char *)"   -jnmlCmd <path to jnml command>",
+   (char *)"   -simDir <path to the CElegansNeuroML directory>",
    (char *)"   -loadMorph <morph file name>",
    (char *)"   -numGenerations <number of evolution generations>",
    (char *)"   [-crossoverRate <probability>(defaults to loaded value)]",
@@ -961,6 +994,7 @@ int createHomomorphicNetworks(int argc, char *argv[])
    char *behaviorsLoadFile         = NULL;
    int  undulationMovements        = -1;
    char *neuronExecPath            = NULL;
+   char *jnmlCmdPath               = NULL;
    char *simDir                    = NULL;
    char *simHocFile                = NULL;
    char *networkLoadFile           = NULL;
@@ -1033,6 +1067,17 @@ int createHomomorphicNetworks(int argc, char *argv[])
             return(1);
          }
          neuronExecPath = argv[i];
+         continue;
+      }
+      if (strcmp(argv[i], "-jnmlCmd") == 0)
+      {
+         i++;
+         if ((i >= argc) || (argv[i][0] == '-'))
+         {
+            printUsageError(argv[i - 1]);
+            return(1);
+         }
+         jnmlCmdPath = argv[i];
          continue;
       }
       if (strcmp(argv[i], "-simDir") == 0)
@@ -1393,11 +1438,32 @@ int createHomomorphicNetworks(int argc, char *argv[])
       {
          if (neuronExecPath == NULL)
          {
-            printUsageError((char *)"missing loadBehaviors or undulationMovements or neuronExec option");
-            return(1);
+            if (jnmlCmdPath == NULL)
+            {
+               printUsageError((char *)"must have one of these options: loadBehaviors, undulationMovements, neuronExec, or jnmlCmd");
+               return(1);
+            }
+            else
+            {
+               if (simDir == NULL)
+               {
+                  printUsageError((char *)"missing simDir option");
+                  return(1);
+               }
+               if (simHocFile != NULL)
+               {
+                  printUsageError((char *)"conflicting jnmlCmd and simHocFile options");
+                  return(1);
+               }
+            }
          }
          else
          {
+            if (jnmlCmdPath != NULL)
+            {
+               printUsageError((char *)"conflicting neuronExec and jnmlCmd options");
+               return(1);
+            }
             if (simDir == NULL)
             {
                printUsageError((char *)"missing simDir option");
@@ -1412,9 +1478,10 @@ int createHomomorphicNetworks(int argc, char *argv[])
       }
       else
       {
-         if ((neuronExecPath != NULL) || (simDir != NULL) || (simHocFile != NULL))
+         if ((neuronExecPath != NULL) || (jnmlCmdPath != NULL) ||
+             (simDir != NULL) || (simHocFile != NULL))
          {
-            printUsageError((char *)"conflicting undulationMovements and neuronExec/simDir/simHocFile options");
+            printUsageError((char *)"conflicting undulationMovements and neuronExec/jnmlCmd/simDir/simHocFile options");
             return(1);
          }
       }
@@ -1428,9 +1495,10 @@ int createHomomorphicNetworks(int argc, char *argv[])
       }
       else
       {
-         if ((neuronExecPath != NULL) || (simDir != NULL) || (simHocFile != NULL))
+         if ((neuronExecPath != NULL) || (jnmlCmdPath != NULL) ||
+             (simDir != NULL) || (simHocFile != NULL))
          {
-            printUsageError((char *)"conflicting undulationMovements and neuronExec/simDir/simHocFile options");
+            printUsageError((char *)"conflicting undulationMovements and neuronExec/jnmlCmd/simDir/simHocFile options");
             return(1);
          }
       }
@@ -1473,6 +1541,24 @@ int createHomomorphicNetworks(int argc, char *argv[])
       if (fitnessMotorList.size() > 0)
       {
          printUsageError((char *)"conflicting fitnessMotorList and neuronExec options");
+         return(1);
+      }
+   }
+   if (jnmlCmdPath != NULL)
+   {
+      if (behaveCutoff != -1)
+      {
+         printUsageError((char *)"conflicting behaveCutoff and jnmlCmd options");
+         return(1);
+      }
+      if (behaveQuorum != -1)
+      {
+         printUsageError((char *)"conflicting behaveQuorum and jnmlCmd options");
+         return(1);
+      }
+      if (fitnessMotorList.size() > 0)
+      {
+         printUsageError((char *)"conflicting fitnessMotorList and jnmlCmd options");
          return(1);
       }
    }
@@ -1580,6 +1666,40 @@ int createHomomorphicNetworks(int argc, char *argv[])
       else
       {
          fprintf(stderr, "NEURON simulator %s not found\n", neuronExecPath);
+         return(1);
+      }
+#endif
+   }
+   if (jnmlCmdPath != NULL)
+   {
+#ifdef WIN32
+      struct _stat stbuf;
+      if (_stat(jnmlCmdPath, &stbuf) == 0)
+      {
+         if ((stbuf.st_mode & _S_IFREG) == 0)
+         {
+            fprintf(stderr, "jnml command %s is not a regular file\n", jnmlCmdPath);
+            return(1);
+         }
+      }
+      else
+      {
+         fprintf(stderr, "jnml command %s not found\n", jnmlCmdPath);
+         return(1);
+      }
+#else
+      struct stat stbuf;
+      if (stat(jnmlCmdPath, &stbuf) == 0)
+      {
+         if (!S_ISREG(stbuf.st_mode))
+         {
+            fprintf(stderr, "jnml command %s is not a regular file\n", jnmlCmdPath);
+            return(1);
+         }
+      }
+      else
+      {
+         fprintf(stderr, "jnml command %s not found\n", jnmlCmdPath);
          return(1);
       }
 #endif
@@ -1745,11 +1865,21 @@ int createHomomorphicNetworks(int argc, char *argv[])
                synapseCrossoverBondStrength, synapseOptimizedPathLength,
                randomSeed);
       }
-      else
+      else if (neuronExecPath != NULL)
       {
          MorphoGenesis =
             new NetworkHomomorphoGenesis(
                neuronExecPath, simDir, simHocFile, homomorph,
+               populationSize, numOffspring, parentLongevity,
+               crossoverRate, mutationRate, synapseWeightsParm,
+               synapseCrossoverBondStrength, synapseOptimizedPathLength,
+               randomSeed);
+      }
+      else
+      {
+         MorphoGenesis =
+            new NetworkHomomorphoGenesis(
+               jnmlCmdPath, simDir, homomorph,
                populationSize, numOffspring, parentLongevity,
                crossoverRate, mutationRate, synapseWeightsParm,
                synapseCrossoverBondStrength, synapseOptimizedPathLength,
@@ -1778,9 +1908,13 @@ int createHomomorphicNetworks(int argc, char *argv[])
       {
          MorphoGenesis = new NetworkHomomorphoGenesis(undulationMovements, morphLoadFile);
       }
-      else
+      else if (neuronExecPath != NULL)
       {
          MorphoGenesis = new NetworkHomomorphoGenesis(neuronExecPath, simDir, simHocFile, morphLoadFile);
+      }
+      else
+      {
+         MorphoGenesis = new NetworkHomomorphoGenesis(jnmlCmdPath, simDir, morphLoadFile);
       }
       assert(MorphoGenesis != NULL);
       if (fitnessMotorList.size() > 0)

@@ -11,6 +11,9 @@
 #include <fstream>
 #endif
 
+// c302 relative path.
+const string NetworkHomomorphoGenesis::c302RelativePath = "CElegans/pythonScripts";
+
 // Constructor.
 NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(vector<Behavior *>& behaviors, Network *homomorph,
                                                    int populationSize, int numOffspring, int parentLongevity,
@@ -26,8 +29,10 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(vector<Behavior *>& behaviors
 
    undulationBehavior  = false;
    undulationMovements = -1;
-   neuronSim           = false;
-   modelSim            = NULL;
+   neuronSimulation    = false;
+   neuronModelSim      = NULL;
+   c302Simulation      = false;
+   c302ModelSim        = NULL;
    for (i = 0, j = (int)behaviors.size(); i < j; i++)
    {
       this->behaviors.push_back(behaviors[i]);
@@ -82,8 +87,10 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int undulationMovements, Netw
 {
    undulationBehavior        = true;
    this->undulationMovements = undulationMovements;
-   neuronSim    = false;
-   modelSim     = NULL;
+   neuronSimulation          = false;
+   neuronModelSim            = NULL;
+   c302Simulation            = false;
+   c302ModelSim = NULL;
    behaveQuorum = -1;
    behaviorStep = -1;
    behaveQuorumMaxGenerations  = -1;
@@ -98,7 +105,7 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int undulationMovements, Netw
 }
 
 
-// Constructor with NEURON network simulator fitness evaluation.
+// Constructor with NEURON simulator fitness evaluation.
 NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(
    char *neuronExecPath, char *simDir, char *simHocFile,
    Network *homomorph,
@@ -109,29 +116,31 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(
    int synapseOptimizedPathLength,
    RANDOM randomSeed)
 {
-   neuronSim = true;
+   neuronSimulation = true;
    char buf[BUFSIZ];
 #ifdef WIN32
    this->neuronExecPath = _fullpath(buf, neuronExecPath, BUFSIZ);
 #else
    this->neuronExecPath = realpath(neuronExecPath, buf);
 #endif
-   this->simDir                = simDir;
-   this->simHocFile            = simHocFile;
+   neuronSimDir                = simDir;
+   neuronSimHocFile            = simHocFile;
    undulationBehavior          = false;
    undulationMovements         = -1;
+   c302Simulation              = false;
+   c302ModelSim                = NULL;
    behaveQuorum                = -1;
    behaviorStep                = -1;
    behaveQuorumMaxGenerations  = -1;
    behaveQuorumGenerationCount = -1;
 
    // Initialize model simulation.
-   string workDir = this->simDir;
+   string workDir = neuronSimDir;
    workDir.append("/model");
-   modelSim = new NeuronSim(this->neuronExecPath, workDir, this->simHocFile);
-   assert(modelSim != NULL);
-   modelSim->exportSynapses(homomorph);
-   modelSim->importSynapseWeights(homomorph);
+   neuronModelSim = new NeuronSim(this->neuronExecPath, workDir, neuronSimHocFile);
+   assert(neuronModelSim != NULL);
+   neuronModelSim->exportSynapses(homomorph);
+   neuronModelSim->importSynapseWeights(homomorph);
 
    // Common initialization.
    init(homomorph,
@@ -143,7 +152,59 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(
         randomSeed);
 
    // Run model simulation to produce activations.
-   modelSim->run();
+   neuronModelSim->run();
+}
+
+
+// Constructor with c302 simulator fitness evaluation.
+NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(
+   char *jnmlCmdPath, char *simDir,
+   Network *homomorph,
+   int populationSize, int numOffspring, int parentLongevity,
+   float crossoverRate, float mutationRate,
+   MutableParm& synapseWeightsParm,
+   float synapseCrossoverBondStrength,
+   int synapseOptimizedPathLength,
+   RANDOM randomSeed)
+{
+   c302Simulation = true;
+   char buf[BUFSIZ];
+#ifdef WIN32
+   this->jnmlCmdPath = _fullpath(buf, jnmlCmdPath, BUFSIZ);
+#else
+   this->jnmlCmdPath = realpath(jnmlCmdPath, buf);
+#endif
+   c302SimDir                  = simDir;
+   undulationBehavior          = false;
+   undulationMovements         = -1;
+   neuronSimulation            = false;
+   neuronModelSim              = NULL;
+   behaveQuorum                = -1;
+   behaviorStep                = -1;
+   behaveQuorumMaxGenerations  = -1;
+   behaveQuorumGenerationCount = -1;
+
+   // Initialize model simulation.
+   string workDir = c302SimDir;
+   workDir.append("/");
+   workDir.append(c302RelativePath);
+   workDir.append("/c302");
+   c302ModelSim = new c302Sim(this->jnmlCmdPath, workDir);
+   assert(c302ModelSim != NULL);
+   c302ModelSim->exportSynapses(homomorph);
+   c302ModelSim->importSynapseWeights(homomorph);
+
+   // Common initialization.
+   init(homomorph,
+        populationSize, numOffspring, parentLongevity,
+        crossoverRate, mutationRate,
+        synapseWeightsParm,
+        synapseCrossoverBondStrength,
+        synapseOptimizedPathLength,
+        randomSeed);
+
+   // Run model simulation to produce activations.
+   c302ModelSim->run();
 }
 
 
@@ -183,9 +244,15 @@ void NetworkHomomorphoGenesis::init(Network *homomorph,
             undulationMovements, homomorph, synapseWeightsParm,
             &motorConnections, randomizer, NetworkMorphoGenesis::tagGenerator++);
       }
-      else if (neuronSim)
+      else if (neuronSimulation)
       {
          networkMorph = (NetworkMorph *)new NeuronSimNetworkHomomorph(
+            homomorph, synapseWeightsParm,
+            &motorConnections, randomizer, NetworkMorphoGenesis::tagGenerator++);
+      }
+      else if (c302Simulation)
+      {
+         networkMorph = (NetworkMorph *)new c302SimNetworkHomomorph(
             homomorph, synapseWeightsParm,
             &motorConnections, randomizer, NetworkMorphoGenesis::tagGenerator++);
       }
@@ -226,8 +293,10 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(
 
    undulationBehavior  = false;
    undulationMovements = -1;
-   neuronSim           = false;
-   modelSim            = NULL;
+   neuronSimulation    = false;
+   neuronModelSim      = NULL;
+   c302Simulation      = false;
+   c302ModelSim        = NULL;
    randomizer          = NULL;
    sigterm             = false;
    for (i = 0, j = (int)behaviors.size(); i < j; i++)
@@ -249,10 +318,12 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int undulationMovements,
 {
    undulationBehavior        = true;
    this->undulationMovements = undulationMovements;
-   neuronSim  = false;
-   modelSim   = NULL;
-   randomizer = NULL;
-   sigterm    = false;
+   neuronSimulation          = false;
+   neuronModelSim            = NULL;
+   c302Simulation            = false;
+   c302ModelSim = NULL;
+   randomizer   = NULL;
+   sigterm      = false;
    if (!load(filename, binary))
    {
       fprintf(stderr, "Cannot load morph from file %s\n", filename);
@@ -262,21 +333,23 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(int undulationMovements,
 }
 
 
-// Load constructor for homomorphogenesis with NEURON network simulator evaluation.
+// Load constructor for homomorphogenesis with NEURON simulator evaluation.
 NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(char *neuronExecPath, char *simDir,
                                                    char *simHocFile, char *filename, bool binary)
 {
-   neuronSim = true;
+   neuronSimulation = true;
    char buf[BUFSIZ];
 #ifdef WIN32
    this->neuronExecPath = _fullpath(buf, neuronExecPath, BUFSIZ);
 #else
    this->neuronExecPath = realpath(neuronExecPath, buf);
 #endif
-   this->simDir        = simDir;
-   this->simHocFile    = simHocFile;
+   neuronSimDir        = simDir;
+   neuronSimHocFile    = simHocFile;
    undulationBehavior  = false;
    undulationMovements = -1;
+   c302Simulation      = false;
+   c302ModelSim        = NULL;
    randomizer          = NULL;
    sigterm             = false;
    if (!load(filename, binary))
@@ -285,12 +358,47 @@ NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(char *neuronExecPath, char *s
       exit(1);
    }
    getMotorConnections();
-   string workDir = this->simDir;
+   string workDir = neuronSimDir;
    workDir.append("/model");
-   modelSim = new NeuronSim(this->neuronExecPath, workDir, this->simHocFile);
-   assert(modelSim != NULL);
-   modelSim->importSynapseWeights(homomorph);
-   modelSim->run();
+   neuronModelSim = new NeuronSim(this->neuronExecPath, workDir, neuronSimHocFile);
+   assert(neuronModelSim != NULL);
+   neuronModelSim->importSynapseWeights(homomorph);
+   neuronModelSim->run();
+}
+
+
+// Load constructor for homomorphogenesis with c302 simulator evaluation.
+NetworkHomomorphoGenesis::NetworkHomomorphoGenesis(char *jnmlCmdPath, char *simDir,
+                                                   char *filename, bool binary)
+{
+   c302Simulation = true;
+   char buf[BUFSIZ];
+#ifdef WIN32
+   this->jnmlCmdPath = _fullpath(buf, jnmlCmdPath, BUFSIZ);
+#else
+   this->jnmlCmdPath = realpath(jnmlCmdPath, buf);
+#endif
+   c302SimDir          = simDir;
+   undulationBehavior  = false;
+   undulationMovements = -1;
+   neuronSimulation    = false;
+   neuronModelSim      = NULL;
+   randomizer          = NULL;
+   sigterm             = false;
+   if (!load(filename, binary))
+   {
+      fprintf(stderr, "Cannot load morph from file %s\n", filename);
+      exit(1);
+   }
+   getMotorConnections();
+   string workDir = c302SimDir;
+   workDir.append("/");
+   workDir.append(c302RelativePath);
+   workDir.append("/c302");
+   c302ModelSim = new c302Sim(this->jnmlCmdPath, workDir);
+   assert(c302ModelSim != NULL);
+   c302ModelSim->importSynapseWeights(homomorph);
+   c302ModelSim->run();
 }
 
 
@@ -304,18 +412,31 @@ NetworkHomomorphoGenesis::~NetworkHomomorphoGenesis()
          delete (UndulationNetworkHomomorph *)population[i];
       }
    }
-   else if (neuronSim)
+   else if (neuronSimulation)
    {
       for (int i = 0, j = (int)population.size(); i < j; i++)
       {
          delete (NeuronSimNetworkHomomorph *)population[i];
       }
-      delete modelSim;
-      for (int i = 0, j = (int)evaluationSims.size(); i < j; i++)
+      delete neuronModelSim;
+      for (int i = 0, j = (int)neuronEvaluationSims.size(); i < j; i++)
       {
-         delete evaluationSims[i];
+         delete neuronEvaluationSims[i];
       }
-      evaluationSims.clear();
+      neuronEvaluationSims.clear();
+   }
+   else if (c302Simulation)
+   {
+      for (int i = 0, j = (int)population.size(); i < j; i++)
+      {
+         delete (c302SimNetworkHomomorph *)population[i];
+      }
+      delete c302ModelSim;
+      for (int i = 0, j = (int)c302EvaluationSims.size(); i < j; i++)
+      {
+         delete c302EvaluationSims[i];
+      }
+      c302EvaluationSims.clear();
    }
    else
    {
@@ -436,16 +557,22 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
    int maxBehaviorStep;
    UndulationNetworkHomomorph *undulationNetworkMorph;
    NeuronSimNetworkHomomorph  *neuronSimNetworkMorph;
+   c302SimNetworkHomomorph    *c302SimNetworkMorph;
 
    if (logFile != NULL)
    {
       startMorphLog(logFile);
    }
 #ifdef THREADS
-   if (neuronSim)
+   if (neuronSimulation)
    {
       // Initialize NEURON evaluation simulations.
-      initEvaluationSims(numThreads);
+      initNeuronEvaluationSims(numThreads);
+   }
+   if (c302Simulation)
+   {
+      // Initialize c302 evaluation simulations.
+      initc302EvaluationSims(numThreads);
    }
 
    // Start additional morph threads.
@@ -512,13 +639,22 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
          fprintf(morphfp, "%d\t%d\t\t%f\n", i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness);
       }
    }
-   else if (neuronSim)
+   else if (neuronSimulation)
    {
       for (i = 0, n = (int)population.size(); i < n; i++)
       {
          neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)population[i];
          fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n", i, neuronSimNetworkMorph->tag,
                  neuronSimNetworkMorph->error, neuronSimNetworkMorph->meanError);
+      }
+   }
+   else if (c302Simulation)
+   {
+      for (i = 0, n = (int)population.size(); i < n; i++)
+      {
+         c302SimNetworkMorph = (c302SimNetworkHomomorph *)population[i];
+         fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n", i, c302SimNetworkMorph->tag,
+                 c302SimNetworkMorph->error, c302SimNetworkMorph->meanError);
       }
    }
    else
@@ -571,13 +707,22 @@ void NetworkHomomorphoGenesis::morph(int numGenerations, int behaveCutoff,
             fprintf(morphfp, "%d\t%d\t\t%f\n", i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness);
          }
       }
-      else if (neuronSim)
+      else if (neuronSimulation)
       {
          for (i = 0, n = (int)population.size(); i < n; i++)
          {
             neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)population[i];
             fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n", i, neuronSimNetworkMorph->tag,
                     neuronSimNetworkMorph->error, neuronSimNetworkMorph->meanError);
+         }
+      }
+      else if (c302Simulation)
+      {
+         for (i = 0, n = (int)population.size(); i < n; i++)
+         {
+            c302SimNetworkMorph = (c302SimNetworkHomomorph *)population[i];
+            fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n", i, c302SimNetworkMorph->tag,
+                    c302SimNetworkMorph->error, c302SimNetworkMorph->meanError);
          }
       }
       else
@@ -673,7 +818,7 @@ void *NetworkHomomorphoGenesis::morphThread(void *arg)
 #endif
 
 // Initialize NEURON evaluation simulations.
-void NetworkHomomorphoGenesis::initEvaluationSims(int numSims)
+void NetworkHomomorphoGenesis::initNeuronEvaluationSims(int numSims)
 {
    int       n;
    NeuronSim *evalSim;
@@ -681,19 +826,19 @@ void NetworkHomomorphoGenesis::initEvaluationSims(int numSims)
    char      evalFile[BUFSIZ], modelFile[BUFSIZ];
 
    // Remove extra simulations.
-   for (n = (int)evaluationSims.size(); n > numSims; n--)
+   for (n = (int)neuronEvaluationSims.size(); n > numSims; n--)
    {
-      delete evaluationSims[n - 1];
-      evaluationSims.pop_back();
+      delete neuronEvaluationSims[n - 1];
+      neuronEvaluationSims.pop_back();
    }
 
 #ifdef WIN32
    WIN32_FIND_DATA fileinfo;
    HANDLE          hp;
-   sprintf(modelDir, "%s/model", simDir.c_str());
+   sprintf(modelDir, "%s/model", neuronSimDir.c_str());
    for (int i = n; i < numSims; i++)
    {
-      sprintf(evalDir, "%s/eval%d", simDir.c_str(), i);
+      sprintf(evalDir, "%s/eval%d", neuronSimDir.c_str(), i);
 
       // Remove possible stale simulation files.
       sprintf(evalFile, "%s\\*.*", evalDir);
@@ -731,10 +876,10 @@ void NetworkHomomorphoGenesis::initEvaluationSims(int numSims)
       }
 #else
    char buf[BUFSIZ];
-   sprintf(modelDir, "%s/model", simDir.c_str());
+   sprintf(modelDir, "%s/model", neuronSimDir.c_str());
    for (int i = n; i < numSims; i++)
    {
-      sprintf(evalDir, "%s/eval%d", simDir.c_str(), i);
+      sprintf(evalDir, "%s/eval%d", neuronSimDir.c_str(), i);
 
       // Remove possible stale simulation.
       sprintf(buf, "/bin/rm -fr %s", evalDir);
@@ -746,9 +891,91 @@ void NetworkHomomorphoGenesis::initEvaluationSims(int numSims)
       result = system(buf);
 #endif
       // Add simulation.
-      evalSim = new NeuronSim(neuronExecPath, evalDir, simHocFile);
+      evalSim = new NeuronSim(neuronExecPath, evalDir, neuronSimHocFile);
       assert(evalSim != NULL);
-      evaluationSims.push_back(evalSim);
+      neuronEvaluationSims.push_back(evalSim);
+   }
+}
+
+
+// Initialize c302 evaluation simulations.
+void NetworkHomomorphoGenesis::initc302EvaluationSims(int numSims)
+{
+   int     n;
+   c302Sim *evalSim;
+   char    evalDir[BUFSIZ], modelDir[BUFSIZ];
+   char    evalFile[BUFSIZ], modelFile[BUFSIZ];
+
+   // Remove extra simulations.
+   for (n = (int)c302EvaluationSims.size(); n > numSims; n--)
+   {
+      delete c302EvaluationSims[n - 1];
+      c302EvaluationSims.pop_back();
+   }
+
+#ifdef WIN32
+   WIN32_FIND_DATA fileinfo;
+   HANDLE          hp;
+   sprintf(modelDir, "%s/%s/c302", c302SimDir.c_str(), c302RelativePath.c_str());
+   for (int i = n; i < numSims; i++)
+   {
+      sprintf(evalDir, "%s/%s/eval%d", c302SimDir.c_str(), c302RelativePath.c_str(), i);
+
+      // Remove possible stale simulation files.
+      sprintf(evalFile, "%s\\*.*", evalDir);
+      hp = FindFirstFile(evalFile, &fileinfo);
+      if (hp != INVALID_HANDLE_VALUE)
+      {
+         while (FindNextFile(hp, &fileinfo))
+         {
+            if (strcmp(fileinfo.cFileName, "..") != 0)
+            {
+               sprintf(evalFile, "%s\\%s", evalDir, fileinfo.cFileName);
+               DeleteFile(evalFile);
+            }
+         }
+         FindClose(hp);
+         _rmdir(evalDir);
+      }
+
+      // Copy fresh model files.
+      _mkdir(evalDir);
+      sprintf(modelFile, "%s\\*.*", modelDir);
+      hp = FindFirstFile(modelFile, &fileinfo);
+      if (hp != INVALID_HANDLE_VALUE)
+      {
+         while (FindNextFile(hp, &fileinfo))
+         {
+            if ((strcmp(fileinfo.cFileName, "..") != 0) &&
+                (strcmp(fileinfo.cFileName, "images") != 0))
+            {
+               sprintf(modelFile, "%s/%s", modelDir, fileinfo.cFileName);
+               sprintf(evalFile, "%s/%s", evalDir, fileinfo.cFileName);
+               CopyFile(modelFile, evalFile, FALSE);
+            }
+         }
+         FindClose(hp);
+      }
+#else
+   char buf[BUFSIZ];
+   sprintf(modelDir, "%s/%s/c302", c302SimDir.c_str(), c302RelativePath.c_str());
+   for (int i = n; i < numSims; i++)
+   {
+      sprintf(evalDir, "%s/%s/eval%d", c302SimDir.c_str(), c302RelativePath.c_str(), i);
+
+      // Remove possible stale simulation.
+      sprintf(buf, "/bin/rm -fr %s", evalDir);
+      int result = system(buf);
+
+      // Copy fresh model files.
+      mkdir(evalDir, 0755);
+      sprintf(buf, "/bin/cp -r %s/* %s", modelDir, evalDir);
+      result = system(buf);
+#endif
+      // Add simulation.
+      evalSim = new c302Sim(jnmlCmdPath, evalDir);
+      assert(evalSim != NULL);
+      c302EvaluationSims.push_back(evalSim);
    }
 }
 
@@ -768,6 +995,7 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
    Network *parent1, *parent2, *parent, *child;
    UndulationNetworkHomomorph *undulationNetworkMorph;
    NeuronSimNetworkHomomorph  *neuronSimNetworkMorph;
+   c302SimNetworkHomomorph    *c302SimNetworkMorph;
 
 #ifdef THREADS
    // Synchronize threads.
@@ -814,9 +1042,14 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
          offspring[i] = (NetworkMorph *)((UndulationNetworkHomomorph *)population[p1])->clone(
             NetworkMorphoGenesis::tagGenerator++);
       }
-      else if (neuronSim)
+      else if (neuronSimulation)
       {
          offspring[i] = (NetworkMorph *)((NeuronSimNetworkHomomorph *)population[p1])->clone(
+            NetworkMorphoGenesis::tagGenerator++);
+      }
+      else if (c302Simulation)
+      {
+         offspring[i] = (NetworkMorph *)((c302SimNetworkHomomorph *)population[p1])->clone(
             NetworkMorphoGenesis::tagGenerator++);
       }
       else
@@ -885,13 +1118,21 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
                     i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness,
                     population[p1]->tag, population[p2]->tag);
          }
-         else if (neuronSim)
+         else if (neuronSimulation)
          {
             neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)offspring[i];
-            neuronSimNetworkMorph->evaluate(modelSim, evaluationSims[threadNum]);
+            neuronSimNetworkMorph->evaluate(neuronModelSim, neuronEvaluationSims[threadNum]);
             fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\t%d %d\n",
                     i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error,
                     neuronSimNetworkMorph->meanError, population[p1]->tag, population[p2]->tag);
+         }
+         else if (c302Simulation)
+         {
+            c302SimNetworkMorph = (c302SimNetworkHomomorph *)offspring[i];
+            c302SimNetworkMorph->evaluate(c302ModelSim, c302EvaluationSims[threadNum]);
+            fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\t%d %d\n",
+                    i, c302SimNetworkMorph->tag, c302SimNetworkMorph->error,
+                    c302SimNetworkMorph->meanError, population[p1]->tag, population[p2]->tag);
          }
          else
          {
@@ -908,12 +1149,19 @@ void NetworkHomomorphoGenesis::mate(int threadNum)
             fprintf(morphfp, "%d\t%d\t\t%f\t%d\n",
                     i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness, population[p1]->tag);
          }
-         else if (neuronSim)
+         else if (neuronSimulation)
          {
             neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)offspring[i];
             fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\t%d\n",
                     i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error,
                     neuronSimNetworkMorph->meanError, population[p1]->tag);
+         }
+         else if (c302Simulation)
+         {
+            c302SimNetworkMorph = (c302SimNetworkHomomorph *)offspring[i];
+            fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\t%d\n",
+                    i, c302SimNetworkMorph->tag, c302SimNetworkMorph->error,
+                    c302SimNetworkMorph->meanError, population[p1]->tag);
          }
          else
          {
@@ -1000,6 +1248,7 @@ void NetworkHomomorphoGenesis::mutate(int threadNum)
    NetworkHomomorph           *networkMorph;
    UndulationNetworkHomomorph *undulationNetworkMorph;
    NeuronSimNetworkHomomorph  *neuronSimNetworkMorph;
+   c302SimNetworkHomomorph    *c302SimNetworkMorph;
 
 #ifdef THREADS
    // Re-group threads.
@@ -1028,16 +1277,28 @@ void NetworkHomomorphoGenesis::mutate(int threadNum)
                     i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness);
          }
       }
-      else if (neuronSim)
+      else if (neuronSimulation)
       {
          neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)offspring[i];
          if (randomizer->RAND_CHANCE(mutationRate))
          {
             neuronSimNetworkMorph->mutate();
-            neuronSimNetworkMorph->evaluate(modelSim, evaluationSims[threadNum]);
+            neuronSimNetworkMorph->evaluate(neuronModelSim, neuronEvaluationSims[threadNum]);
             fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n",
                     i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error,
                     neuronSimNetworkMorph->meanError);
+         }
+      }
+      else if (c302Simulation)
+      {
+         c302SimNetworkMorph = (c302SimNetworkHomomorph *)offspring[i];
+         if (randomizer->RAND_CHANCE(mutationRate))
+         {
+            c302SimNetworkMorph->mutate();
+            c302SimNetworkMorph->evaluate(c302ModelSim, c302EvaluationSims[threadNum]);
+            fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n",
+                    i, c302SimNetworkMorph->tag, c302SimNetworkMorph->error,
+                    c302SimNetworkMorph->meanError);
          }
       }
       else
@@ -1077,6 +1338,7 @@ void NetworkHomomorphoGenesis::optimize(int threadNum)
    NetworkHomomorph           *networkMorph;
    UndulationNetworkHomomorph *undulationNetworkMorph;
    NeuronSimNetworkHomomorph  *neuronSimNetworkMorph;
+   c302SimNetworkHomomorph    *c302SimNetworkMorph;
 
 #ifdef THREADS
    // Re-group threads.
@@ -1101,14 +1363,23 @@ void NetworkHomomorphoGenesis::optimize(int threadNum)
          fprintf(morphfp, "%d\t%d\t\t%f\n",
                  i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness);
       }
-      else if (neuronSim)
+      else if (neuronSimulation)
       {
          neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)offspring[i];
          neuronSimNetworkMorph->optimize(synapseOptimizedPathLength,
-                                         modelSim, evaluationSims[threadNum]);
+                                         neuronModelSim, neuronEvaluationSims[threadNum]);
          fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n",
                  i, neuronSimNetworkMorph->tag, neuronSimNetworkMorph->error,
                  neuronSimNetworkMorph->meanError);
+      }
+      else if (c302Simulation)
+      {
+         c302SimNetworkMorph = (c302SimNetworkHomomorph *)offspring[i];
+         c302SimNetworkMorph->optimize(synapseOptimizedPathLength,
+                                       c302ModelSim, c302EvaluationSims[threadNum]);
+         fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n",
+                 i, c302SimNetworkMorph->tag, c302SimNetworkMorph->error,
+                 c302SimNetworkMorph->meanError);
       }
       else
       {
@@ -1136,6 +1407,7 @@ void NetworkHomomorphoGenesis::prune()
    NetworkHomomorph           *networkMorph;
    UndulationNetworkHomomorph *undulationNetworkMorph;
    NeuronSimNetworkHomomorph  *neuronSimNetworkMorph;
+   c302SimNetworkHomomorph    *c302SimNetworkMorph;
 
    fprintf(morphfp, "Prune:\n");
    fprintf(morphfp, "Member\tid\t\tfitness\n");
@@ -1145,14 +1417,21 @@ void NetworkHomomorphoGenesis::prune()
       {
          undulationNetworkMorph = (UndulationNetworkHomomorph *)population[i];
          fprintf(morphfp, "%d\t%d\t\t%f\n", i, undulationNetworkMorph->tag, undulationNetworkMorph->fitness);
-         delete (UndulationNetworkHomomorph *)undulationNetworkMorph;
+         delete undulationNetworkMorph;
       }
-      else if (neuronSim)
+      else if (neuronSimulation)
       {
          neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)population[i];
          fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n", i, neuronSimNetworkMorph->tag,
                  neuronSimNetworkMorph->error, neuronSimNetworkMorph->meanError);
-         delete (NeuronSimNetworkHomomorph *)neuronSimNetworkMorph;
+         delete neuronSimNetworkMorph;
+      }
+      else if (c302Simulation)
+      {
+         c302SimNetworkMorph = (c302SimNetworkHomomorph *)population[i];
+         fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)\n", i, c302SimNetworkMorph->tag,
+                 c302SimNetworkMorph->error, c302SimNetworkMorph->meanError);
+         delete c302SimNetworkMorph;
       }
       else
       {
@@ -1183,7 +1462,7 @@ void NetworkHomomorphoGenesis::prune()
                undulationNetworkMorph->evaluate();
                fprintf(morphfp, "\t%f\n", undulationNetworkMorph->fitness);
             }
-            else if (neuronSim)
+            else if (neuronSimulation)
             {
                neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)population[i];
                fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)", i, neuronSimNetworkMorph->tag,
@@ -1194,9 +1473,24 @@ void NetworkHomomorphoGenesis::prune()
                assert(population[i] != NULL);
                delete neuronSimNetworkMorph;
                neuronSimNetworkMorph = (NeuronSimNetworkHomomorph *)population[i];
-               neuronSimNetworkMorph->evaluate(modelSim, evaluationSims[0]);
+               neuronSimNetworkMorph->evaluate(neuronModelSim, neuronEvaluationSims[0]);
                fprintf(morphfp, "\t%.2f (%.2f)\n", neuronSimNetworkMorph->error,
                        neuronSimNetworkMorph->meanError);
+            }
+            else if (c302Simulation)
+            {
+               c302SimNetworkMorph = (c302SimNetworkHomomorph *)population[i];
+               fprintf(morphfp, "%d\t%d\t\t%.2f (%.2f)", i, c302SimNetworkMorph->tag,
+                       c302SimNetworkMorph->error, c302SimNetworkMorph->meanError);
+               population[i] = (NetworkMorph *)new c302SimNetworkHomomorph(
+                  homomorph, networkMorph->synapseWeightsParm, &motorConnections,
+                  randomizer, NetworkMorphoGenesis::tagGenerator++);
+               assert(population[i] != NULL);
+               delete c302SimNetworkMorph;
+               c302SimNetworkMorph = (c302SimNetworkHomomorph *)population[i];
+               c302SimNetworkMorph->evaluate(c302ModelSim, c302EvaluationSims[0]);
+               fprintf(morphfp, "\t%.2f (%.2f)\n", c302SimNetworkMorph->error,
+                       c302SimNetworkMorph->meanError);
             }
             else
             {
@@ -1229,11 +1523,18 @@ void NetworkHomomorphoGenesis::evaluate()
          ((UndulationNetworkHomomorph *)population[i])->evaluate();
       }
    }
-   else if (neuronSim)
+   else if (neuronSimulation)
    {
       for (i = 0, n = (int)population.size(); i < n; i++)
       {
-         ((NeuronSimNetworkHomomorph *)population[i])->evaluate(modelSim, evaluationSims[0]);
+         ((NeuronSimNetworkHomomorph *)population[i])->evaluate(neuronModelSim, neuronEvaluationSims[0]);
+      }
+   }
+   else if (c302Simulation)
+   {
+      for (i = 0, n = (int)population.size(); i < n; i++)
+      {
+         ((c302SimNetworkHomomorph *)population[i])->evaluate(c302ModelSim, c302EvaluationSims[0]);
       }
    }
    else
@@ -1283,6 +1584,7 @@ bool NetworkHomomorphoGenesis::load(char *filename, bool binary)
    NetworkHomomorph           *networkMorph;
    UndulationNetworkHomomorph *undulationNetworkMorph;
    NeuronSimNetworkHomomorph  *neuronSimNetworkMorph;
+   c302SimNetworkHomomorph    *c302SimNetworkMorph;
 
    if ((fp = FOPEN_READ(filename, binary)) == NULL)
    {
@@ -1334,7 +1636,7 @@ bool NetworkHomomorphoGenesis::load(char *filename, bool binary)
          }
       }
    }
-   else if (neuronSim)
+   else if (neuronSimulation)
    {
       for (i = 0; i < n; i++)
       {
@@ -1344,6 +1646,19 @@ bool NetworkHomomorphoGenesis::load(char *filename, bool binary)
          if (neuronSimNetworkMorph->tag >= NetworkMorphoGenesis::tagGenerator)
          {
             NetworkMorphoGenesis::tagGenerator = neuronSimNetworkMorph->tag + 1;
+         }
+      }
+   }
+   else if (c302Simulation)
+   {
+      for (i = 0; i < n; i++)
+      {
+         c302SimNetworkMorph = new c302SimNetworkHomomorph(fp, &motorConnections, randomizer);
+         assert(c302SimNetworkMorph != NULL);
+         population.push_back((NetworkMorph *)c302SimNetworkMorph);
+         if (c302SimNetworkMorph->tag >= NetworkMorphoGenesis::tagGenerator)
+         {
+            NetworkMorphoGenesis::tagGenerator = c302SimNetworkMorph->tag + 1;
          }
       }
    }
@@ -1413,11 +1728,18 @@ bool NetworkHomomorphoGenesis::save(char *filename, bool binary)
          ((UndulationNetworkHomomorph *)population[i])->save(fp);
       }
    }
-   else if (neuronSim)
+   else if (neuronSimulation)
    {
       for (i = 0; i < n; i++)
       {
          ((NeuronSimNetworkHomomorph *)population[i])->save(fp);
+      }
+   }
+   else if (c302Simulation)
+   {
+      for (i = 0; i < n; i++)
+      {
+         ((c302SimNetworkHomomorph *)population[i])->save(fp);
       }
    }
    else
@@ -1478,10 +1800,15 @@ void NetworkHomomorphoGenesis::print(bool printNetwork)
    {
       printf("undulationMovements=%d\n", undulationMovements);
    }
-   else if (neuronSim)
+   else if (neuronSimulation)
    {
       printf("neuronExec=%s\n", neuronExecPath.c_str());
-      printf("simDir=%s\n", simDir.c_str());
+      printf("simDir=%s\n", neuronSimDir.c_str());
+   }
+   else if (c302Simulation)
+   {
+      printf("jnmlCmd=%s\n", jnmlCmdPath.c_str());
+      printf("simDir=%s\n", c302SimDir.c_str());
    }
    else
    {
@@ -1513,11 +1840,18 @@ void NetworkHomomorphoGenesis::print(bool printNetwork)
          ((UndulationNetworkHomomorph *)population[i])->print(printNetwork);
       }
    }
-   else if (neuronSim)
+   else if (neuronSimulation)
    {
       for (i = 0, n = (int)population.size(); i < n; i++)
       {
          ((NeuronSimNetworkHomomorph *)population[i])->print(printNetwork);
+      }
+   }
+   else if (c302Simulation)
+   {
+      for (i = 0, n = (int)population.size(); i < n; i++)
+      {
+         ((c302SimNetworkHomomorph *)population[i])->print(printNetwork);
       }
    }
    else

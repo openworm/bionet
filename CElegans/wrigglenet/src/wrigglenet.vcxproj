@@ -100,6 +100,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\behavior.cpp" />
+    <ClCompile Include="..\..\..\src\c302Sim.cpp" />
+    <ClCompile Include="..\..\..\src\c302SimNetworkHomomorph.cpp" />
     <ClCompile Include="..\..\..\src\fileio.cpp" />
     <ClCompile Include="..\..\..\src\gettime.cpp" />
     <ClCompile Include="..\..\..\src\mutableParm.cpp" />
@@ -120,6 +122,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\behavior.hpp" />
+    <ClInclude Include="..\..\..\src\c302Sim.hpp" />
+    <ClInclude Include="..\..\..\src\c302SimNetworkHomomorph.hpp" />
     <ClInclude Include="..\..\..\src\fileio.h" />
     <ClInclude Include="..\..\..\src\gettime.h" />
     <ClInclude Include="..\..\..\src\mutableParm.hpp" />

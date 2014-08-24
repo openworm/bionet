@@ -55,6 +55,12 @@
     <ClCompile Include="..\..\..\src\undulationNetworkHomomorph.cpp">
       <Filter>bionet</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\c302Sim.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\c302SimNetworkHomomorph.cpp">
+      <Filter>bionet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\fileio.h">
@@ -106,6 +112,12 @@
       <Filter>bionet</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\undulationNetworkHomomorph.hpp">
+      <Filter>bionet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\c302Sim.hpp">
+      <Filter>bionet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\c302SimNetworkHomomorph.hpp">
       <Filter>bionet</Filter>
     </ClInclude>
   </ItemGroup>

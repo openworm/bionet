@@ -9,13 +9,13 @@ all: ../bin/wrigglenet
 
 ../bin/wrigglenet: wrigglenet.o evolveWriggle.o wriggle.o \
 neuron.o network.o behavior.o networkMorph.o networkMorphoGenesis.o \
-networkHomomorph.o undulationNetworkHomomorph.o neuronSimNetworkHomomorph.o networkHomomorphoGenesis.o \
-neuronSim.o neuronHocDoc.o mutableParm.o random.o fileio.o gettime.o
+networkHomomorph.o undulationNetworkHomomorph.o neuronSimNetworkHomomorph.o c302SimNetworkHomomorph.o networkHomomorphoGenesis.o \
+neuronSim.o neuronHocDoc.o c302Sim.o mutableParm.o random.o fileio.o gettime.o
 	$(CC) -o ../bin/wrigglenet wrigglenet.o evolveWriggle.o wriggle.o \
         neuron.o network.o behavior.o \
         networkMorph.o networkMorphoGenesis.o \
-        networkHomomorph.o undulationNetworkHomomorph.o neuronSimNetworkHomomorph.o networkHomomorphoGenesis.o \
-        neuronSim.o neuronHocDoc.o mutableParm.o \
+        networkHomomorph.o undulationNetworkHomomorph.o neuronSimNetworkHomomorph.o c302SimNetworkHomomorph.o networkHomomorphoGenesis.o \
+        neuronSim.o neuronHocDoc.o c302Sim.o mutableParm.o \
         random.o fileio.o gettime.o $(LINKLIBS)
 
 wrigglenet.o: wrigglenet.cpp
@@ -48,6 +48,9 @@ undulationNetworkHomomorph.o: ../../../src/undulationNetworkHomomorph.hpp ../../
 neuronSimNetworkHomomorph.o: ../../../src/neuronSimNetworkHomomorph.hpp ../../../src/neuronSimNetworkHomomorph.cpp ../../../src/networkHomomorph.hpp ../../../src/network.hpp
 	$(CC) $(CCFLAGS) ../../../src/neuronSimNetworkHomomorph.cpp
 
+c302SimNetworkHomomorph.o: ../../../src/c302SimNetworkHomomorph.hpp ../../../src/c302SimNetworkHomomorph.cpp ../../../src/networkHomomorph.hpp ../../../src/network.hpp
+	$(CC) $(CCFLAGS) ../../../src/c302SimNetworkHomomorph.cpp
+
 networkMorphoGenesis.o: ../../../src/networkMorphoGenesis.hpp ../../../src/networkMorphoGenesis.cpp
 	$(CC) $(CCFLAGS) ../../../src/networkMorphoGenesis.cpp
 
@@ -59,6 +62,9 @@ neuronHocDoc.o: ../../../src/neuronHocDoc.hpp ../../../src/neuronHocDoc.cpp
 
 neuronSim.o: ../../../src/neuronSim.hpp ../../../src/neuronSim.cpp
 	$(CC) $(CCFLAGS) ../../../src/neuronSim.cpp
+
+c302Sim.o: ../../../src/c302Sim.hpp ../../../src/c302Sim.cpp
+	$(CC) $(CCFLAGS) ../../../src/c302Sim.cpp
 
 mutableParm.o: ../../../src/mutableParm.hpp ../../../src/mutableParm.cpp
 	$(CC) $(CCFLAGS) ../../../src/mutableParm.cpp

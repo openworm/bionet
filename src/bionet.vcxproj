@@ -100,6 +100,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bionet.cpp" />
+    <ClCompile Include="c302Sim.cpp" />
+    <ClCompile Include="c302SimNetworkHomomorph.cpp" />
     <ClCompile Include="fileio.cpp" />
     <ClCompile Include="gettime.cpp" />
     <ClCompile Include="mutableParm.cpp" />
@@ -119,6 +121,8 @@
     <ClCompile Include="undulationNetworkHomomorph.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="c302Sim.hpp" />
+    <ClInclude Include="c302SimNetworkHomomorph.hpp" />
     <ClInclude Include="fileio.h" />
     <ClInclude Include="gettime.h" />
     <ClInclude Include="mutableParm.hpp" />

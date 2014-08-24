@@ -1,4 +1,4 @@
-// Network homomorph with NEURON network simulator implementation.
+// Network homomorph with NEURON simulator implementation.
 
 #include "neuronSimNetworkHomomorph.hpp"
 

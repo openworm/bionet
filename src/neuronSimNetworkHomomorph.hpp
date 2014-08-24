@@ -1,4 +1,4 @@
-// Network homomorph with NEURON network simulator.
+// Network homomorph with NEURON simulator.
 
 #ifndef __NEURON_SIM_NETWORK_HOMOMORPH_HPP__
 #define __NEURON_SIM_NETWORK_HOMOMORPH_HPP__

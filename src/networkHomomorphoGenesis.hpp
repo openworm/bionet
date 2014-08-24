@@ -8,6 +8,8 @@
 #include "undulationNetworkHomomorph.hpp"
 #include "neuronSimNetworkHomomorph.hpp"
 #include "neuronSim.hpp"
+#include "c302SimNetworkHomomorph.hpp"
+#include "c302Sim.hpp"
 #ifdef THREADS
 #include <pthread.h>
 #endif
@@ -42,8 +44,18 @@ public:
                             int synapseOptimizedPathLength,
                             RANDOM randomSeed);
 
-   // Constructor with NEURON network simulator fitness evaluation.
+   // Constructor with NEURON simulator fitness evaluation.
    NetworkHomomorphoGenesis(char *neuronExecPath, char *simDir, char *simHocFile,
+                            Network *homomorph,
+                            int populationSize, int numOffspring, int parentLongevity,
+                            float crossoverRate, float mutationRate,
+                            MutableParm& synapseWeightsParm,
+                            float synapseCrossoverBondStrength,
+                            int synapseOptimizedPathLength,
+                            RANDOM randomSeed);
+
+   // Constructor with c302 simulator fitness evaluation.
+   NetworkHomomorphoGenesis(char *jnmlCmdPath, char *simDir,
                             Network *homomorph,
                             int populationSize, int numOffspring, int parentLongevity,
                             float crossoverRate, float mutationRate,
@@ -56,6 +68,7 @@ public:
    NetworkHomomorphoGenesis(int undulationMovements, char *filename, bool binary = false);
    NetworkHomomorphoGenesis(char *neuronExecPath, char *simDir, char *simHocFile,
                             char *filename, bool binary = false);
+   NetworkHomomorphoGenesis(char *jnmlCmdPath, char *simDir, char *filename, bool binary = false);
 
    // Destructor.
    ~NetworkHomomorphoGenesis();
@@ -67,13 +80,21 @@ public:
    bool undulationBehavior;
    int  undulationMovements;
 
-   // NEURON network simulation.
-   bool                neuronSim;
+   // NEURON simulation.
+   bool                neuronSimulation;
    string              neuronExecPath;
-   string              simDir;
-   string              simHocFile;
-   NeuronSim           *modelSim;
-   vector<NeuronSim *> evaluationSims;
+   string              neuronSimDir;
+   string              neuronSimHocFile;
+   NeuronSim           *neuronModelSim;
+   vector<NeuronSim *> neuronEvaluationSims;
+
+   // c302 simulation.
+   static const string c302RelativePath;
+   bool                c302Simulation;
+   string              jnmlCmdPath;
+   string              c302SimDir;
+   c302Sim             *c302ModelSim;
+   vector<c302Sim *>   c302EvaluationSims;
 
    // Crossover and mutation rates.
    float crossoverRate;
@@ -140,7 +161,8 @@ private:
              int synapseOptimizedPathLength,
              RANDOM randomSeed);
 
-   void initEvaluationSims(int numSims);
+   void initNeuronEvaluationSims(int numSims);
+   void initc302EvaluationSims(int numSims);
 
    void mate(int threadNum);
    void mutate(int threadNum);
