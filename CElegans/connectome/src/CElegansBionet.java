@@ -162,21 +162,21 @@ public class CElegansBionet
       HashSet<String> neuronTypes = new HashSet<String>();
       for (int i = 0; i < connectomeTables.connectome.size(); i++)
       {
-         ConnectomeRow neuron = connectomeTables.connectome.get(i);
-         if (!neuronTypes.contains(neuron.origin))
+         ConnectomeRow row = connectomeTables.connectome.get(i);
+         if (!neuronTypes.contains(row.origin))
          {
-            neuronTypes.add(neuron.origin);
+            neuronTypes.add(row.origin);
             numNeurons++;
-            if (neuron.sensory)
+            if (row.sensory)
             {
                numSensors++;
             }
          }
-         if (neuron.motor)
+         if (row.motor)
          {
-            if (!neuronTypes.contains(neuron.target))
+            if (!neuronTypes.contains(row.target))
             {
-               neuronTypes.add(neuron.target);
+               neuronTypes.add(row.target);
                numNeurons++;
                numMotors++;
             }
@@ -193,14 +193,14 @@ public class CElegansBionet
       n = numSensors + numMotors;
       for (int i = 0; i < connectomeTables.connectome.size(); i++)
       {
-         ConnectomeRow neuron = connectomeTables.connectome.get(i);
-         if (!neuronIndices.containsKey(neuron.origin))
+         ConnectomeRow row = connectomeTables.connectome.get(i);
+         if (!neuronIndices.containsKey(row.origin))
          {
-            if (neuron.sensory)
+            if (row.sensory)
             {
-               neuronIndices.put(neuron.origin, new Integer(s));
-               neuronNames[s] = neuron.origin;
-               if (neuron.transmitter.startsWith("GABA"))
+               neuronIndices.put(row.origin, new Integer(s));
+               neuronNames[s] = row.origin;
+               if (row.transmitter.startsWith("GABA"))
                {
                   neuronExcitatory[s] = 0;
                }
@@ -212,9 +212,9 @@ public class CElegansBionet
             }
             else
             {
-               neuronIndices.put(neuron.origin, new Integer(n));
-               neuronNames[n] = neuron.origin;
-               if (neuron.synapse.startsWith("GABA"))
+               neuronIndices.put(row.origin, new Integer(n));
+               neuronNames[n] = row.origin;
+               if (row.type.startsWith("GABA"))
                {
                   neuronExcitatory[n] = 0;
                }
@@ -225,12 +225,12 @@ public class CElegansBionet
                n++;
             }
          }
-         if (neuron.motor)
+         if (row.motor)
          {
-            if (!neuronIndices.containsKey(neuron.target))
+            if (!neuronIndices.containsKey(row.target))
             {
-               neuronIndices.put(neuron.target, new Integer(m));
-               neuronNames[m]      = neuron.target;
+               neuronIndices.put(row.target, new Integer(m));
+               neuronNames[m]      = row.target;
                neuronExcitatory[m] = 1;
                m++;
             }
@@ -238,20 +238,26 @@ public class CElegansBionet
       }
 
       // Configure synapses.
-      String[][] synapses = new String[numNeurons][numNeurons];
+      String[][] types        = new String[numNeurons][numNeurons];
+      Integer[][] connections = new Integer[numNeurons][numNeurons];
+      String[][] transmitters = new String[numNeurons][numNeurons];
       for (int i = 0; i < numNeurons; i++)
       {
          for (int j = 0; j < numNeurons; j++)
          {
-            synapses[i][j] = null;
+            types[i][j]        = null;
+            connections[i][j]  = null;
+            transmitters[i][j] = null;
          }
       }
       for (int i = 0; i < connectomeTables.connectome.size(); i++)
       {
-         ConnectomeRow neuron = connectomeTables.connectome.get(i);
-         m = neuronIndices.get(neuron.origin).intValue();
-         n = neuronIndices.get(neuron.target).intValue();
-         synapses[m][n] = neuron.transmitter;
+         ConnectomeRow row = connectomeTables.connectome.get(i);
+         m                  = neuronIndices.get(row.origin).intValue();
+         n                  = neuronIndices.get(row.target).intValue();
+         types[m][n]        = row.type;
+         connections[m][n]  = row.connections;
+         transmitters[m][n] = row.transmitter;
       }
 
       try
@@ -282,7 +288,7 @@ public class CElegansBionet
          {
             for (int j = 0; j < numNeurons; j++)
             {
-               if (synapses[i][j] != null)
+               if (transmitters[i][j] != null)
                {
                   n++;
                }
@@ -295,15 +301,22 @@ public class CElegansBionet
          {
             for (int j = 0; j < numNeurons; j++)
             {
-               if (synapses[i][j] != null)
+               if (transmitters[i][j] != null)
                {
                   bw.write(i + "\n");
                   bw.write(j + "\n");
-                  bw.write(1 + "\n");
-                  bw.write(((random.nextFloat() * scale) + minSynapseWeight) + "\n");
-                  bw.write(0 + "\n");
-                  bw.write(0.0f + "\n");
-                  bw.write("\"" + synapses[i][j] + "\"\n");
+                  int c = connections[i][j];
+                  bw.write(c + "\n");
+                  float weight = (random.nextFloat() * scale) + minSynapseWeight;
+                  int   type   = 0;
+                  if (types[i][j].equals("GapJunction")) { type = 1; }
+                  for (int k = 0; k < c; k++)
+                  {
+                     bw.write(weight + "\n");
+                     bw.write(type + "\n");
+                     bw.write(0.0f + "\n");
+                     bw.write("\"" + transmitters[i][j] + "\"\n");
+                  }
                }
             }
          }

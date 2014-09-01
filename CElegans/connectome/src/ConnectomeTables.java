@@ -47,15 +47,15 @@ class ConnectomeTables
                   cell = sheet.getCell(1, i);
                   String target = cell.getContents();
                   cell = sheet.getCell(2, i);
-                  String synapse = cell.getContents();
+                  String type = cell.getContents();
                   cell = sheet.getCell(3, i);
                   String connections = cell.getContents();
                   cell = sheet.getCell(4, i);
                   String        transmitter = cell.getContents();
-                  ConnectomeRow neuron      = new ConnectomeRow(origin, target, synapse,
+                  ConnectomeRow row         = new ConnectomeRow(origin, target, type,
                                                                 Integer.parseInt(connections),
                                                                 transmitter);
-                  connectome.add(neuron);
+                  connectome.add(row);
                }
                break;
 
@@ -71,11 +71,11 @@ class ConnectomeTables
                   String connections = cell.getContents();
                   cell = sheet.getCell(3, i);
                   String        transmitter = cell.getContents();
-                  ConnectomeRow neuron      = new ConnectomeRow(origin, target, "Muscle",
+                  ConnectomeRow row         = new ConnectomeRow(origin, target, "Muscle",
                                                                 Integer.parseInt(connections),
                                                                 transmitter);
-                  neuron.motor = true;
-                  connectome.add(neuron);
+                  row.motor = true;
+                  connectome.add(row);
                }
                break;
 
@@ -87,10 +87,10 @@ class ConnectomeTables
                   String origin = cell.getContents();
                   for (int j = 0; j < connectome.size(); j++)
                   {
-                     ConnectomeRow neuron = connectome.get(j);
-                     if (neuron.origin.equals(origin))
+                     ConnectomeRow row = connectome.get(j);
+                     if (row.origin.equals(origin))
                      {
-                        neuron.sensory = true;
+                        row.sensory = true;
                      }
                   }
                }
@@ -110,14 +110,14 @@ class ConnectomeTables
       System.out.println("origin\ttarget\tsynapse\tconnections\ttransmitter\tsensory\tmotor");
       for (int i = 0; i < connectome.size(); i++)
       {
-         ConnectomeRow neuron  = connectome.get(i);
+         ConnectomeRow row     = connectome.get(i);
          String        sensory = "false";
-         if (neuron.sensory) { sensory = "true"; }
+         if (row.sensory) { sensory = "true"; }
          String motor = "false";
-         if (neuron.motor) { motor = "true"; }
-         System.out.println(neuron.origin + "\t" + neuron.target + "\t" +
-                            neuron.synapse + "\t" + neuron.connections + "\t" +
-                            neuron.transmitter + "\t" + sensory + "\t" + motor);
+         if (row.motor) { motor = "true"; }
+         System.out.println(row.origin + "\t" + row.target + "\t" +
+                            row.type + "\t" + row.connections + "\t" +
+                            row.transmitter + "\t" + sensory + "\t" + motor);
       }
    }
 }
