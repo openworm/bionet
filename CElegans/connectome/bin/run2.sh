@@ -1,1 +1,1 @@
-./run.sh -maxSynapseWeight .25 -randomSeed 50
+./run.sh -maxSynapseWeight .1 -randomSeed 50
