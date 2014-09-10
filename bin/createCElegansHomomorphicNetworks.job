@@ -14,4 +14,4 @@ cp $HOME/bionet/bin/CElegans_behaviors.txt .
 #run my executable
 OMP_NUM_THREADS=256
 export OMP_NUM_THREADS
-omplace -nt $OMP_NUM_THREADS ./bionet -createHomomorphicNetworks -loadBehaviors CElegans_behaviors.txt -loadNetwork CElegans_network.txt -synapseWeights 0.0 .1 .01 -populationSize 500 -numOffspring 250 -numGenerations 250 -behaveCutoff 50 -crossoverRate .8 -mutationRate .05 -synapseCrossoverBondStrength .5 -synapseOptimizedPathLength 4 -saveMorph morph0.txt -numThreads 256 -randomSeed 78 -logMorph morph0.log
+omplace -nt $OMP_NUM_THREADS ./bionet -createHomomorphicNetworks -loadBehaviors CElegans_behaviors.txt -loadNetwork CElegans_network.txt -synapseWeights 0.0 .1 .05 -populationSize 500 -numOffspring 250 -numGenerations 250 -behaveCutoff 50 -crossoverRate .8 -mutationRate .05 -synapseCrossoverBondStrength .5 -synapseOptimizedPathLength 4 -saveMorph morph0.txt -numThreads 256 -randomSeed 78 -logMorph morph0.log
