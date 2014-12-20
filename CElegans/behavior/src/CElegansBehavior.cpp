@@ -27,6 +27,7 @@ char *Usage[] =
    (char *)"Run:",
    (char *)"",
    (char *)"CElegansBehavior",
+   (char *)"  [-blackOnWhite (display contrast mode)]",
    (char *)"",
    (char *)"Create network behavior:",
    (char *)"",
@@ -254,6 +255,9 @@ TIME msAnimationTimer = INVALID_TIME;
 #define BIG_FONT      GLUT_BITMAP_TIMES_ROMAN_24
 #define LINE_SPACE    15
 
+// Display contrast mode.
+bool BlackOnWhite = false;
+
 // Main.
 int main(int argc, char *argv[])
 {
@@ -348,6 +352,11 @@ int main(int argc, char *argv[])
          }
          continue;
       }
+      if (strcmp(argv[i], "-blackOnWhite") == 0)
+      {
+         BlackOnWhite = true;
+         continue;
+      }
       if ((strcmp(argv[i], "-h") == 0) ||
           (strcmp(argv[i], "-help") == 0) ||
           (strcmp(argv[i], "--h") == 0) ||
@@ -419,7 +428,14 @@ int main(int argc, char *argv[])
    glutMouseFunc(mouseClicked);
    glutMotionFunc(mouseDragged);
    glutPassiveMotionFunc(mouseMoved);
-   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+   if (BlackOnWhite)
+   {
+      glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+   }
+   else
+   {
+      glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+   }
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
    gluOrtho2D(0.0f, WindowWidth, 0.0f, WindowHeight);
@@ -616,7 +632,14 @@ void display()
    glLoadIdentity();
 
    // Partitions.
-   glColor3f(1.0f, 1.0f, 1.0f);
+   if (BlackOnWhite)
+   {
+      glColor3f(0.0f, 0.0f, 0.0f);
+   }
+   else
+   {
+      glColor3f(1.0f, 1.0f, 1.0f);
+   }
    bodyOffset = WindowHeight * TouchHeightRatio;
    bodyHeight = WindowHeight - bodyOffset - (WindowHeight * RunHeightRatio);
    glBegin(GL_LINES);
@@ -631,6 +654,15 @@ void display()
    glVertex2f(0.0f, d);
    glVertex2f(WindowWidth, d);
    glEnd();
+   if (BlackOnWhite)
+   {
+      glColor3f(0.25f, 0.25f, 0.25f);
+      d = bodyOffset * 0.95f;
+      glRectf(WindowWidth * 0.25f, 0.0f, WindowWidth * 0.75f, d);
+      d = WindowHeight * (1.0f - RunHeightRatio) * 1.005f;
+      glRectf(0.0f, d, WindowWidth, WindowHeight);
+      glColor3f(0.0f, 0.0f, 0.0f);
+   }
 
    // Controls.
    GuiFrame->render((float)gettime());
@@ -751,16 +783,37 @@ void display()
    for (i = 0, j = (int)centers.size(); i < j; i++)
    {
       point = centers[i];
-      glColor3f(1.0f, 1.0f, 1.0f);
+      if (BlackOnWhite)
+      {
+         glColor3f(0.0f, 0.0f, 0.0f);
+      }
+      else
+      {
+         glColor3f(1.0f, 1.0f, 1.0f);
+      }
       drawCircle(point.x, point.y, radius);
       glColor3f(dorsalMagnitudes[i], 0.0f, 0.0f);
       drawCircle((WindowWidth * 0.75f) + (radius * 1.5f), point.y, radius, true);
-      glColor3f(1.0f, 1.0f, 1.0f);
+      if (BlackOnWhite)
+      {
+         glColor3f(0.0f, 0.0f, 0.0f);
+      }
+      else
+      {
+         glColor3f(1.0f, 1.0f, 1.0f);
+      }
       sprintf(buf, (char *)"%0.2f", dorsalMagnitudes[i]);
       renderBitmapString((WindowWidth * 0.75f) - (radius * 5.0f), point.y + (radius * 0.4f), FONT, buf);
       glColor3f(ventralMagnitudes[i], 0.0f, 0.0f);
       drawCircle((WindowWidth * 0.25f) - (radius * 1.5f), point.y, radius, true);
-      glColor3f(1.0f, 1.0f, 1.0f);
+      if (BlackOnWhite)
+      {
+         glColor3f(0.0f, 0.0f, 0.0f);
+      }
+      else
+      {
+         glColor3f(1.0f, 1.0f, 1.0f);
+      }
       sprintf(buf, (char *)"%0.2f", ventralMagnitudes[i]);
       renderBitmapString((WindowWidth * 0.25f) + (radius), point.y + (radius * 0.4f), FONT, buf);
       switch (i)
@@ -841,6 +894,14 @@ void display()
    renderBitmapString(10, 15, FONT, (char *)"MV R/L");
    renderBitmapString((int)(WindowWidth * 0.75f) + 10, 15, FONT, (char *)"MD R/L");
 
+   if (BlackOnWhite)
+   {
+      glColor3f(1.0f, 1.0f, 1.0f);
+   }
+   else
+   {
+      glColor3f(0.0f, 0.0f, 0.0f);
+   }
    if (BehaviorsLoadFile)
    {
       sprintf(buf, "Load: %d/%d", BehaviorSequenceIndex + 1, BehaviorSequenceLength);
