@@ -42,8 +42,8 @@ char *getPath(char *dir, char *file)
       return(path);
    }
 
-   // Check MONA_HOME directory path environment variable.
-   if ((home = getenv("MONA_HOME")) != NULL)
+   // Check BIONET_HOME directory path environment variable.
+   if ((home = getenv("BIONET_HOME")) != NULL)
    {
 #ifdef WIN32
       // Replace Cygwin path with Windows path.
