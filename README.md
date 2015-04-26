@@ -1,15 +1,15 @@
-bionet
+Bionet
 ======
 
 #Artificial biological neural network
 
-bionet simulates a biologically inspired neural network composed of
+Bionet simulates a biologically inspired neural network composed of
 sensory neurons, interneurons, and motor neurons which can be connected
 in arbitrary configurations. Signals propagate through the network one
 synapse at a time. A network behavior is defined as a sequence of
 sensory-motor neuron firings.
 
-bionet also possesses a network morphogenesis capability:
+Bionet also possesses a network morphogenesis capability:
 An isomorphic network reproduces the behaviors of another network
 without knowing its interneuron configuration. A homomorphic network
 additionally mirrors the interneuron configuration of the other network.
@@ -26,7 +26,7 @@ knowing the original network weights. Since C. elegans has more than
 3000 synapses, this is a daunting task. However, accomplishing it would
 be a significant step toward programming an artificial C. elegans.
 
-In addition to bionet, see the CElegans/Readme.txt for related projects
+In addition to Bionet, see the CElegans/Readme.txt for related projects
 that are specific to C. elegans.
 
 ##Required packages:
